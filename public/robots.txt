@@ -1,0 +1,19 @@
+User-agent: *
+Allow: /
+Allow: /about
+Allow: /methods
+Allow: /blog
+Allow: /podcast
+Allow: /booking
+Allow: /contact
+Allow: /privacy
+Allow: /kvkk
+Allow: /cookies
+Allow: /copyright
+
+Disallow: /login
+Disallow: /register
+Disallow: /admin
+Disallow: /client-panel
+
+Sitemap: https://re-set.com.tr/sitemap.xml

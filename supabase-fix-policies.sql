@@ -1,0 +1,3 @@
+Error: Failed to run sql query: ERROR: 42710: policy "services_select" for table "services" already exists
+
+

@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Cookie Banner Snippet</title>
+  <style>
+    /* Minimal premium cookie banner styles (self-contained) */
+    .cookie-banner{position:fixed;bottom:20px;right:20px;max-width:380px;padding:20px;background:#fff;border-radius:14px;box-shadow:0 8px 25px rgba(0,0,0,.15);border:1px solid #f0f0f0;z-index:9999;font-family:Inter,Arial,Helvetica,sans-serif}
+    .cookie-content h3{font-size:16px;margin-bottom:8px;color:#1A1A1A}
+    .cookie-content p{font-size:13px;color:#4A4A4A;margin-bottom:14px}
+    .cookie-content a{color:#D4AF37;font-weight:600;text-decoration:none}
+    .cookie-buttons{display:flex;gap:8px;justify-content:flex-end}
+    .cookie-buttons button{padding:8px 12px;border-radius:8px;border:none;cursor:pointer}
+    .accept{background:#D4AF37;color:#fff}
+    .reject{background:#f2f2f2;color:#333}
+    .settings{background:#1A1A1A;color:#fff}
+  </style>
+</head>
+<body>
+
+  <div id="cookie-banner" class="cookie-banner" style="display:none">
+    <div class="cookie-content">
+      <h3>Çerez Ayarları</h3>
+      <p>Size daha iyi bir deneyim sunmak için çerezleri kullanıyoruz. <a href="/cookies">Çerez Politikası</a>, <a href="/privacy">Gizlilik Politikası</a> ve <a href="/kvkk">KVKK</a>'yi inceleyebilirsiniz.</p>
+      <div class="cookie-buttons">
+        <button class="accept" id="cb-accept">Kabul Et</button>
+        <button class="reject" id="cb-reject">Reddet</button>
+        <button class="settings" id="cb-settings">Ayarları Özelleştir</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      const banner = document.getElementById('cookie-banner');
+      const key = 'cookieConsent';
+      function show(){ banner.style.display = 'block'; }
+      function hide(){ banner.style.display = 'none'; }
+      if(!localStorage.getItem(key)) setTimeout(show, 400);
+      document.getElementById('cb-accept').onclick = function(){ localStorage.setItem(key,'accepted'); hide(); };
+      document.getElementById('cb-reject').onclick = function(){ localStorage.setItem(key,'rejected'); hide(); };
+      document.getElementById('cb-settings').onclick = function(){ alert('Ayarlar paneli yakında eklenecek.'); };
+    })();
+  </script>
+
+</body>
+</html>
