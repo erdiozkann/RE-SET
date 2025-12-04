@@ -44,7 +44,7 @@ export const accountingClientsApi = {
     let query = supabase
       .from('clients')
       .select('*')
-      .order('full_name', { ascending: true });
+      .order('name', { ascending: true });
 
     if (activeOnly) {
       query = query.eq('is_active', true);
@@ -52,7 +52,13 @@ export const accountingClientsApi = {
 
     const { data, error } = await query;
     if (error) throw error;
-    return data || [];
+    
+    // name ve full_name uyumluluğu
+    return (data || []).map(client => ({
+      ...client,
+      full_name: client.full_name || client.name || 'İsimsiz',
+      name: client.name || client.full_name || 'İsimsiz'
+    }));
   },
 
   /**
@@ -66,7 +72,13 @@ export const accountingClientsApi = {
       .single();
 
     if (error) throw error;
-    return data;
+    if (!data) return null;
+    
+    return {
+      ...data,
+      full_name: data.full_name || data.name || 'İsimsiz',
+      name: data.name || data.full_name || 'İsimsiz'
+    };
   },
 
   /**
@@ -172,14 +184,14 @@ export const invoicesApi = {
       .from('invoices')
       .select(`
         *,
-        clients(full_name)
+        clients(name, full_name)
       `)
       .order('invoice_date', { ascending: false });
 
     if (error) throw error;
     return (data || []).map(inv => ({
       ...inv,
-      client_name: inv.clients?.full_name
+      client_name: inv.clients?.full_name || inv.clients?.name || 'İsimsiz'
     }));
   },
 
@@ -208,13 +220,13 @@ export const invoicesApi = {
       .from('invoices')
       .select(`
         *,
-        clients(full_name)
+        clients(name, full_name)
       `)
       .eq('id', id)
       .single();
 
     if (error) throw error;
-    return data ? { ...data, client_name: data.clients?.full_name } : null;
+    return data ? { ...data, client_name: data.clients?.full_name || data.clients?.name || 'İsimsiz' } : null;
   },
 
   /**
@@ -338,7 +350,7 @@ export const paymentsApi = {
       .from('payments')
       .select(`
         *,
-        clients(full_name),
+        clients(name, full_name),
         invoices(invoice_no)
       `)
       .order('payment_date', { ascending: false });
@@ -346,7 +358,7 @@ export const paymentsApi = {
     if (error) throw error;
     return (data || []).map(pmt => ({
       ...pmt,
-      client_name: pmt.clients?.full_name,
+      client_name: pmt.clients?.full_name || pmt.clients?.name || 'İsimsiz',
       invoice_no: pmt.invoices?.invoice_no
     }));
   },
@@ -421,7 +433,7 @@ export const paymentsApi = {
       .from('payments')
       .select(`
         *,
-        clients(full_name)
+        clients(name, full_name)
       `)
       .gte('payment_date', startDate)
       .lte('payment_date', endDate)
@@ -430,7 +442,7 @@ export const paymentsApi = {
     if (error) throw error;
     return (data || []).map(pmt => ({
       ...pmt,
-      client_name: pmt.clients?.full_name
+      client_name: pmt.clients?.full_name || pmt.clients?.name || 'İsimsiz'
     }));
   }
 };

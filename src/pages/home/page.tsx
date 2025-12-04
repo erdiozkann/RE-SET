@@ -72,7 +72,7 @@ export default function HomePage() {
   // Yükleme durumu
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-teal-50 via-white to-amber-50">
+      <div className="py-16 flex items-center justify-center bg-gradient-to-br from-teal-50 via-white to-amber-50">
         <div className="text-center">
           <i className="ri-loader-4-line text-4xl text-teal-600 animate-spin mb-4"></i>
           <p className="text-gray-600">Yükleniyor...</p>
@@ -155,7 +155,7 @@ export default function HomePage() {
       />
 
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-teal-50 via-white to-amber-50 overflow-hidden">
+      <section className="relative py-16 md:py-24 flex items-center justify-center bg-gradient-to-br from-teal-50 via-white to-amber-50 overflow-hidden">
         {/* Hero Background Image */}
         {heroImage && (
           <div className="absolute inset-0 z-0">
@@ -167,22 +167,22 @@ export default function HomePage() {
           </div>
         )}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-          <h1 className="text-5xl md:text-6xl font-serif text-gray-900 mb-6">
+          <h1 className="text-4xl md:text-5xl font-serif text-gray-900 mb-4">
             {displayHero.title}
           </h1>
-          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+          <p className="text-lg md:text-xl text-gray-600 mb-6 max-w-2xl mx-auto">
             {displayHero.description}
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
               to="/booking"
-              className="px-8 py-4 bg-[#D4AF37] text-[#1A1A1A] rounded-full font-semibold hover:bg-[#C19B2E] transition-all shadow-lg hover:shadow-xl"
+              className="px-6 py-3 bg-[#D4AF37] text-[#1A1A1A] rounded-full font-semibold hover:bg-[#C19B2E] transition-all shadow-lg hover:shadow-xl"
             >
               Randevu Al
             </Link>
             <button
               onClick={handleWhatsAppClick}
-              className="px-8 py-4 bg-[#D4AF37] text-[#1A1A1A] rounded-full font-semibold hover:bg-[#C19B2E] transition-all shadow-lg hover:shadow-xl flex items-center gap-2"
+              className="px-6 py-3 bg-[#D4AF37] text-[#1A1A1A] rounded-full font-semibold hover:bg-[#C19B2E] transition-all shadow-lg hover:shadow-xl flex items-center gap-2"
             >
               <i className="ri-whatsapp-line text-xl"></i>
               WhatsApp ile İletişim
@@ -192,16 +192,16 @@ export default function HomePage() {
       </section>
 
       {/* About Section */}
-      <section className="py-20 bg-white">
+      <section className="py-12 md:py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
             <div>
-              <h2 className="text-4xl font-serif text-gray-900 mb-6">{displayAbout.title}</h2>
-              <p className="text-lg text-gray-700 mb-4">{displayAbout.paragraph1}</p>
-              <p className="text-lg text-gray-700">{displayAbout.paragraph2}</p>
+              <h2 className="text-3xl md:text-4xl font-serif text-gray-900 mb-4">{displayAbout.title}</h2>
+              <p className="text-base md:text-lg text-gray-700 mb-3">{displayAbout.paragraph1}</p>
+              <p className="text-base md:text-lg text-gray-700">{displayAbout.paragraph2}</p>
               <Link
                 to="/about"
-                className="inline-block mt-6 px-6 py-3 bg-[#D4AF37] text-[#1A1A1A] rounded-full font-semibold hover:bg-[#C19B2E] transition-colors"
+                className="inline-block mt-4 px-6 py-2.5 bg-[#D4AF37] text-[#1A1A1A] rounded-full font-semibold hover:bg-[#C19B2E] transition-colors"
               >
                 Daha Fazla Bilgi
               </Link>
@@ -219,21 +219,21 @@ export default function HomePage() {
 
       {/* Services Section */}
       {services.length > 0 && (
-        <section className="py-20 bg-gradient-to-br from-gray-50 to-white">
+        <section className="py-12 md:py-16 bg-gradient-to-br from-gray-50 to-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-4xl font-serif text-center text-gray-900 mb-12">Hizmetlerimiz</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <h2 className="text-3xl md:text-4xl font-serif text-center text-gray-900 mb-8">Hizmetlerimiz</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {services.map((service) => (
-                <div key={service.id} className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow">
-                  <h3 className="text-2xl font-semibold text-gray-900 mb-4">{service.title}</h3>
-                  <p className="text-gray-600 mb-6">{service.description}</p>
-                  <div className="flex items-center justify-between text-sm text-gray-500 mb-6">
+                <div key={service.id} className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-3">{service.title}</h3>
+                  <p className="text-gray-600 mb-4 text-sm">{service.description}</p>
+                  <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
                     <span><i className="ri-time-line mr-1"></i>{service.duration} dakika</span>
                     {service.price && <span className="text-lg font-semibold text-[#D4AF37]">{service.price} ₺</span>}
                   </div>
                   <Link
                     to="/booking"
-                    className="block w-full text-center px-6 py-3 bg-[#D4AF37] text-[#1A1A1A] rounded-full font-semibold hover:bg-[#C19B2E] transition-colors"
+                    className="block w-full text-center px-4 py-2.5 bg-[#D4AF37] text-[#1A1A1A] rounded-full font-semibold hover:bg-[#C19B2E] transition-colors text-sm"
                   >
                     Randevu Al
                   </Link>
@@ -246,34 +246,34 @@ export default function HomePage() {
 
       {/* Methods Section */}
       {methods.length > 0 && (
-        <section className="py-20 bg-white">
+        <section className="py-12 md:py-16 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <h2 className="text-4xl font-serif text-gray-900 mb-4">Kullandığımız Yöntemler</h2>
-              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl md:text-4xl font-serif text-gray-900 mb-3">Kullandığımız Yöntemler</h2>
+              <p className="text-base md:text-lg text-gray-600 max-w-2xl mx-auto">
                 Danışmanlık sürecimizde bilimsel temelli ve etkili yöntemler kullanıyoruz
               </p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {methods.map((method) => (
                 <div 
                   key={method.id} 
-                  className="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-8 border border-gray-200 hover:border-[#D4AF37] hover:shadow-xl transition-all group"
+                  className="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-6 border border-gray-200 hover:border-[#D4AF37] hover:shadow-xl transition-all group"
                 >
                   {method.icon && (
-                    <div className="w-16 h-16 bg-gradient-to-br from-[#D4AF37] to-[#C19B2E] rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                      <i className={`${method.icon} text-3xl text-white`}></i>
+                    <div className="w-14 h-14 bg-gradient-to-br from-[#D4AF37] to-[#C19B2E] rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                      <i className={`${method.icon} text-2xl text-white`}></i>
                     </div>
                   )}
-                  <h3 className="text-2xl font-semibold text-gray-900 mb-4">{method.title}</h3>
-                  <p className="text-gray-600 leading-relaxed">{method.description}</p>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-3">{method.title}</h3>
+                  <p className="text-gray-600 leading-relaxed text-sm">{method.description}</p>
                 </div>
               ))}
             </div>
-            <div className="text-center mt-12">
+            <div className="text-center mt-8">
               <Link
                 to="/methods"
-                className="inline-block px-8 py-4 bg-[#D4AF37] text-[#1A1A1A] rounded-full font-semibold hover:bg-[#C19B2E] transition-colors shadow-lg"
+                className="inline-block px-6 py-3 bg-[#D4AF37] text-[#1A1A1A] rounded-full font-semibold hover:bg-[#C19B2E] transition-colors shadow-lg"
               >
                 Tüm Yöntemlerimiz
               </Link>
@@ -286,13 +286,13 @@ export default function HomePage() {
       <ReviewsSlider />
 
       {/* CTA Section */}
-      <section className="py-20 bg-[#1A1A1A]">
+      <section className="py-12 md:py-16 bg-[#1A1A1A]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
-          <h2 className="text-4xl font-serif mb-6">Hayalinizdeki Yaşama İlk Adımı Atın</h2>
-          <p className="text-xl mb-8">Profesyonel destek ile potansiyelinizi keşfedin</p>
+          <h2 className="text-3xl md:text-4xl font-serif mb-4">Hayalinizdeki Yaşama İlk Adımı Atın</h2>
+          <p className="text-lg md:text-xl mb-6">Profesyonel destek ile potansiyelinizi keşfedin</p>
           <Link
             to="/booking"
-            className="inline-block px-8 py-4 bg-[#D4AF37] text-[#1A1A1A] rounded-full font-semibold hover:bg-[#C19B2E] transition-colors shadow-lg"
+            className="inline-block px-6 py-3 bg-[#D4AF37] text-[#1A1A1A] rounded-full font-semibold hover:bg-[#C19B2E] transition-colors shadow-lg"
           >
             Hemen Başlayın
           </Link>

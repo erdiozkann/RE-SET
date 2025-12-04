@@ -111,6 +111,16 @@ export const usersApi = {
   },
 
   async approve(email: string) {
+    // Önce kullanıcıyı al
+    const { data: userData, error: fetchError } = await supabase
+      .from('users')
+      .select('*')
+      .eq('email', email)
+      .single();
+    
+    if (fetchError) throw fetchError;
+
+    // Kullanıcıyı onayla
     const { data, error } = await supabase
       .from('users')
       .update({ approved: true })
@@ -119,6 +129,31 @@ export const usersApi = {
       .single();
     
     if (error) throw error;
+
+    // Clients tablosunda bu email var mı kontrol et
+    const { data: existingClient } = await supabase
+      .from('clients')
+      .select('id')
+      .eq('email', email)
+      .single();
+
+    // Eğer clients tablosunda yoksa ekle
+    if (!existingClient) {
+      const { error: clientError } = await supabase
+        .from('clients')
+        .insert([{
+          name: userData.name,
+          email: userData.email,
+          phone: userData.phone || null,
+          is_active: true
+        }]);
+      
+      if (clientError) {
+        console.error('Client oluşturma hatası:', clientError);
+        // Hata olsa bile devam et, kullanıcı onaylandı
+      }
+    }
+
     const { password, ...user } = data;
     return user;
   },
