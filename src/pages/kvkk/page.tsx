@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
+import DOMPurify from 'dompurify';
 import SEO from '../../components/SEO';
 import { contentApi } from '../../lib/api';
 
 const KVKKPage = () => {
   const siteUrl = import.meta.env.VITE_SITE_URL || 'https://re-set.com.tr';
   const [content, setContent] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
+
 
   useEffect(() => {
     const loadContent = async () => {
@@ -16,8 +17,7 @@ const KVKKPage = () => {
         }
       } catch (error) {
         console.error('KVKK içeriği yüklenemedi:', error);
-      } finally {
-        setLoading(false);
+        // Loading removed
       }
     };
     loadContent();
@@ -79,27 +79,21 @@ const KVKKPage = () => {
         canonical="/kvkk"
         schema={schema}
       />
-      <section className="py-16 md:py-24 bg-white">
+      <section className="py-10 md:py-16 bg-white">
         <div className="max-w-4xl mx-auto px-4 md:px-8">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-5xl font-serif text-[#1A1A1A] mb-6">
+          <div className="text-center mb-8">
+            <h1 className="text-3xl md:text-4xl font-serif text-[#1A1A1A] mb-4">
               KVKK Aydınlatma Metni
             </h1>
-            <p className="text-lg text-gray-600">
+            <p className="text-base text-gray-600">
               Kişisel Verilerin Korunması Kanunu kapsamında bilgilendirme
             </p>
           </div>
 
-          {loading ? (
-            <div className="flex items-center justify-center py-12">
-              <div className="w-8 h-8 border-4 border-[#D4AF37] border-t-transparent rounded-full animate-spin"></div>
-            </div>
-          ) : (
-            <div 
-              className="prose prose-lg max-w-none text-gray-700"
-              dangerouslySetInnerHTML={{ __html: content || defaultContent }}
-            />
-          )}
+          <div
+            className="prose prose-lg max-w-none text-gray-700"
+            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content || defaultContent) }}
+          />
         </div>
       </section>
     </>

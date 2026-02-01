@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { authHelpers, supabase } from '../../lib/supabase';
+import { supabase } from '../../lib/supabase';
+import { useAuth } from '../../contexts/AuthContext';
 import { getUserFriendlyErrorMessage } from '../../lib/errors';
 import { useToast } from '../../components/ToastContainer';
 import SEO from '../../components/SEO';
@@ -18,7 +19,7 @@ export default function ClientPanelPage() {
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [rating, setRating] = useState(5);
   const [reviewText, setReviewText] = useState('');
-  const [user, setUser] = useState<any>(null);
+  const { user, loading: authLoading, signOut } = useAuth();
   const [loading, setLoading] = useState(true);
 
   const clampProgressPercentage = (value: number | null): number => {
@@ -27,36 +28,32 @@ export default function ClientPanelPage() {
   };
 
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const currentUser = await authHelpers.getCurrentUser();
-        if (!currentUser || currentUser.role !== 'CLIENT') {
-          navigate('/login');
-          return;
-        }
-        setUser(currentUser);
-        await loadClientData(currentUser.email);
-      } catch (error) {
-        console.error('Auth check error:', error);
-        toast.error('Oturum doğrulanamadı');
-        navigate('/login');
-      }
-    };
+    if (authLoading) return;
 
-    checkAuth();
-  }, [navigate]);
+    if (!user) {
+      navigate('/login', { replace: true });
+      return;
+    }
+
+    if (user.role !== 'CLIENT') {
+      navigate('/login', { replace: true });
+      return;
+    }
+
+    loadClientData(user.email);
+  }, [user, authLoading, navigate]);
 
   const loadClientData = async (email: string) => {
     try {
       setLoading(true);
-      
+
       // Kullanıcının client kaydını bul
       const { data: clients, error: clientError } = await supabase
         .from('clients')
         .select('*')
         .eq('email', email)
         .maybeSingle();
-      
+
       if (clientError) {
         console.error('Client sorgu hatası:', clientError);
         setLoading(false);
@@ -76,7 +73,7 @@ export default function ClientPanelPage() {
         .select('*')
         .eq('client_id', clients.id)
         .order('date', { ascending: false });
-      
+
       if (appts) {
         setAppointments(appts.map((a: any) => ({
           id: a.id,
@@ -93,14 +90,14 @@ export default function ClientPanelPage() {
           createdAt: a.created_at
         })));
       }
-      
+
       // Gelişim kayıtlarını yükle
       const { data: progress } = await supabase
         .from('progress_records')
         .select('*')
         .eq('client_id', clients.id)
         .order('session_date', { ascending: true });
-      
+
       if (progress) {
         setProgressRecords(progress.map((p: any) => ({
           id: p.id,
@@ -113,14 +110,14 @@ export default function ClientPanelPage() {
           summary: p.summary || p.notes || ''
         })));
       }
-      
+
       // Kaynakları yükle
       const { data: res } = await supabase
         .from('client_resources')
         .select('*')
         .eq('client_id', clients.id)
         .order('date', { ascending: false });
-      
+
       if (res) {
         setResources(res.map((r: any) => ({
           id: r.id,
@@ -140,9 +137,9 @@ export default function ClientPanelPage() {
     }
   };
 
-  const handleLogout = () => {
-    authHelpers.signOut();
-    navigate('/login');
+  const handleLogout = async () => {
+    await signOut();
+    navigate('/login', { replace: true });
   };
 
   const handleSubmitReview = async () => {
@@ -202,7 +199,7 @@ export default function ClientPanelPage() {
   if (!user || loading) {
     return (
       <>
-        <SEO 
+        <SEO
           title="Danışan Paneli - Reset Danışmanlık"
           description="Reset Danışmanlık danışan paneli"
         />
@@ -218,7 +215,7 @@ export default function ClientPanelPage() {
 
   return (
     <>
-      <SEO 
+      <SEO
         title="Danışan Paneli - Reset Danışmanlık"
         description="Reset Danışmanlık danışan paneli"
       />
@@ -248,22 +245,20 @@ export default function ClientPanelPage() {
             <div className="flex border-b border-gray-200">
               <button
                 onClick={() => setActiveTab('panel')}
-                className={`flex-1 px-6 py-4 font-medium transition-colors cursor-pointer ${
-                  activeTab === 'panel'
-                    ? 'text-teal-600 border-b-2 border-teal-600'
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
+                className={`flex-1 px-6 py-4 font-medium transition-colors cursor-pointer ${activeTab === 'panel'
+                  ? 'text-teal-600 border-b-2 border-teal-600'
+                  : 'text-gray-600 hover:text-gray-900'
+                  }`}
               >
                 <i className="ri-dashboard-line mr-2"></i>
                 Panelim
               </button>
               <button
                 onClick={() => setActiveTab('progress')}
-                className={`flex-1 px-6 py-4 font-medium transition-colors cursor-pointer ${
-                  activeTab === 'progress'
-                    ? 'text-teal-600 border-b-2 border-teal-600'
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
+                className={`flex-1 px-6 py-4 font-medium transition-colors cursor-pointer ${activeTab === 'progress'
+                  ? 'text-teal-600 border-b-2 border-teal-600'
+                  : 'text-gray-600 hover:text-gray-900'
+                  }`}
               >
                 <i className="ri-line-chart-line mr-2"></i>
                 Gelişimim
@@ -337,9 +332,8 @@ export default function ClientPanelPage() {
                               className="text-3xl transition-colors cursor-pointer"
                             >
                               <i
-                                className={`${
-                                  star <= rating ? 'ri-star-fill text-teal-600' : 'ri-star-line text-gray-300'
-                                }`}
+                                className={`${star <= rating ? 'ri-star-fill text-teal-600' : 'ri-star-line text-gray-300'
+                                  }`}
                               ></i>
                             </button>
                           ))}
@@ -412,13 +406,12 @@ export default function ClientPanelPage() {
                             {appointment.serviceType}
                           </span>
                           <span
-                            className={`px-2 py-1 text-xs font-medium rounded-full ${
-                              appointment.status === 'CONFIRMED'
-                                ? 'bg-green-100 text-green-700'
-                                : appointment.status === 'PENDING'
-                                  ? 'bg-yellow-100 text-yellow-700'
-                                  : 'bg-red-100 text-red-700'
-                            }`}
+                            className={`px-2 py-1 text-xs font-medium rounded-full ${appointment.status === 'CONFIRMED'
+                              ? 'bg-green-100 text-green-700'
+                              : appointment.status === 'PENDING'
+                                ? 'bg-yellow-100 text-yellow-700'
+                                : 'bg-red-100 text-red-700'
+                              }`}
                           >
                             {appointment.status === 'CONFIRMED'
                               ? 'Onaylandı'
@@ -447,18 +440,16 @@ export default function ClientPanelPage() {
                       <div key={resource.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
                         <div className="flex items-start justify-between mb-2">
                           <div className="flex items-center gap-2">
-                            <i className={`text-2xl ${
-                              resource.type === 'PDF' ? 'ri-file-pdf-line text-red-500' :
+                            <i className={`text-2xl ${resource.type === 'PDF' ? 'ri-file-pdf-line text-red-500' :
                               resource.type === 'NOTE' ? 'ri-file-text-line text-blue-500' :
-                              resource.type === 'AUDIO' ? 'ri-music-line text-purple-500' :
-                              'ri-link text-green-500'
-                            }`}></i>
-                            <span className={`text-xs font-medium px-2 py-1 rounded-full ${
-                              resource.type === 'PDF' ? 'bg-red-100 text-red-700' :
+                                resource.type === 'AUDIO' ? 'ri-music-line text-purple-500' :
+                                  'ri-link text-green-500'
+                              }`}></i>
+                            <span className={`text-xs font-medium px-2 py-1 rounded-full ${resource.type === 'PDF' ? 'bg-red-100 text-red-700' :
                               resource.type === 'NOTE' ? 'bg-blue-100 text-blue-700' :
-                              resource.type === 'AUDIO' ? 'bg-purple-100 text-purple-700' :
-                              'bg-green-100 text-green-700'
-                            }`}>
+                                resource.type === 'AUDIO' ? 'bg-purple-100 text-purple-700' :
+                                  'bg-green-100 text-green-700'
+                              }`}>
                               {resource.type}
                             </span>
                           </div>
@@ -626,10 +617,10 @@ export default function ClientPanelPage() {
                       <div key={record.id} className="border border-gray-200 rounded-lg p-4">
                         <div className="flex items-center justify-between mb-3">
                           <span className="text-sm font-medium text-gray-900">
-                            {new Date(record.sessionDate).toLocaleDateString('tr-TR', { 
-                              day: 'numeric', 
-                              month: 'long', 
-                              year: 'numeric' 
+                            {new Date(record.sessionDate).toLocaleDateString('tr-TR', {
+                              day: 'numeric',
+                              month: 'long',
+                              year: 'numeric'
                             })}
                           </span>
                           <div className="flex gap-4 text-xs">

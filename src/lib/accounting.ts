@@ -251,7 +251,43 @@ export const invoicesApi = {
       .single();
 
     if (error) throw error;
+
+    // Danışanın toplam borcunu güncelle
+    await this.updateClientTotals(invoice.client_id);
+
     return data;
+  },
+
+  /**
+   * Danışanın toplam borç ve ödeme bilgilerini güncelle
+   */
+  async updateClientTotals(clientId: string): Promise<void> {
+    // Danışanın tüm faturalarından toplam borcu hesapla (iptal edilmemiş)
+    const { data: invoices } = await supabase
+      .from('invoices')
+      .select('amount')
+      .eq('client_id', clientId)
+      .neq('status', 'cancelled');
+    
+    const totalDebt = (invoices || []).reduce((sum, inv) => sum + (inv.amount || 0), 0);
+
+    // Danışanın tüm ödemelerinden toplam ödemeyi hesapla
+    const { data: payments } = await supabase
+      .from('payments')
+      .select('amount')
+      .eq('client_id', clientId);
+    
+    const totalPaid = (payments || []).reduce((sum, pmt) => sum + (pmt.amount || 0), 0);
+
+    // Client tablosunu güncelle
+    await supabase
+      .from('clients')
+      .update({ 
+        total_debt: totalDebt,
+        total_paid: totalPaid,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', clientId);
   },
 
   /**
@@ -270,15 +306,61 @@ export const invoicesApi = {
   },
 
   /**
+   * Fatura sil (sadece ödenmemişler silinebilir)
+   */
+  async delete(id: string): Promise<void> {
+    // Önce faturayı al (client_id için)
+    const { data: invoice } = await supabase
+      .from('invoices')
+      .select('client_id')
+      .eq('id', id)
+      .single();
+
+    // Faturaya bağlı ödeme var mı kontrol et
+    const { data: payments } = await supabase
+      .from('payments')
+      .select('id')
+      .eq('invoice_id', id);
+    
+    if (payments && payments.length > 0) {
+      throw new Error('Bu faturaya bağlı ödemeler var. Önce ödemeleri silin.');
+    }
+
+    const { error } = await supabase
+      .from('invoices')
+      .delete()
+      .eq('id', id);
+
+    if (error) throw error;
+
+    // Danışanın toplam borcunu güncelle
+    if (invoice?.client_id) {
+      await this.updateClientTotals(invoice.client_id);
+    }
+  },
+
+  /**
    * Fatura iptal et
    */
   async cancel(id: string): Promise<void> {
+    // Önce faturayı al (client_id için)
+    const { data: invoice } = await supabase
+      .from('invoices')
+      .select('client_id')
+      .eq('id', id)
+      .single();
+
     const { error } = await supabase
       .from('invoices')
       .update({ status: 'cancelled' })
       .eq('id', id);
 
     if (error) throw error;
+
+    // Danışanın toplam borcunu güncelle (iptal edilen fatura borçtan düşer)
+    if (invoice?.client_id) {
+      await this.updateClientTotals(invoice.client_id);
+    }
   },
 
   /**
@@ -410,19 +492,136 @@ export const paymentsApi = {
       .single();
 
     if (error) throw error;
+
+    // Faturaya bağlı ödeme ise fatura durumunu güncelle
+    if (payment.invoice_id) {
+      await this.updateInvoiceStatus(payment.invoice_id);
+    }
+
+    // Danışanın toplam ödemesini güncelle
+    await invoicesApi.updateClientTotals(payment.client_id);
+
     return data;
+  },
+
+  /**
+   * Ödeme güncelle (yöntem, tutar, açıklama değiştirme)
+   */
+  async update(id: string, updates: {
+    amount?: number;
+    payment_method?: 'cash' | 'credit_card' | 'bank_transfer' | 'other';
+    description?: string;
+    payment_date?: string;
+  }): Promise<Payment> {
+    // Önce mevcut ödemeyi al (invoice_id ve client_id için)
+    const { data: existingPayment } = await supabase
+      .from('payments')
+      .select('invoice_id, amount, client_id')
+      .eq('id', id)
+      .single();
+
+    const { data, error } = await supabase
+      .from('payments')
+      .update({
+        ...updates,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    // Tutar değiştiyse
+    if (updates.amount !== undefined && updates.amount !== existingPayment?.amount) {
+      // Faturaya bağlıysa, fatura durumunu güncelle
+      if (existingPayment?.invoice_id) {
+        await this.updateInvoiceStatus(existingPayment.invoice_id);
+      }
+      // Danışanın toplam ödemesini güncelle
+      if (existingPayment?.client_id) {
+        await invoicesApi.updateClientTotals(existingPayment.client_id);
+      }
+    }
+
+    return data;
+  },
+
+  /**
+   * Fatura ödeme durumunu güncelle
+   */
+  async updateInvoiceStatus(invoiceId: string): Promise<void> {
+    // Fatura bilgisini al
+    const { data: invoice, error: invError } = await supabase
+      .from('invoices')
+      .select('amount')
+      .eq('id', invoiceId)
+      .single();
+    
+    if (invError || !invoice) return;
+
+    // Faturaya yapılan toplam ödemeyi hesapla
+    const { data: payments, error: payError } = await supabase
+      .from('payments')
+      .select('amount')
+      .eq('invoice_id', invoiceId);
+    
+    if (payError) return;
+
+    const totalPaid = (payments || []).reduce((sum, p) => sum + (p.amount || 0), 0);
+    
+    // Fatura durumunu belirle
+    let newStatus: 'paid' | 'partial' | 'unpaid';
+    if (totalPaid >= invoice.amount) {
+      newStatus = 'paid';
+    } else if (totalPaid > 0) {
+      newStatus = 'partial';
+    } else {
+      newStatus = 'unpaid';
+    }
+
+    // Faturayı güncelle
+    await supabase
+      .from('invoices')
+      .update({ 
+        paid_amount: totalPaid,
+        status: newStatus,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', invoiceId);
   },
 
   /**
    * Ödeme sil
    */
   async delete(id: string): Promise<void> {
+    // Önce ödemenin bilgilerini al
+    const { data: payment } = await supabase
+      .from('payments')
+      .select('invoice_id, client_id')
+      .eq('id', id)
+      .single();
+    
+    const invoiceId = payment?.invoice_id;
+    const clientId = payment?.client_id;
+
+    // Ödemeyi sil
     const { error } = await supabase
       .from('payments')
       .delete()
       .eq('id', id);
 
     if (error) throw error;
+
+    // Faturaya bağlı ödeme ise fatura durumunu güncelle
+    if (invoiceId) {
+      await this.updateInvoiceStatus(invoiceId);
+    }
+
+    // Danışanın toplam ödemesini güncelle
+    if (clientId) {
+      await invoicesApi.updateClientTotals(clientId);
+    }
   },
 
   /**

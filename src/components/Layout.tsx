@@ -3,7 +3,7 @@ import { Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
 import Header from './feature/Header';
 import Footer from './feature/Footer';
-import CookieBanner from './CookieBanner';
+import CookieBanner from './feature/CookieBanner';
 
 export default function Layout() {
   return (

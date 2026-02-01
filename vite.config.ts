@@ -69,7 +69,7 @@ export default defineConfig({
   base,
   build: {
     sourcemap: true,
-    outDir: "out",
+    outDir: "HOSTINGER_UPLOAD",
   },
   resolve: {
     alias: {

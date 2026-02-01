@@ -121,4 +121,6 @@ export type UpdateContentInput = {
   instagram?: string;
   youtube?: string;
   image?: string;
+  story?: string;
+  text_color?: string;
 };

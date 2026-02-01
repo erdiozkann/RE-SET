@@ -1,11 +1,26 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { contentApi } from '../../lib/api';
+import type { ContactInfo } from '../../types';
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [contactInfo, setContactInfo] = useState<ContactInfo | null>(null);
   const location = useLocation();
 
   const isActive = (path: string) => location.pathname === path;
+
+  useEffect(() => {
+    const fetchContactInfo = async () => {
+      try {
+        const data = await contentApi.getContactInfo();
+        if (data) setContactInfo(data);
+      } catch (error) {
+        console.error('Header contact info fetch error:', error);
+      }
+    };
+    fetchContactInfo();
+  }, []);
 
   const navLinks = [
     { path: '/', label: 'Ana Sayfa' },
@@ -23,11 +38,7 @@ export default function Header() {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center cursor-pointer">
-            <img 
-              src="https://static.readdy.ai/image/6c432e190935318471b81dba0ca536b3/f8cacb0d1ad0c1f4f6e313d7c034bd99.png" 
-              alt="Reset Logo" 
-              className="h-12 w-auto"
-            />
+            <span className="text-2xl font-serif font-bold text-[#1A1A1A]">RESET</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -36,15 +47,26 @@ export default function Header() {
               <Link
                 key={link.path}
                 to={link.path}
-                className={`text-sm font-medium transition-colors cursor-pointer whitespace-nowrap ${
-                  isActive(link.path)
-                    ? 'text-[#D4AF37]'
-                    : 'text-gray-700 hover:text-[#D4AF37]'
-                }`}
+                className={`text-sm font-medium transition-colors cursor-pointer whitespace-nowrap ${isActive(link.path)
+                  ? 'text-[#D4AF37]'
+                  : 'text-gray-700 hover:text-[#D4AF37]'
+                  }`}
               >
                 {link.label}
               </Link>
             ))}
+
+            {/* YouTube Button (Dinamik) */}
+            {contactInfo?.youtube && (
+              <Link
+                to="/youtube"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all cursor-pointer bg-red-600 text-white hover:bg-red-700"
+              >
+                <i className="ri-youtube-fill text-lg"></i>
+                <span className="text-sm font-medium">YouTube</span>
+              </Link>
+            )}
+
             <Link
               to="/login"
               className="bg-[#D4AF37] text-[#1A1A1A] px-6 py-2 font-medium whitespace-nowrap cursor-pointer transition-all hover:bg-[#C19B2E]"
@@ -72,15 +94,27 @@ export default function Header() {
                 key={link.path}
                 to={link.path}
                 onClick={() => setMobileMenuOpen(false)}
-                className={`block py-2 text-base font-medium cursor-pointer ${
-                  isActive(link.path)
-                    ? 'text-[#D4AF37]'
-                    : 'text-gray-700'
-                }`}
+                className={`block py-2 text-base font-medium cursor-pointer ${isActive(link.path)
+                  ? 'text-[#D4AF37]'
+                  : 'text-gray-700'
+                  }`}
               >
                 {link.label}
               </Link>
             ))}
+
+            {/* YouTube Button - Mobile */}
+            {contactInfo?.youtube && (
+              <Link
+                to="/youtube"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-2 py-2 text-red-600 font-medium cursor-pointer"
+              >
+                <i className="ri-youtube-fill text-xl"></i>
+                YouTube
+              </Link>
+            )}
+
             <Link
               to="/login"
               onClick={() => setMobileMenuOpen(false)}

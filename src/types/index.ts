@@ -149,8 +149,8 @@ export interface AdminUser {
 }
 
 export interface User {
+  id?: string; // Supabase Auth ID
   email: string;
-  password?: string;
   name: string;
   role: 'ADMIN' | 'CLIENT';
   approved?: boolean;
@@ -243,6 +243,7 @@ export interface HeroContent {
   titleSize?: string;
   descriptionSize?: string;
   image?: string;
+  text_color?: string;
 }
 
 export interface AboutContent {
@@ -250,8 +251,10 @@ export interface AboutContent {
   title: string;
   paragraph1: string;
   paragraph2: string;
+  story?: string;
   location: string;
   image?: string;
+  text_color?: string;
 }
 
 export interface ContactInfo {
@@ -294,4 +297,143 @@ export interface PodcastEpisode {
   image: string;
   audioUrl: string;
   date: string;
+}
+
+export interface YouTubeVideo {
+  id: string;
+  title: string;
+  description: string;
+  youtubeId: string;
+  thumbnail?: string;
+  duration: string;
+  publishedAt: string;
+  isPublished: boolean;
+  viewCount: number;
+  category: string;
+}
+
+// ============================================
+// 📱 SOSYAL MEDYA TİPLERİ
+// ============================================
+
+export interface InstagramAccount {
+  id: string;
+  username: string;
+  bio?: string;
+  profileImageUrl?: string;
+  followersCount: number;
+  followingCount: number;
+  postsCount: number;
+  isActive: boolean;
+  lastSyncAt?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface SocialMediaCampaign {
+  id: string;
+  title: string;
+  description?: string;
+  platform: 'instagram' | 'youtube' | 'tiktok' | 'twitter' | 'linkedin';
+  content: string;
+  mediaUrls?: string[];
+  startDate: string;
+  endDate?: string;
+  status: 'draft' | 'published' | 'scheduled' | 'completed';
+  engagementCount: number;
+  reach: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface SocialMediaAnalytics {
+  id: string;
+  platform: string;
+  metricName: string;
+  metricValue: number;
+  dateRecorded: string;
+  createdAt: string;
+}
+
+// ============================================
+// 📊 REKLAM TAKIP TİPLERİ (Google Ads & Meta)
+// ============================================
+
+export interface AdAccount {
+  id: string;
+  platform: 'google_ads' | 'meta_ads' | 'tiktok_ads';
+  accountName: string;
+  accountId?: string;
+  apiKey?: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AdCampaign {
+  id: string;
+  platform: 'google_ads' | 'meta_ads' | 'tiktok_ads';
+  campaignId?: string;
+  campaignName: string;
+  campaignType?: string;
+  status?: 'active' | 'paused' | 'ended';
+  budget?: number;
+  spent: number;
+  startDate?: string;
+  endDate?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AdMetrics {
+  id: string;
+  campaignId: string;
+  platform: string;
+  dateRecorded: string;
+
+  impressions: number;
+  clicks: number;
+  ctr?: number;
+
+  conversions: number;
+  conversionValue?: number;
+  costPerConversion?: number;
+
+  cost: number;
+  cpc?: number;
+  cpm?: number;
+
+  views?: number;
+  watchTimeMinutes?: number;
+  engagements?: number;
+
+  createdAt: string;
+}
+
+export interface AdConversion {
+  id: string;
+  campaignId: string;
+  platform: string;
+  conversionType?: string;
+  conversionName?: string;
+
+  conversionCount: number;
+  conversionValue?: number;
+  costPerAcquisition?: number;
+
+  dateRecorded: string;
+  createdAt: string;
+}
+
+export interface AdROISummary {
+  id: string;
+  platform: string;
+  month: string;
+
+  totalSpend: number;
+  totalRevenue?: number;
+  roiPercentage?: number;
+
+  createdAt: string;
+  updatedAt: string;
 }

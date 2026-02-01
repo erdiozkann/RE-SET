@@ -7,10 +7,12 @@ const AboutPage = lazy(() => import('../pages/about/page'));
 const MethodsPage = lazy(() => import('../pages/methods/page'));
 const BlogPage = lazy(() => import('../pages/blog/page'));
 const PodcastPage = lazy(() => import('../pages/podcast/page'));
+const YouTubePage = lazy(() => import('../pages/youtube/page'));
 const BookingPage = lazy(() => import('../pages/booking/page'));
 const ContactPage = lazy(() => import('../pages/contact/page'));
 const LoginPage = lazy(() => import('../pages/login/page'));
 const RegisterPage = lazy(() => import('../pages/register/page'));
+const ResetPasswordPage = lazy(() => import('../pages/reset-password/page'));
 const AdminPage = lazy(() => import('../pages/admin/page'));
 const ClientPanelPage = lazy(() => import('../pages/client-panel/page'));
 const KVKKPage = lazy(() => import('../pages/kvkk/page'));
@@ -18,6 +20,8 @@ const PrivacyPage = lazy(() => import('../pages/privacy/page'));
 const CopyrightPage = lazy(() => import('../pages/copyright/page'));
 const NotFoundPage = lazy(() => import('../pages/NotFound'));
 import CookiesPage from '../pages/cookies/page';
+
+import ProtectedRoute from '../components/ProtectedRoute';
 
 const routes: RouteObject[] = [
   {
@@ -29,6 +33,7 @@ const routes: RouteObject[] = [
       { path: 'methods', element: <MethodsPage /> },
       { path: 'blog', element: <BlogPage /> },
       { path: 'podcast', element: <PodcastPage /> },
+      { path: 'youtube', element: <YouTubePage /> },
       { path: 'booking', element: <BookingPage /> },
       { path: 'contact', element: <ContactPage /> },
       { path: 'kvkk', element: <KVKKPage /> },
@@ -45,12 +50,24 @@ const routes: RouteObject[] = [
     element: <RegisterPage />,
   },
   {
+    path: '/reset-password',
+    element: <ResetPasswordPage />,
+  },
+  {
     path: '/admin',
-    element: <AdminPage />,
+    element: (
+      <ProtectedRoute requireAdmin>
+        <AdminPage />
+      </ProtectedRoute>
+    ),
   },
   {
     path: '/client-panel',
-    element: <ClientPanelPage />,
+    element: (
+      <ProtectedRoute>
+        <ClientPanelPage />
+      </ProtectedRoute>
+    ),
   },
   {
     path: '/cookies',

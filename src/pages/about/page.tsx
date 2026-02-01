@@ -2,33 +2,32 @@ import { useEffect, useState } from 'react';
 import Button from '../../components/base/Button';
 import type { Certificate } from '../../types';
 import SEO from '../../components/SEO';
-import { supabase } from '../../lib/supabase';
+import { certificatesApi, contentApi } from '../../lib/api';
 
 export default function About() {
   const [certificates, setCertificates] = useState<Certificate[]>([]);
+  const [aboutContent, setAboutContent] = useState<any>(null);
   const [heroImage, setHeroImage] = useState<string>('');
 
   useEffect(() => {
     const fetchData = async () => {
-      // Fetch certificates
-      const { data: certsData } = await supabase
-        .from('certificates')
-        .select('*')
-        .order('year', { ascending: false });
-      
-      if (certsData) {
-        setCertificates(certsData);
-      }
+      try {
+        // Fetch certificates
+        const certsData = await certificatesApi.getAll();
+        if (certsData) {
+          setCertificates(certsData);
+        }
 
-      // Fetch hero image
-      const { data: imagesData } = await supabase
-        .from('profile_images')
-        .select('*')
-        .eq('location', 'about-hero')
-        .single();
-      
-      if (imagesData) {
-        setHeroImage(imagesData.url);
+        // Fetch about content from API
+        const aboutData = await contentApi.getAboutContents();
+        if (aboutData && aboutData.length > 0) {
+          setAboutContent(aboutData[0]);
+          if (aboutData[0].image) {
+            setHeroImage(aboutData[0].image);
+          }
+        }
+      } catch (error) {
+        console.error('Veri yüklenemedi:', error);
       }
     };
 
@@ -42,15 +41,15 @@ export default function About() {
       "@context": "https://schema.org",
       "@type": "Person",
       "name": "Şafak Özkan",
-      "jobTitle": "Yaşam Koçu, Demartini Metodu Uygulayıcısı ve Kişisel Gelişim Uzmanı",
-      "description": "İstanbul'da Demartini Metodu uygulayıcısı ve yaşam koçu. 15 yılı aşkın deneyimle binlerce kişinin hayatına dokundum. Değer belirleme, yaşam koçluğu ve mindfulness alanlarında uzmanım.",
+      "jobTitle": "Sertifikalı Demartini Metodu Uygulayıcısı",
+      "description": "İstanbul'da Demartini Metodu uygulayıcısı. 15 yılı aşkın deneyimle binlerce kişinin hayatına dokundum. Değer belirleme, yaşam dengeleme ve Breakthrough Experience alanlarında uzmanım.",
       "url": `${siteUrl}/about`,
       "image": heroImage,
       "alumniOf": certificates.map(cert => ({
         "@type": "EducationalOrganization",
         "name": cert.organization
       })),
-      "knowsAbout": ["Demartini Metodu", "Yaşam Koçluğu", "Kişisel Gelişim", "Mindfulness", "NLP", "İlişki Danışmanlığı", "Kariyer Koçluğu", "Değer Belirleme"],
+      "knowsAbout": ["Demartini Metodu", "Değer Belirleme", "Breakthrough Experience", "Yaşam Dengeleme", "Kişisel Dönüşüm", "Quantum Collapse Process"],
       "hasCredential": certificates.map(cert => ({
         "@type": "EducationalOccupationalCredential",
         "name": cert.title,
@@ -78,7 +77,7 @@ export default function About() {
           "name": "Şafak Özkan kimdir?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Şafak Özkan, İstanbul'da faaliyet gösteren sertifikalı bir Demartini Metodu uygulayıcısı, yaşam koçu ve kişisel gelişim uzmanıdır. 15 yılı aşkın deneyimiyle binlerce kişinin hayatına dokunmuştur."
+            "text": "Şafak Özkan, İstanbul'da faaliyet gösteren sertifikalı Demartini Metodu uygulayıcısıdır. 15 yılı aşkın deneyimiyle binlerce kişinin Demartini Metodu ile yaşam dönüşümüne rehberlik etmiştir."
           }
         }
       ]
@@ -88,39 +87,45 @@ export default function About() {
   return (
     <>
       <SEO
-        title="Şafak Özkan | Demartini Metodu Uygulayıcısı ve Yaşam Koçu İstanbul"
-        description="İstanbul'da Demartini Metodu uygulayıcısı Şafak Özkan hakkında. 15 yılı aşkın deneyimle yaşam koçluğu, kişisel gelişim ve değer belirleme alanlarında uzman. Uluslararası sertifikalı yaşam koçu."
-        keywords="şafak özkan, demartini metodu uygulayıcısı, demartini metodu istanbul, yaşam koçu istanbul, kişisel gelişim uzmanı, mindfulness, nlp, değer belirleme"
+        title="Şafak Özkan | Sertifikalı Demartini Metodu Uygulayıcısı İstanbul"
+        description="İstanbul'da sertifikalı Demartini Metodu uygulayıcısı Şafak Özkan. 15 yılı aşkın deneyimle değer belirleme, Breakthrough Experience ve yaşam dengeleme alanlarında uzman."
+        keywords="şafak özkan, demartini metodu uygulayıcısı, demartini metodu istanbul, değer belirleme, breakthrough experience, yaşam dengeleme, demartini metodu türkiye"
         schema={schema}
       />
       <div className="bg-white">
         {/* Hero Section */}
-        <section className="relative py-20 md:py-32 bg-gradient-to-br from-[#F5F5F5] to-white">
+        <section className="relative py-12 md:py-20 bg-gradient-to-br from-[#F5F5F5] to-white">
           <div className="max-w-7xl mx-auto px-4 md:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
               <div>
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif text-[#1A1A1A] mb-6 leading-tight">
-                  Şafak Özkan
+                <h1
+                  className="text-3xl md:text-4xl lg:text-5xl font-serif mb-4 leading-tight"
+                  style={{ color: aboutContent?.text_color || '#1A1A1A' }}
+                >
+                  {aboutContent?.title || 'Şafak Özkan'}
                 </h1>
-                <p className="text-xl md:text-2xl text-[#D4AF37] mb-6 font-medium">
-                  Yaşam Koçu & Kişisel Gelişim Uzmanı
+                <p className="text-lg md:text-xl text-[#D4AF37] mb-4 font-medium">
+                  Sertifikalı Demartini Metodu Uygulayıcısı
                 </p>
-                <p className="text-lg text-gray-600 leading-relaxed mb-8">
-                  15 yılı aşkın deneyimle binlerce kişinin hayatına dokundum. 
-                  Yaşam koçluğu, kişisel gelişim ve mindfulness alanlarındaki uzmanlığımla 
-                  size de kendi potansiyelinizi keşfetmenizde yardımcı oluyorum.
+                <p className="text-base text-gray-600 leading-relaxed mb-6">
+                  {aboutContent?.paragraph1 || '15 yılı aşkın deneyimle binlerce kişinin hayatına dokundum. Demartini Metodu, değer belirleme ve Breakthrough Experience alanlarındaki uzmanlığımla size de kendi potansiyelinizi keşfetmenizde yardımcı oluyorum.'}
                 </p>
                 <Button variant="primary" size="lg">
                   Randevu Al
                 </Button>
               </div>
               <div className="relative flex justify-center">
-                <div className="aspect-square w-full max-w-lg rounded-2xl overflow-hidden">
-                  <img 
-                    src={heroImage || 'https://readdy.ai/api/search-image?query=Professional%20portrait%20of%20a%20confident%20life%20coach%20woman%20in%20her%2040s%2C%20warm%20smile%2C%20professional%20attire%2C%20natural%20lighting%2C%20minimal%20background%2C%20inspiring%20and%20trustworthy%20appearance%2C%20high%20quality%20professional%20photography&width=600&height=600&seq=safak1&orientation=squarish'}
-                    alt="Şafak Özkan"
-                    className="w-full h-full object-cover object-center"
-                  />
+                <div className="aspect-square w-full max-w-md rounded-2xl overflow-hidden bg-gray-100 flex items-center justify-center shadow-lg">
+                  {heroImage ? (
+                    <img
+                      src={heroImage}
+                      alt="Şafak Özkan"
+                      className="w-full h-full object-cover object-center"
+                      fetchPriority="high"
+                    />
+                  ) : (
+                    <i className="ri-user-smile-line text-6xl text-gray-300"></i>
+                  )}
                 </div>
               </div>
             </div>
@@ -128,39 +133,49 @@ export default function About() {
         </section>
 
         {/* Hikayem */}
-        <section className="py-16 md:py-24 bg-white">
+        <section className="py-12 md:py-16 bg-white">
           <div className="max-w-4xl mx-auto px-4 md:px-8">
-            <h2 className="text-3xl md:text-4xl font-serif text-[#1A1A1A] mb-8 text-center">
+            <h2 className="text-2xl md:text-3xl font-serif text-[#1A1A1A] mb-6 text-center">
               Hikayem
             </h2>
             <div className="prose prose-lg max-w-none text-gray-700">
-              <p className="mb-6 leading-relaxed">
-                Hayatımın büyük bir bölümünde, başkalarının beklentilerini karşılamaya odaklanmış, 
-                kendi iç sesimi duymakta zorlandığım bir dönem yaşadım. Kurumsal dünyada geçirdiğim 
-                yıllar boyunca başarılı görünürken, içimde derin bir boşluk hissediyordum.
-              </p>
-              <p className="mb-6 leading-relaxed">
-                Bu iç yolculuk, beni yaşam koçluğu ve kişisel gelişim dünyasıyla tanıştırdı. 
-                Önce kendi hayatımı dönüştürdüm, sonra bu dönüşümün gücünü başkalarıyla paylaşma 
-                arzusu doğdu. Uluslararası sertifikalarımı aldım, sürekli eğitimlerle kendimi 
-                geliştirdim ve bugün buradayım.
-              </p>
-              <p className="mb-0 leading-relaxed">
-                Artık biliyorum ki, gerçek değişim içeriden başlar. Her bireyin kendine özgü bir 
-                potansiyeli vardır ve bu potansiyeli ortaya çıkarmak için sadece doğru rehberliğe 
-                ve içsel farkındalığa ihtiyaç vardır.
-              </p>
+              {aboutContent?.story ? (
+                aboutContent.story.split('\n').map((paragraph: string, index: number) => (
+                  paragraph.trim() && (
+                    <p key={index} className="mb-4 leading-relaxed">
+                      {paragraph}
+                    </p>
+                  )
+                ))
+              ) : (
+                <>
+                  <p className="mb-4 leading-relaxed">
+                    Hayatımın büyük bir bölümünde, başkalarının beklentilerini karşılamaya odaklanmış,
+                    kendi iç sesimi duymakta zorlandığım bir dönem yaşadım. Kurumsal dünyada geçirdiğim
+                    yıllar boyunca başarılı görünürken, içimde derin bir boşluk hissediyordum.
+                  </p>
+                  <p className="mb-4 leading-relaxed">
+                    Bu iç yolculuk, beni Demartini Metodu ve değer belirleme dünyasıyla tanıştırdı.
+                    Önce kendi hayatımı dönüştürdüm, sonra bu dönüşümün gücünü başkalarıyla paylaşma
+                    arzusu doğdu. Dr. John Demartini'den aldığım uluslararası sertifikalarımla
+                    ve sürekli eğitimlerle kendimi geliştirdim ve bugün buradayım.
+                  </p>
+                  <p className="mb-0 leading-relaxed">
+                    {aboutContent?.paragraph2 || 'Artık biliyorum ki, gerçek değişim içeriden başlar. Her bireyin kendine özgü bir potansiyeli vardır ve bu potansiyeli ortaya çıkarmak için sadece doğru rehberliğe ve içsel farkındalığa ihtiyaç vardır.'}
+                  </p>
+                </>
+              )}
             </div>
           </div>
         </section>
 
         {/* Sertifikalar & Eğitimler */}
-        <section className="py-16 md:py-24 bg-[#F5F5F5]">
+        <section className="py-12 md:py-16 bg-[#F5F5F5]">
           <div className="max-w-7xl mx-auto px-4 md:px-8">
-            <h2 className="text-3xl md:text-4xl font-serif text-[#1A1A1A] mb-12 text-center">
+            <h2 className="text-2xl md:text-3xl font-serif text-[#1A1A1A] mb-8 text-center">
               Sertifikalar & Eğitimler
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {certificates.map((cert) => (
                 <div key={cert.id} className="bg-white p-6 rounded-xl">
                   <h3 className="text-lg font-semibold text-[#1A1A1A] mb-2">
@@ -179,12 +194,12 @@ export default function About() {
         </section>
 
         {/* Yaklaşımım */}
-        <section className="py-16 md:py-24 bg-white">
+        <section className="py-12 md:py-16 bg-white">
           <div className="max-w-6xl mx-auto px-4 md:px-8">
-            <h2 className="text-3xl md:text-4xl font-serif text-[#1A1A1A] mb-12 text-center">
+            <h2 className="text-2xl md:text-3xl font-serif text-[#1A1A1A] mb-8 text-center">
               Yaklaşımım
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {[
                 {
                   icon: "ri-heart-line",
@@ -224,13 +239,13 @@ export default function About() {
         </section>
 
         {/* CTA */}
-        <section className="py-16 md:py-24 bg-gradient-to-br from-[#1A1A1A] to-[#2A2A2A]">
+        <section className="py-12 md:py-16 bg-gradient-to-br from-[#1A1A1A] to-[#2A2A2A]">
           <div className="max-w-4xl mx-auto px-4 md:px-8 text-center">
-            <h2 className="text-3xl md:text-4xl font-serif text-white mb-6">
+            <h2 className="text-2xl md:text-3xl font-serif text-white mb-4">
               Birlikte Yolculuğa Çıkmaya Hazır mısınız?
             </h2>
-            <p className="text-lg text-white/80 mb-8 leading-relaxed">
-              Değişim için ilk adımı atmaya hazır olduğunuzda, ben burada olacağım. 
+            <p className="text-base text-white/80 mb-6 leading-relaxed">
+              Değişim için ilk adımı atmaya hazır olduğunuzda, ben burada olacağım.
               Ücretsiz keşif seansınızı rezerve edin.
             </p>
             <Button variant="primary" size="lg">

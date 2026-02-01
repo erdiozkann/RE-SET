@@ -39,7 +39,7 @@ export default function MethodsPage() {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
       name: 'Demartini Metodu ve Danışmanlık Yöntemleri',
-      description: 'Demartini Metodu, NLP, Mindfulness ve diğer kanıta dayalı psikolojik danışmanlık yöntemleri hakkında bilgi edinin.',
+      description: 'Demartini Metodu, Breakthrough Experience, değer belirleme ve diğer kanıta dayalı yaşam dönüşümü yöntemleri hakkında bilgi edinin.',
       url: `${siteUrl}/methods`,
       mainEntity: {
         '@type': 'ItemList',
@@ -73,13 +73,13 @@ export default function MethodsPage() {
       provider: {
         '@type': 'Person',
         name: 'Şafak Özkan',
-        jobTitle: 'Yaşam Koçu ve Demartini Metodu Uygulayıcısı'
+        jobTitle: 'Sertifikalı Demartini Metodu Uygulayıcısı'
       },
       areaServed: {
         '@type': 'City',
         name: 'İstanbul'
       },
-      serviceType: 'Psikolojik Danışmanlık'
+      serviceType: 'Demartini Metodu Danışmanlığı'
     }
   ];
 
@@ -87,23 +87,23 @@ export default function MethodsPage() {
     <>
       <SEO
         title="Demartini Metodu ve Danışmanlık Yöntemleri | Reset - Şafak Özkan"
-        description="Demartini Metodu, NLP, Mindfulness ve kanıta dayalı psikolojik danışmanlık yöntemleri. İstanbul'da profesyonel yaşam koçluğu ve Demartini Metodu uygulayıcısı."
-        keywords="demartini metodu, demartini metodu istanbul, demartini metodu nedir, nlp, mindfulness, yaşam koçluğu, psikolojik danışmanlık, değer belirleme, kişisel gelişim"
+        description="Demartini Metodu, Breakthrough Experience, değer belirleme ve kanıta dayalı yaşam dönüşümü yöntemleri. İstanbul'da sertifikalı Demartini Metodu uygulayıcısı."
+        keywords="demartini metodu, demartini metodu istanbul, demartini metodu nedir, breakthrough experience, değer belirleme, yaşam dengeleme, demartini metodu türkiye"
         schema={schema}
       />
 
-      <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-amber-50 py-20">
+      <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-amber-50 py-12 md:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h1 className="text-4xl md:text-5xl font-serif text-gray-900 mb-6">
+          <div className="text-center mb-10">
+            <h1 className="text-3xl md:text-4xl font-serif text-gray-900 mb-4">
               Kullandığım Yöntemler
             </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-base md:text-lg text-gray-600 max-w-3xl mx-auto">
               Kanıta dayalı, etkili terapi yöntemleri ile size özel danışmanlık hizmeti sunuyorum
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {isLoading ? (
               <>
                 <MethodSkeleton />
@@ -131,18 +131,18 @@ export default function MethodsPage() {
             )}
           </div>
 
-          <div className="mt-16 text-center">
-            <div className="bg-white rounded-2xl p-8 shadow-lg max-w-3xl mx-auto">
-              <h2 className="text-2xl font-serif text-gray-900 mb-4">
+          <div className="mt-12 text-center">
+            <div className="bg-white rounded-2xl p-6 md:p-8 shadow-lg max-w-3xl mx-auto">
+              <h2 className="text-xl md:text-2xl font-serif text-gray-900 mb-3">
                 Size Özel Bir Yaklaşım
               </h2>
-              <p className="text-gray-600 mb-6">
+              <p className="text-gray-600 mb-5 text-sm md:text-base">
                 Her bireyin ihtiyaçları farklıdır. Bu nedenle, yukarıdaki yöntemleri sizin özel
                 durumunuza göre birleştirerek kişiselleştirilmiş bir terapi planı oluşturuyorum.
               </p>
               <a
                 href="/booking"
-                className="inline-block px-8 py-4 bg-gradient-to-r from-teal-500 to-teal-600 text-white rounded-full font-semibold hover:from-teal-600 hover:to-teal-700 transition-all shadow-lg"
+                className="inline-block px-6 py-3 bg-gradient-to-r from-teal-500 to-teal-600 text-white rounded-full font-semibold hover:from-teal-600 hover:to-teal-700 transition-all shadow-lg text-sm md:text-base"
               >
                 Randevu Alın
               </a>

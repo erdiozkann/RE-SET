@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import DOMPurify from 'dompurify';
 import { certificatesApi, contentApi, storageApi } from '../../../lib/api';
 import { useToast } from '../../../components/ToastContainer';
 import { getUserFriendlyErrorMessage } from '../../../lib/errors';
@@ -29,13 +30,16 @@ export default function ContentTab() {
     description: '',
     titleSize: 'text-5xl md:text-6xl',
     descriptionSize: 'text-xl',
-    image: ''
+    image: '',
+    text_color: '#1A1A1A'
   });
   const [aboutForm, setAboutForm] = useState({
     title: '',
     paragraph1: '',
     paragraph2: '',
-    image: ''
+    image: '',
+    story: '',
+    text_color: '#1A1A1A'
   });
   const [heroImageUploadMethod, setHeroImageUploadMethod] = useState<'url' | 'file'>('url');
   const [aboutImageUploadMethod, setAboutImageUploadMethod] = useState<'url' | 'file'>('url');
@@ -58,6 +62,11 @@ export default function ContentTab() {
   const [kvkkContent, setKvkkContent] = useState('');
   const [editingKvkk, setEditingKvkk] = useState(false);
   const [savingKvkk, setSavingKvkk] = useState(false);
+
+  // Gizlilik Politikası State
+  const [privacyContent, setPrivacyContent] = useState('');
+  const [editingPrivacy, setEditingPrivacy] = useState(false);
+  const [savingPrivacy, setSavingPrivacy] = useState(false);
 
   // Çerez Politikası State
   const [cookiesContent, setCookiesContent] = useState('');
@@ -87,7 +96,8 @@ export default function ContentTab() {
           description: heroData[0].description,
           titleSize: heroData[0].titleSize || 'text-5xl md:text-6xl',
           descriptionSize: heroData[0].descriptionSize || 'text-xl',
-          image: heroData[0].image || ''
+          image: heroData[0].image || '',
+          text_color: heroData[0].text_color || '#1A1A1A'
         });
       }
 
@@ -99,7 +109,13 @@ export default function ContentTab() {
           title: aboutData[0].title,
           paragraph1: aboutData[0].paragraph1,
           paragraph2: aboutData[0].paragraph2,
-          image: aboutData[0].image || ''
+          image: aboutData[0].image || '',
+          story: aboutData[0].story || `Hayatımın büyük bir bölümünde, başkalarının beklentilerini karşılamaya odaklanmış, kendi iç sesimi duymakta zorlandığım bir dönem yaşadım. Kurumsal dünyada geçirdiğim yıllar boyunca başarılı görünürken, içimde derin bir boşluk hissediyordum.
+
+Bu iç yolculuk, beni Demartini Metodu ve değer belirleme dünyasıyla tanıştırdı. Önce kendi hayatımı dönüştürdüm, sonra bu dönüşümün gücünü başkalarıyla paylaşma arzusu doğdu. Dr. John Demartini'den aldığım uluslararası sertifikalarımla ve sürekli eğitimlerle kendimi geliştirdim ve bugün buradayım.
+
+Artık biliyorum ki, gerçek değişim içeriden başlar. Her bireyin kendine özgü bir potansiyeli vardır ve bu potansiyeli ortaya çıkarmak için sadece doğru rehberliğe ve içsel farkındalığa ihtiyaç vardır.`,
+          text_color: aboutData[0].text_color || '#1A1A1A'
         });
       }
 
@@ -118,6 +134,12 @@ export default function ContentTab() {
       const kvkkData = await contentApi.getKvkkContent();
       if (kvkkData) {
         setKvkkContent(kvkkData.content);
+      }
+
+      // Gizlilik politikası içeriğini yükle
+      const privacyData = await contentApi.getPrivacyContent();
+      if (privacyData) {
+        setPrivacyContent(privacyData.content);
       }
 
       // Çerez politikası içeriğini yükle
@@ -142,6 +164,20 @@ export default function ContentTab() {
       toast.error(`KVKK metni kaydedilemedi: ${message}`);
     } finally {
       setSavingKvkk(false);
+    }
+  };
+
+  const handleSavePrivacy = async () => {
+    setSavingPrivacy(true);
+    try {
+      await contentApi.updatePrivacyContent(privacyContent);
+      toast.success('Gizlilik politikası başarıyla güncellendi');
+      setEditingPrivacy(false);
+    } catch (error) {
+      const message = getUserFriendlyErrorMessage(error);
+      toast.error(`Gizlilik politikası kaydedilemedi: ${message}`);
+    } finally {
+      setSavingPrivacy(false);
     }
   };
 
@@ -253,7 +289,7 @@ export default function ContentTab() {
 
   const handleSaveImage = async () => {
     if (!imageUrl || !editingImage) return;
-    
+
     try {
       await contentApi.updateProfileImage(editingImage.id, imageUrl);
       await loadData();
@@ -282,9 +318,10 @@ export default function ContentTab() {
         await contentApi.updateHeroContent(heroContent.id, {
           title: heroForm.title,
           description: heroForm.description,
-          image: heroForm.image
+          image: heroForm.image,
+          text_color: heroForm.text_color
         });
-        
+
         await loadData();
         setEditingHero(false);
         toast.success('Hero içeriği başarıyla güncellendi');
@@ -302,7 +339,8 @@ export default function ContentTab() {
         description: heroContent.description,
         titleSize: heroContent.titleSize || 'text-5xl md:text-6xl',
         descriptionSize: heroContent.descriptionSize || 'text-xl',
-        image: heroContent.image || ''
+        image: heroContent.image || '',
+        text_color: heroContent.text_color || '#1A1A1A'
       });
     }
     setEditingHero(false);
@@ -347,7 +385,7 @@ export default function ContentTab() {
         instagram: contactForm.instagram,
         youtube: contactForm.youtube
       });
-      
+
       await loadData();
       setEditingContact(false);
       toast.success('İletişim bilgileri başarıyla güncellendi');
@@ -376,7 +414,9 @@ export default function ContentTab() {
         title: aboutContent.title,
         paragraph1: aboutContent.paragraph1,
         paragraph2: aboutContent.paragraph2,
-        image: aboutContent.image || ''
+        image: aboutContent.image || '',
+        story: aboutContent.story || '',
+        text_color: aboutContent.text_color || '#1A1A1A'
       });
     }
     setEditingAbout(false);
@@ -387,7 +427,7 @@ export default function ContentTab() {
       {/* Ana Sayfa Hero İçeriği */}
       <div className="bg-white rounded-xl shadow-sm p-6">
         <h3 className="text-xl font-semibold text-[#1A1A1A] mb-6">Ana Sayfa Hero Bölümü</h3>
-        
+
         {heroContent && (
           <div className="border border-gray-200 rounded-lg p-4">
             <div className="mb-4">
@@ -413,7 +453,7 @@ export default function ContentTab() {
       {/* Ana Sayfa Hakkımda İçeriği */}
       <div className="bg-white rounded-xl shadow-sm p-6">
         <h3 className="text-xl font-semibold text-[#1A1A1A] mb-6">Ana Sayfa Hakkımda Bölümü</h3>
-        
+
         {aboutContent && (
           <div className="border border-gray-200 rounded-lg p-4">
             <div className="flex flex-col md:flex-row gap-6">
@@ -457,7 +497,7 @@ export default function ContentTab() {
       {/* İletişim Bilgileri */}
       <div className="bg-white rounded-xl shadow-sm p-6">
         <h3 className="text-xl font-semibold text-[#1A1A1A] mb-6">İletişim Bilgileri</h3>
-        
+
         {contactInfo && (
           <div className="border border-gray-200 rounded-lg p-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -540,7 +580,7 @@ export default function ContentTab() {
       {/* Profil Resimleri */}
       <div className="bg-white rounded-xl shadow-sm p-6">
         <h3 className="text-xl font-semibold text-[#1A1A1A] mb-6">Profil Resimleri</h3>
-        
+
         <div className="space-y-4">
           {profileImages.map((image) => (
             <div key={image.id} className="border border-gray-200 rounded-lg p-4">
@@ -556,9 +596,9 @@ export default function ContentTab() {
                   <h4 className="font-semibold text-[#1A1A1A] mb-2">{image.name}</h4>
                   <p className="text-sm text-gray-600 mb-3">
                     Konum: {
-                      image.location === 'about-hero' ? 'Hakkımda Sayfası' : 
-                      image.location === 'home-about' ? 'Ana Sayfa - Hakkımda Bölümü' : 
-                      'Diğer'
+                      image.location === 'about-hero' ? 'Hakkımda Sayfası' :
+                        image.location === 'home-about' ? 'Ana Sayfa - Hakkımda Bölümü' :
+                          'Diğer'
                     }
                   </p>
                   <button
@@ -583,7 +623,7 @@ export default function ContentTab() {
             <h3 className="text-xl font-semibold text-[#1A1A1A] mb-4">
               {editingCert ? 'Sertifika Düzenle' : 'Yeni Sertifika Ekle'}
             </h3>
-            
+
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -652,23 +692,22 @@ export default function ContentTab() {
             <h3 className="text-xl font-semibold text-[#1A1A1A] mb-4">
               Resmi Değiştir
             </h3>
-            
+
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-3">
                   {editingImage.name}
                 </label>
-                
+
                 {/* Yükleme Yöntemi Seçimi */}
                 <div className="flex gap-2 mb-4">
                   <button
                     type="button"
                     onClick={() => setUploadMethod('url')}
-                    className={`flex-1 px-4 py-2 rounded-lg transition-colors whitespace-nowrap cursor-pointer ${
-                      uploadMethod === 'url'
-                        ? 'bg-[#D4AF37] text-white'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                    }`}
+                    className={`flex-1 px-4 py-2 rounded-lg transition-colors whitespace-nowrap cursor-pointer ${uploadMethod === 'url'
+                      ? 'bg-[#D4AF37] text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
                   >
                     <i className="ri-link mr-2"></i>
                     URL ile
@@ -676,11 +715,10 @@ export default function ContentTab() {
                   <button
                     type="button"
                     onClick={() => setUploadMethod('file')}
-                    className={`flex-1 px-4 py-2 rounded-lg transition-colors whitespace-nowrap cursor-pointer ${
-                      uploadMethod === 'file'
-                        ? 'bg-[#D4AF37] text-white'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                    }`}
+                    className={`flex-1 px-4 py-2 rounded-lg transition-colors whitespace-nowrap cursor-pointer ${uploadMethod === 'file'
+                      ? 'bg-[#D4AF37] text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
                   >
                     <i className="ri-upload-2-line mr-2"></i>
                     Dosya Yükle
@@ -777,7 +815,7 @@ export default function ContentTab() {
             <h3 className="text-xl font-semibold text-[#1A1A1A] mb-4">
               Hero Bölümünü Düzenle
             </h3>
-            
+
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -790,6 +828,27 @@ export default function ContentTab() {
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent"
                   placeholder="Hayatınızı Yeniden Keşfedin"
                 />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Başlık Rengi
+                </label>
+                <div className="flex items-center gap-3">
+                  <input
+                    type="color"
+                    value={heroForm.text_color}
+                    onChange={(e) => setHeroForm({ ...heroForm, text_color: e.target.value })}
+                    className="h-10 w-20 rounded-lg border border-gray-300 cursor-pointer p-1"
+                  />
+                  <input
+                    type="text"
+                    value={heroForm.text_color}
+                    onChange={(e) => setHeroForm({ ...heroForm, text_color: e.target.value })}
+                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent uppercase"
+                    placeholder="#1A1A1A"
+                  />
+                </div>
               </div>
 
               <div>
@@ -817,7 +876,7 @@ export default function ContentTab() {
                   onChange={(e) => setHeroForm({ ...heroForm, description: e.target.value })}
                   rows={4}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent resize-none"
-                  placeholder="Profesyonel yaşam koçluğu ve danışmanlık hizmetleri..."
+                  placeholder="Demartini Metodu ile değerlerinizi keşfedin..."
                 />
               </div>
 
@@ -846,27 +905,25 @@ export default function ContentTab() {
                   <button
                     type="button"
                     onClick={() => setHeroImageUploadMethod('url')}
-                    className={`flex-1 px-3 py-2 rounded-lg transition-colors text-sm cursor-pointer ${
-                      heroImageUploadMethod === 'url'
-                        ? 'bg-[#D4AF37] text-white'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                    }`}
+                    className={`flex-1 px-3 py-2 rounded-lg transition-colors text-sm cursor-pointer ${heroImageUploadMethod === 'url'
+                      ? 'bg-[#D4AF37] text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
                   >
                     <i className="ri-link mr-1"></i> URL
                   </button>
                   <button
                     type="button"
                     onClick={() => setHeroImageUploadMethod('file')}
-                    className={`flex-1 px-3 py-2 rounded-lg transition-colors text-sm cursor-pointer ${
-                      heroImageUploadMethod === 'file'
-                        ? 'bg-[#D4AF37] text-white'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                    }`}
+                    className={`flex-1 px-3 py-2 rounded-lg transition-colors text-sm cursor-pointer ${heroImageUploadMethod === 'file'
+                      ? 'bg-[#D4AF37] text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
                   >
                     <i className="ri-upload-2-line mr-1"></i> Dosya
                   </button>
                 </div>
-                
+
                 {heroImageUploadMethod === 'url' ? (
                   <input
                     type="text"
@@ -912,7 +969,7 @@ export default function ContentTab() {
                     )}
                   </label>
                 )}
-                
+
                 {heroForm.image && (
                   <div className="mt-3 relative">
                     <img
@@ -960,7 +1017,7 @@ export default function ContentTab() {
             <h3 className="text-xl font-semibold text-[#1A1A1A] mb-4">
               Hakkımda Bölümünü Düzenle
             </h3>
-            
+
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -973,6 +1030,27 @@ export default function ContentTab() {
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent"
                   placeholder="Şafak Özkan"
                 />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Başlık Rengi
+                </label>
+                <div className="flex items-center gap-3">
+                  <input
+                    type="color"
+                    value={aboutForm.text_color}
+                    onChange={(e) => setAboutForm({ ...aboutForm, text_color: e.target.value })}
+                    className="h-10 w-20 rounded-lg border border-gray-300 cursor-pointer p-1"
+                  />
+                  <input
+                    type="text"
+                    value={aboutForm.text_color}
+                    onChange={(e) => setAboutForm({ ...aboutForm, text_color: e.target.value })}
+                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent uppercase"
+                    placeholder="#1A1A1A"
+                  />
+                </div>
               </div>
 
               <div>
@@ -1001,6 +1079,22 @@ export default function ContentTab() {
                 />
               </div>
 
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Hikayem (Tam Metin)
+                </label>
+                <p className="text-xs text-gray-500 mb-2">
+                  Buraya yazılan metin "Hikayem" başlığı altında görünecektir. Paragraflar arası boşluk bırakabilirsiniz.
+                </p>
+                <textarea
+                  value={aboutForm.story}
+                  onChange={(e) => setAboutForm({ ...aboutForm, story: e.target.value })}
+                  rows={10}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent"
+                  placeholder="Hayatımın büyük bir bölümünde..."
+                />
+              </div>
+
               {/* About Resim Yükleme */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -1010,27 +1104,25 @@ export default function ContentTab() {
                   <button
                     type="button"
                     onClick={() => setAboutImageUploadMethod('url')}
-                    className={`flex-1 px-3 py-2 rounded-lg transition-colors text-sm cursor-pointer ${
-                      aboutImageUploadMethod === 'url'
-                        ? 'bg-[#D4AF37] text-white'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                    }`}
+                    className={`flex-1 px-3 py-2 rounded-lg transition-colors text-sm cursor-pointer ${aboutImageUploadMethod === 'url'
+                      ? 'bg-[#D4AF37] text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
                   >
                     <i className="ri-link mr-1"></i> URL
                   </button>
                   <button
                     type="button"
                     onClick={() => setAboutImageUploadMethod('file')}
-                    className={`flex-1 px-3 py-2 rounded-lg transition-colors text-sm cursor-pointer ${
-                      aboutImageUploadMethod === 'file'
-                        ? 'bg-[#D4AF37] text-white'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                    }`}
+                    className={`flex-1 px-3 py-2 rounded-lg transition-colors text-sm cursor-pointer ${aboutImageUploadMethod === 'file'
+                      ? 'bg-[#D4AF37] text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
                   >
                     <i className="ri-upload-2-line mr-1"></i> Dosya
                   </button>
                 </div>
-                
+
                 {aboutImageUploadMethod === 'url' ? (
                   <input
                     type="text"
@@ -1076,7 +1168,7 @@ export default function ContentTab() {
                     )}
                   </label>
                 )}
-                
+
                 {aboutForm.image && (
                   <div className="mt-3 relative">
                     <img
@@ -1124,7 +1216,7 @@ export default function ContentTab() {
             <h3 className="text-xl font-semibold text-[#1A1A1A] mb-4">
               İletişim Bilgilerini Düzenle
             </h3>
-            
+
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -1264,9 +1356,9 @@ export default function ContentTab() {
         ) : (
           <div className="bg-gray-50 rounded-lg p-4 max-h-64 overflow-y-auto">
             {kvkkContent ? (
-              <div 
+              <div
                 className="prose prose-sm max-w-none"
-                dangerouslySetInnerHTML={{ __html: kvkkContent }}
+                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(kvkkContent) }}
               />
             ) : (
               <p className="text-gray-500 text-center py-8">
@@ -1331,13 +1423,80 @@ export default function ContentTab() {
         ) : (
           <div className="bg-gray-50 rounded-lg p-4 max-h-64 overflow-y-auto">
             {cookiesContent ? (
-              <div 
-                className="prose prose-sm max-w-none"
-                dangerouslySetInnerHTML={{ __html: cookiesContent }}
+              <div
+                className="mt-4 p-4 bg-gray-50 rounded-lg max-h-96 overflow-y-auto prose max-w-none"
+                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(cookiesContent) }}
               />
             ) : (
               <p className="text-gray-500 text-center py-8">
                 Henüz çerez politikası metni eklenmemiş. "Düzenle" butonuna tıklayarak ekleyebilirsiniz.
+              </p>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Gizlilik Politikası Düzenleme Bölümü */}
+      <div className="bg-white rounded-2xl border border-gray-200 p-6">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h3 className="text-xl font-semibold text-[#1A1A1A]">Gizlilik Politikası</h3>
+            <p className="text-sm text-gray-500 mt-1">Gizlilik politikası sayfasında görünecek içerik</p>
+          </div>
+          {!editingPrivacy && (
+            <button
+              onClick={() => setEditingPrivacy(true)}
+              className="px-4 py-2 bg-[#D4AF37] text-white rounded-lg hover:bg-[#C4A137] transition-colors cursor-pointer"
+            >
+              <i className="ri-pencil-line mr-2"></i>
+              Düzenle
+            </button>
+          )}
+        </div>
+
+        {editingPrivacy ? (
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Gizlilik Politikası Metni (HTML destekli)
+              </label>
+              <textarea
+                value={privacyContent}
+                onChange={(e) => setPrivacyContent(e.target.value)}
+                rows={15}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent font-mono text-sm"
+                placeholder="<h2>1. Giriş</h2>&#10;<p>Gizlilik politikamız hakkında...</p>"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                HTML etiketleri kullanabilirsiniz: &lt;h2&gt;, &lt;p&gt;, &lt;ul&gt;, &lt;li&gt;, &lt;strong&gt;
+              </p>
+            </div>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setEditingPrivacy(false)}
+                className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
+              >
+                İptal
+              </button>
+              <button
+                onClick={handleSavePrivacy}
+                disabled={savingPrivacy}
+                className="px-6 py-2 bg-[#D4AF37] text-white rounded-lg hover:bg-[#C4A137] transition-colors disabled:opacity-50 cursor-pointer"
+              >
+                {savingPrivacy ? 'Kaydediliyor...' : 'Kaydet'}
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="bg-gray-50 rounded-lg p-4 max-h-64 overflow-y-auto">
+            {privacyContent ? (
+              <div
+                className="mt-4 p-4 bg-gray-50 rounded-lg max-h-96 overflow-y-auto prose max-w-none"
+                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(privacyContent) }}
+              />
+            ) : (
+              <p className="text-gray-500 text-center py-8">
+                Henüz gizlilik politikası metni eklenmemiş. "Düzenle" butonuna tıklayarak ekleyebilirsiniz.
               </p>
             )}
           </div>

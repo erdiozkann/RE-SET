@@ -1,33 +1,52 @@
-import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { authHelpers } from '../../lib/supabase';
+import { useState, useEffect } from 'react';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 import { getUserFriendlyErrorMessage } from '../../lib/errors';
 import { useToast } from '../../components/ToastContainer';
 import SEO from '../../components/SEO';
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const toast = useToast();
+  const { signIn, resetPassword, user, loading: authLoading } = useAuth();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // Şifremi Unuttum Modal State
+  const [showResetModal, setShowResetModal] = useState(false);
+  const [resetEmail, setResetEmail] = useState('');
+  const [resetLoading, setResetLoading] = useState(false);
+
+  // Zaten giriş yapmışsa yönlendir
+  useEffect(() => {
+    if (!authLoading && user) {
+      const from = (location.state as { from?: { pathname: string } })?.from?.pathname;
+      if (user.role === 'ADMIN') {
+        navigate(from || '/admin', { replace: true });
+      } else {
+        navigate(from || '/client-panel', { replace: true });
+      }
+    }
+  }, [user, authLoading, navigate, location]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const user = await authHelpers.signIn(email, password);
+      const loggedInUser = await signIn(email, password);
 
       toast.success('Giriş başarılı! Yönlendiriliyorsunuz...');
-      setLoading(false);
 
-      // Rol bazlı yönlendirme
+      // SPA-uyumlu yönlendirme (window.location yerine navigate)
       setTimeout(() => {
-        if (user.role === 'ADMIN') {
-          navigate('/admin');
+        if (loggedInUser.role === 'ADMIN') {
+          navigate('/admin', { replace: true });
         } else {
-          navigate('/client-panel');
+          navigate('/client-panel', { replace: true });
         }
       }, 500);
 
@@ -38,14 +57,47 @@ export default function LoginPage() {
     }
   };
 
+  // Şifre Sıfırlama
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!resetEmail.trim()) {
+      toast.error('Lütfen e-posta adresinizi girin.');
+      return;
+    }
+
+    setResetLoading(true);
+
+    try {
+      await resetPassword(resetEmail);
+      toast.success('Şifre sıfırlama linki e-posta adresinize gönderildi!');
+      setShowResetModal(false);
+      setResetEmail('');
+    } catch (error) {
+      const message = getUserFriendlyErrorMessage(error);
+      toast.error(message);
+    } finally {
+      setResetLoading(false);
+    }
+  };
+
+  // Auth yüklenirken bekle
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-amber-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-teal-600"></div>
+      </div>
+    );
+  }
+
   return (
     <>
-      <SEO 
-        title="Giriş Yap - RE-SET Psikolojik Danışmanlık"
-        description="RE-SET Psikolojik Danışmanlık hesabınıza giriş yapın. Randevularınızı yönetin, ilerleme kayıtlarınızı görüntüleyin."
+      <SEO
+        title="Giriş Yap - RE-SET Demartini Metodu"
+        description="RE-SET Demartini Metodu hesabınıza giriş yapın. Randevularınızı yönetin, ilerleme kayıtlarınızı görüntüleyin."
         keywords="giriş, login, danışan girişi, admin girişi"
       />
-      
+
       <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-amber-50 flex items-center justify-center px-4 py-12">
         <div className="w-full max-w-md">
           <div className="bg-white rounded-2xl shadow-xl p-8">
@@ -102,6 +154,20 @@ export default function LoginPage() {
                 </div>
               </div>
 
+              {/* Şifremi Unuttum Linki */}
+              <div className="text-right">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setResetEmail(email); // Mevcut email'i aktar
+                    setShowResetModal(true);
+                  }}
+                  className="text-sm text-teal-600 hover:text-teal-700 font-medium transition-colors"
+                >
+                  Şifremi Unuttum
+                </button>
+              </div>
+
               <button
                 type="submit"
                 disabled={loading}
@@ -125,8 +191,8 @@ export default function LoginPage() {
             <div className="mt-6 text-center">
               <p className="text-sm text-gray-600">
                 Hesabınız yok mu?{' '}
-                <Link 
-                  to="/register" 
+                <Link
+                  to="/register"
                   className="text-teal-600 hover:text-teal-700 font-medium transition-colors"
                 >
                   Kayıt Olun
@@ -148,6 +214,79 @@ export default function LoginPage() {
 
         </div>
       </div>
+
+      {/* Şifremi Unuttum Modal */}
+      {showResetModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 animate-fade-in">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-bold text-gray-900">Şifremi Unuttum</h2>
+              <button
+                onClick={() => setShowResetModal(false)}
+                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+              >
+                <i className="ri-close-line text-xl text-gray-500"></i>
+              </button>
+            </div>
+
+            <p className="text-sm text-gray-600 mb-6">
+              E-posta adresinizi girin, size şifre sıfırlama linki gönderelim.
+            </p>
+
+            <form onSubmit={handleResetPassword} className="space-y-4">
+              <div>
+                <label htmlFor="resetEmail" className="block text-sm font-medium text-gray-700 mb-2">
+                  E-posta Adresi
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <i className="ri-mail-line text-gray-400"></i>
+                  </div>
+                  <input
+                    type="email"
+                    id="resetEmail"
+                    value={resetEmail}
+                    onChange={(e) => setResetEmail(e.target.value)}
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all text-sm"
+                    placeholder="ornek@email.com"
+                    required
+                    disabled={resetLoading}
+                    autoFocus
+                  />
+                </div>
+              </div>
+
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => setShowResetModal(false)}
+                  className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors"
+                  disabled={resetLoading}
+                >
+                  İptal
+                </button>
+                <button
+                  type="submit"
+                  disabled={resetLoading}
+                  className="flex-1 bg-gradient-to-r from-teal-500 to-teal-600 text-white py-3 rounded-lg font-medium hover:from-teal-600 hover:to-teal-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                >
+                  {resetLoading ? (
+                    <>
+                      <i className="ri-loader-4-line animate-spin"></i>
+                      <span>Gönderiliyor...</span>
+                    </>
+                  ) : (
+                    <>
+                      <i className="ri-mail-send-line"></i>
+                      <span>Gönder</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </>
   );
 }

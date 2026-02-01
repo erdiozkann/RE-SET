@@ -1,32 +1,17 @@
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { supabase } from '../../lib/supabase';
+import { contentApi } from '../../lib/api';
+import type { ContactInfo } from '../../types';
 
 export default function Footer() {
-  const [contactInfo, setContactInfo] = useState({
-    email: 'info@re-set.com.tr',
-    phone: '',
-    address: 'Teşvikiye, Hakkı Yeten Cd. No:11 D:7, 34365 Şişli/İstanbul',
-    instagram: '',
-    youtube: ''
-  });
+  const [contactInfo, setContactInfo] = useState<ContactInfo | null>(null);
 
   useEffect(() => {
     const loadContactInfo = async () => {
       try {
-        const { data } = await supabase
-          .from('contact_info')
-          .select('*')
-          .single();
-        
+        const data = await contentApi.getContactInfo();
         if (data) {
-          setContactInfo({
-            email: data.email || 'info@re-set.com.tr',
-            phone: data.phone || '',
-            address: data.address || 'Teşvikiye, Hakkı Yeten Cd. No:11 D:7, 34365 Şişli/İstanbul',
-            instagram: data.instagram || '',
-            youtube: data.youtube || ''
-          });
+          setContactInfo(data);
         }
       } catch (error) {
         console.error('Footer contact info error:', error);
@@ -46,21 +31,18 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Logo & Description */}
           <div className="col-span-1 md:col-span-2">
-            <img 
-              src="https://static.readdy.ai/image/6c432e190935318471b81dba0ca536b3/f8cacb0d1ad0c1f4f6e313d7c034bd99.png" 
-              alt="Reset Logo" 
-              className="h-12 mb-4"
-            />
+            <span className="text-2xl font-serif font-bold text-white mb-4 block">RESET</span>
+
             <p className="text-gray-400 mb-4">
-              Yaşam koçluğu ve danışmanlık hizmetleri ile hayatınızı yeniden keşfedin.
+              Demartini Metodu ile değerlerinizi keşfedin, yaşamınızı dengeleyin.
             </p>
             <div className="flex items-center space-x-4">
-              {contactInfo.instagram && (
+              {contactInfo?.instagram && (
                 <a href={contactInfo.instagram} target="_blank" rel="noopener noreferrer" className="w-10 h-10 flex items-center justify-center bg-white/10 hover:bg-[#D4AF37] transition-colors cursor-pointer">
                   <i className="ri-instagram-line text-xl"></i>
                 </a>
               )}
-              {contactInfo.youtube && (
+              {contactInfo?.youtube && (
                 <a href={contactInfo.youtube} target="_blank" rel="noopener noreferrer" className="w-10 h-10 flex items-center justify-center bg-white/10 hover:bg-[#D4AF37] transition-colors cursor-pointer">
                   <i className="ri-youtube-line text-xl"></i>
                 </a>
@@ -99,18 +81,24 @@ export default function Footer() {
           <div>
             <h4 className="text-lg font-semibold mb-4">İletişim</h4>
             <ul className="space-y-2 text-gray-400">
-              <li className="flex items-start">
-                <i className="ri-mail-line mt-1 mr-2"></i>
-                <span>{contactInfo.email}</span>
-              </li>
-              <li className="flex items-start">
-                <i className="ri-phone-line mt-1 mr-2"></i>
-                <span>{contactInfo.phone}</span>
-              </li>
-              <li className="flex items-start">
-                <i className="ri-map-pin-line mt-1 mr-2"></i>
-                <span>{contactInfo.address}</span>
-              </li>
+              {contactInfo?.email && (
+                <li className="flex items-start">
+                  <i className="ri-mail-line mt-1 mr-2"></i>
+                  <span>{contactInfo.email}</span>
+                </li>
+              )}
+              {contactInfo?.phone && (
+                <li className="flex items-start">
+                  <i className="ri-phone-line mt-1 mr-2"></i>
+                  <span>{contactInfo.phone}</span>
+                </li>
+              )}
+              {contactInfo?.address && (
+                <li className="flex items-start">
+                  <i className="ri-map-pin-line mt-1 mr-2"></i>
+                  <span>{contactInfo.address}</span>
+                </li>
+              )}
             </ul>
           </div>
         </div>
@@ -118,7 +106,7 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row items-center justify-between">
           <p className="text-gray-400 text-sm mb-4 md:mb-0">
-            © 2025 Reset. Tüm hakları saklıdır.
+            © {new Date().getFullYear()} Reset. Tüm hakları saklıdır.
           </p>
           <div className="flex items-center space-x-6 text-sm">
             <Link to="/kvkk" className="text-gray-400 hover:text-[#D4AF37] transition-colors cursor-pointer">
@@ -136,9 +124,7 @@ export default function Footer() {
             <Link to="/copyright" className="text-gray-400 hover:text-[#D4AF37] transition-colors cursor-pointer">
               Telif Hakkı
             </Link>
-            <a href="https://readdy.ai/?origin=logo" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#D4AF37] transition-colors cursor-pointer">
-              Powered by Readdy
-            </a>
+
           </div>
         </div>
       </div>

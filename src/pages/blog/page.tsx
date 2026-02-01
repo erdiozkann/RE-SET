@@ -24,11 +24,11 @@ export default function Blog() {
   }, []);
 
   const categories = ['Tümü', ...Array.from(new Set(blogPosts.map(post => post.category).filter(Boolean)))];
-  
-  const filteredPosts = selectedCategory === 'Tümü' 
-    ? blogPosts 
+
+  const filteredPosts = selectedCategory === 'Tümü'
+    ? blogPosts
     : blogPosts.filter(post => post.category === selectedCategory);
-  
+
   const featuredPosts = filteredPosts.filter(post => post.featured);
 
   const formatDate = (dateString: string) => {
@@ -54,7 +54,7 @@ export default function Blog() {
       '@context': 'https://schema.org',
       '@type': 'Blog',
       name: 'Reset Blog',
-      description: 'Kişisel gelişim, yaşam koçluğu ve psikolojik danışmanlık üzerine yazılar',
+      description: 'Demartini Metodu, değer belirleme, Breakthrough Experience ve yaşam dönüşümü üzerine yazılar',
       url: `${siteUrl}/blog`,
       author: {
         '@type': 'Person',
@@ -66,17 +66,17 @@ export default function Blog() {
   return (
     <>
       <SEO
-        title="Blog | Kişisel Gelişim ve Yaşam Koçluğu Yazıları"
-        description="Kişisel gelişim, yaşam koçluğu ve mindfulness üzerine düşünceler."
-        keywords="kişisel gelişim blog, yaşam koçluğu yazıları"
+        title="Blog | Demartini Metodu ve Yaşam Dönüşümü Yazıları"
+        description="Demartini Metodu, değer belirleme ve Breakthrough Experience üzerine düşünceler."
+        keywords="demartini metodu blog, değer belirleme yazıları, breakthrough experience türkiye, demartini metodu türkiye"
         schema={schema}
       />
-      <section className="py-16 md:py-24 bg-gradient-to-br from-[#F5F5F5] to-white">
+      <section className="py-10 md:py-14 bg-gradient-to-br from-[#F5F5F5] to-white">
         <div className="max-w-7xl mx-auto px-4 md:px-8">
           <div className="text-center">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif text-[#1A1A1A] mb-6">Blog</h1>
-            <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
-              Kişisel gelişim, yaşam koçluğu ve mindfulness üzerine düşünceler.
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-serif text-[#1A1A1A] mb-4">Blog</h1>
+            <p className="text-base md:text-lg text-gray-600 max-w-2xl mx-auto">
+              Demartini Metodu, değer belirleme ve Breakthrough Experience üzerine düşünceler.
             </p>
           </div>
         </div>
@@ -90,11 +90,10 @@ export default function Blog() {
                 <button
                   key={category}
                   onClick={() => setSelectedCategory(category)}
-                  className={`px-4 py-2 text-sm font-medium whitespace-nowrap transition-all cursor-pointer ${
-                    category === selectedCategory
+                  className={`px-4 py-2 text-sm font-medium whitespace-nowrap transition-all cursor-pointer ${category === selectedCategory
                       ? 'bg-[#D4AF37] text-[#1A1A1A]'
                       : 'bg-gray-100 text-gray-600 hover:bg-[#D4AF37] hover:text-[#1A1A1A]'
-                  }`}
+                    }`}
                 >
                   {category}
                 </button>
@@ -105,23 +104,28 @@ export default function Blog() {
       )}
 
       {!isLoading && featuredPosts.length > 0 && (
-        <section className="py-16 md:py-20 bg-white">
+        <section className="py-10 md:py-14 bg-white">
           <div className="max-w-7xl mx-auto px-4 md:px-8">
-            <h2 className="text-2xl md:text-3xl font-serif text-[#1A1A1A] mb-8">Öne Çıkan Yazılar</h2>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
+            <h2 className="text-xl md:text-2xl font-serif text-[#1A1A1A] mb-6">Öne Çıkan Yazılar</h2>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {featuredPosts.map((post) => (
                 <article key={post.id} className="group cursor-pointer">
-                  <div className="aspect-video rounded-xl overflow-hidden mb-6">
-                    <img 
-                      src={post.image || 'https://via.placeholder.com/600x400?text=Blog'}
-                      alt={post.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
+                  <div className="aspect-video rounded-xl overflow-hidden mb-4 bg-gray-100 flex items-center justify-center">
+                    {post.image ? (
+                      <img
+                        src={post.image}
+                        alt={post.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    ) : (
+                      <i className="ri-article-line text-4xl text-gray-300"></i>
+                    )}
                   </div>
+
                   <p className="text-sm text-[#D4AF37] font-medium mb-2">{post.category}</p>
-                  <h3 className="text-xl md:text-2xl font-serif text-[#1A1A1A] mb-3 group-hover:text-[#D4AF37]">{post.title}</h3>
-                  <p className="text-gray-600 mb-4">{post.excerpt}</p>
-                  <span className="text-sm text-gray-500">{formatDate(post.date)}</span>
+                  <h3 className="text-lg md:text-xl font-serif text-[#1A1A1A] mb-2 group-hover:text-[#D4AF37]">{post.title}</h3>
+                  <p className="text-gray-600 mb-3 text-sm">{post.excerpt}</p>
+                  <span className="text-xs text-gray-500">{formatDate(post.date)}</span>
                 </article>
               ))}
             </div>
@@ -129,29 +133,34 @@ export default function Blog() {
         </section>
       )}
 
-      <section className="py-16 md:py-20 bg-white">
+      <section className="py-10 md:py-14 bg-white">
         <div className="max-w-7xl mx-auto px-4 md:px-8">
-          <h2 className="text-2xl md:text-3xl font-serif text-[#1A1A1A] mb-8">
+          <h2 className="text-xl md:text-2xl font-serif text-[#1A1A1A] mb-6">
             {featuredPosts.length > 0 ? 'Tüm Yazılar' : 'Blog Yazıları'}
           </h2>
-          
+
           {isLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <BlogSkeleton />
               <BlogSkeleton />
               <BlogSkeleton />
             </div>
           ) : filteredPosts.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredPosts.map((post) => (
                 <article key={post.id} className="group cursor-pointer">
-                  <div className="aspect-video rounded-xl overflow-hidden mb-4">
-                    <img 
-                      src={post.image || 'https://via.placeholder.com/600x400?text=Blog'}
-                      alt={post.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
+                  <div className="aspect-video rounded-xl overflow-hidden mb-4 bg-gray-100 flex items-center justify-center">
+                    {post.image ? (
+                      <img
+                        src={post.image}
+                        alt={post.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    ) : (
+                      <i className="ri-article-line text-4xl text-gray-300"></i>
+                    )}
                   </div>
+
                   <p className="text-xs text-[#D4AF37] font-medium mb-2">{post.category}</p>
                   <h3 className="text-lg font-semibold text-[#1A1A1A] mb-2 group-hover:text-[#D4AF37] line-clamp-2">{post.title}</h3>
                   <p className="text-sm text-gray-600 mb-3 line-clamp-2">{post.excerpt}</p>
@@ -168,14 +177,14 @@ export default function Blog() {
         </div>
       </section>
 
-      <section className="py-16 md:py-24 bg-[#F5F5F5]">
+      <section className="py-12 md:py-16 bg-[#F5F5F5]">
         <div className="max-w-4xl mx-auto px-4 md:px-8 text-center">
-          <div className="bg-white p-8 md:p-12 rounded-2xl">
-            <div className="w-16 h-16 flex items-center justify-center bg-[#D4AF37] rounded-full mx-auto mb-6">
-              <i className="ri-mail-line text-3xl text-white"></i>
+          <div className="bg-white p-6 md:p-10 rounded-2xl">
+            <div className="w-14 h-14 flex items-center justify-center bg-[#D4AF37] rounded-full mx-auto mb-4">
+              <i className="ri-mail-line text-2xl text-white"></i>
             </div>
-            <h3 className="text-2xl md:text-3xl font-serif text-[#1A1A1A] mb-4">Blog Güncellemelerini Kaçırmayın</h3>
-            <p className="text-gray-600 mb-8">Yeni yazılarımdan haberdar olmak için e-posta listemize katılın.</p>
+            <h3 className="text-xl md:text-2xl font-serif text-[#1A1A1A] mb-3">Blog Güncellemelerini Kaçırmayın</h3>
+            <p className="text-gray-600 mb-6 text-sm">Yeni yazılarımdan haberdar olmak için e-posta listemize katılın.</p>
             <form className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
               <input
                 type="email"

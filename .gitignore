@@ -16,6 +16,9 @@ dist-ssr
 # Build outputs
 out
 build
+dist
+HOSTINGER_UPLOAD
+hostinger-deploy
 .vite
 .cache
 

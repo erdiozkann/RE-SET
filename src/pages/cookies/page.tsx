@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import DOMPurify from 'dompurify';
 import SEO from '../../components/SEO';
 import { contentApi } from '../../lib/api';
 
@@ -56,7 +57,7 @@ const defaultCookiesContent = `
 export default function CookiesPage() {
   const siteUrl = import.meta.env.VITE_SITE_URL || 'https://re-set.com.tr';
   const [content, setContent] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
+
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -71,8 +72,7 @@ export default function CookiesPage() {
       }
     } catch (error) {
       console.error('Çerez politikası yüklenemedi:', error);
-    } finally {
-      setLoading(false);
+      // Loading removed
     }
   };
 
@@ -86,34 +86,28 @@ export default function CookiesPage() {
 
   return (
     <>
-      <SEO 
+      <SEO
         title="Çerez Politikası"
         description="Reset web sitesinde kullanılan çerezler, amaçları ve yönetim seçenekleri hakkında detaylı bilgi."
         canonical="/cerez-politikasi"
         schema={schema}
       />
-      
-      <section className="py-16 md:py-24 bg-white">
+
+      <section className="py-10 md:py-16 bg-white">
         <div className="max-w-4xl mx-auto px-4 md:px-8">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-5xl font-serif text-[#1A1A1A] mb-6">
+          <div className="text-center mb-8">
+            <h1 className="text-3xl md:text-4xl font-serif text-[#1A1A1A] mb-4">
               Çerez Politikası
             </h1>
-            <p className="text-lg text-gray-600">
+            <p className="text-base text-gray-600">
               Web sitemizde kullanılan çerezler hakkında bilgilendirme
             </p>
           </div>
 
-          {loading ? (
-            <div className="flex items-center justify-center py-12">
-              <div className="w-8 h-8 border-4 border-[#D4AF37] border-t-transparent rounded-full animate-spin"></div>
-            </div>
-          ) : (
-            <div 
-              className="prose prose-lg max-w-none text-gray-700"
-              dangerouslySetInnerHTML={{ __html: content || defaultCookiesContent }}
-            />
-          )}
+          <div
+            className="prose prose-lg max-w-none text-gray-700"
+            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content || defaultCookiesContent) }}
+          />
         </div>
       </section>
     </>

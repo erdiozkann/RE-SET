@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { authHelpers } from '../../lib/supabase';
+import { useAuth } from '../../contexts/AuthContext';
 import { servicesApi, appointmentsApi } from '../../lib/api';
 import { getUserFriendlyErrorMessage } from '../../lib/errors';
 import { useToast } from '../../components/ToastContainer';
@@ -14,13 +14,12 @@ const BookingPage = () => {
   const [step, setStep] = useState(1);
   const [services, setServices] = useState<ServiceType[]>([]);
   const [config, setConfig] = useState<WorkingConfig | null>(null);
-  const [currentUser, setCurrentUser] = useState<any>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  
+  const { user, loading: authLoading, signOut } = useAuth();
+
   const [selectedService, setSelectedService] = useState<ServiceType | null>(null);
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
-  
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -32,55 +31,24 @@ const BookingPage = () => {
   const [timeSlots, setTimeSlots] = useState<string[]>([]);
   const [showSuccess, setShowSuccess] = useState(false);
 
-  const siteUrl = import.meta.env.VITE_SITE_URL || 'https://example.com';
-
-  const schema = {
-    '@context': 'https://schema.org',
-    '@type': 'Service',
-    name: 'Randevu Al',
-    description: 'Reset - Şafak Özkan Danışmanlık randevu sistemi',
-    url: `${siteUrl}/booking`,
-    provider: {
-      '@type': 'Person',
-      name: 'Şafak Özkan'
-    },
-    serviceType: 'Psikolojik Danışmanlık ve Yaşam Koçluğu',
-    areaServed: {
-      '@type': 'City',
-      name: 'İstanbul'
-    }
-  };
-
   useEffect(() => {
-    const checkAuthAndLoad = async () => {
-      try {
-        setIsLoading(true);
-        const user = await authHelpers.getCurrentUser();
-        if (!user || user.role !== 'CLIENT') {
-          toast.warning('Bu sayfaya erişmek için giriş yapmalısınız');
-          navigate('/login');
-          return;
-        }
-        setCurrentUser(user);
-        setFormData({
-          name: user.name || '',
-          email: user.email,
-          phone: '',
-          notes: ''
-        });
+    if (authLoading) return;
 
-        await loadData();
-      } catch (error) {
-        console.error('Auth check error:', error);
-        toast.error('Oturum doğrulanamadı');
-        navigate('/login');
-      } finally {
-        setIsLoading(false);
-      }
-    };
+    if (!user || user.role !== 'CLIENT') {
+      toast.warning('Bu sayfaya erişmek için giriş yapmalısınız');
+      navigate('/login', { replace: true });
+      return;
+    }
 
-    checkAuthAndLoad();
-  }, [navigate]);
+    setFormData(prev => ({
+      ...prev,
+      name: user.name || '',
+      email: user.email || '',
+      phone: user.phone || ''
+    }));
+
+    loadData();
+  }, [user, authLoading, navigate]);
 
   const loadData = async () => {
     try {
@@ -88,7 +56,7 @@ const BookingPage = () => {
         servicesApi.getAll(),
         loadConfig()
       ]);
-      
+
       setServices(servicesData || []);
       setConfig(configData);
     } catch (error) {
@@ -102,7 +70,7 @@ const BookingPage = () => {
         .from('working_config')
         .select('*')
         .single();
-      
+
       if (data) {
         return {
           startHour: data.start_hour,
@@ -132,11 +100,18 @@ const BookingPage = () => {
 
   const generateAvailableDates = () => {
     if (!config) return;
-    
+
     const dates: string[] = [];
     const today = new Date();
+    const now = new Date();
     let daysAdded = 0;
-    let currentDate = new Date(today);
+    const currentDate = new Date(today);
+
+    // Bugünün saati geçmiş çalışma saatinden sonraysa, bugünü atla
+    const [endH] = config.endHour.split(':').map(Number);
+    if (now.getHours() >= endH) {
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
 
     while (daysAdded < 7) {
       const dayOfWeek = currentDate.getDay();
@@ -151,7 +126,7 @@ const BookingPage = () => {
   };
 
   const generateTimeSlots = () => {
-    if (!config) return;
+    if (!config || !selectedDate) return;
 
     const slots: string[] = [];
     const [startH, startM] = config.startHour.split(':').map(Number);
@@ -160,11 +135,23 @@ const BookingPage = () => {
     let currentMinutes = startH * 60 + startM;
     const endMinutes = endH * 60 + endM;
 
+    // Bugün için geçmiş saatleri filtrele
+    const today = new Date().toISOString().split('T')[0];
+    const now = new Date();
+    const currentTimeMinutes = now.getHours() * 60 + now.getMinutes();
+    const isToday = selectedDate === today;
+
     while (currentMinutes < endMinutes) {
       const hours = Math.floor(currentMinutes / 60);
       const minutes = currentMinutes % 60;
       const timeString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
-      slots.push(timeString);
+
+      // Bugünse ve saat geçmişse, bu slotu ekleme
+      // En az 1 saat sonrasını göster (hazırlık süresi için)
+      if (!isToday || currentMinutes > currentTimeMinutes + 60) {
+        slots.push(timeString);
+      }
+
       currentMinutes += config.slotDuration;
     }
 
@@ -175,7 +162,7 @@ const BookingPage = () => {
     const date = new Date(dateString);
     const days = ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'];
     const months = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
-    
+
     return `${date.getDate()} ${months[date.getMonth()]} ${days[date.getDay()]}`;
   };
 
@@ -192,11 +179,12 @@ const BookingPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!selectedService || !selectedDate || !selectedTime || !currentUser) return;
+
+    if (!selectedService || !selectedDate || !selectedTime || !user) return;
 
     try {
       await appointmentsApi.create({
+        clientId: user.id,
         clientEmail: formData.email,
         clientName: formData.name,
         clientPhone: formData.phone,
@@ -211,39 +199,27 @@ const BookingPage = () => {
       toast.success('Randevunuz başarıyla oluşturuldu! Yönlendiriliyorsunuz...');
       setShowSuccess(true);
       setTimeout(() => {
-        navigate('/client-panel');
+        navigate('/client-panel', { replace: true });
       }, 2000);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Randevu oluşturma hatası:', error);
+      console.error('Hata detayı:', error.message, error.details, error.hint);
       const message = getUserFriendlyErrorMessage(error);
       toast.error(message || 'Randevu oluşturulurken bir hata oluştu');
     }
   };
 
-  const resetBooking = () => {
-    setStep(1);
-    setSelectedService(null);
-    setSelectedDate('');
-    setSelectedTime('');
-    setFormData({
-      name: currentUser?.name || '',
-      email: currentUser?.email || '',
-      phone: '',
-      notes: ''
-    });
-  };
-
   const handleLogout = async () => {
     try {
-      await authHelpers.signOut();
+      await signOut();
       toast.success('Çıkış yapıldı');
-      navigate('/');
+      navigate('/', { replace: true });
     } catch (error) {
       toast.error('Çıkış yapılırken bir hata oluştu');
     }
   };
 
-  if (!currentUser) {
+  if (!user) {
     return null;
   }
 
@@ -268,7 +244,7 @@ const BookingPage = () => {
         <div className="flex items-center justify-between mb-8">
           <div className="text-center flex-1">
             <h1 className="text-4xl md:text-5xl font-serif text-[#1A1A1A] mb-4">Randevu Oluştur</h1>
-            <p className="text-gray-600">Hoş geldiniz, {currentUser.name}</p>
+            <p className="text-gray-600">Hoş geldiniz, {user.name}</p>
           </div>
           <button
             onClick={handleLogout}
@@ -283,17 +259,15 @@ const BookingPage = () => {
           <div className="flex items-center space-x-4">
             {[1, 2, 3].map((num) => (
               <div key={num} className="flex items-center">
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-all ${
-                  step >= num 
-                    ? 'bg-gradient-to-br from-[#D4AF37] to-[#F4D03F] text-white' 
-                    : 'bg-gray-200 text-gray-500'
-                }`}>
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-all ${step >= num
+                  ? 'bg-gradient-to-br from-[#D4AF37] to-[#F4D03F] text-white'
+                  : 'bg-gray-200 text-gray-500'
+                  }`}>
                   {num}
                 </div>
                 {num < 3 && (
-                  <div className={`w-16 h-1 mx-2 transition-all ${
-                    step > num ? 'bg-[#D4AF37]' : 'bg-gray-200'
-                  }`} />
+                  <div className={`w-16 h-1 mx-2 transition-all ${step > num ? 'bg-[#D4AF37]' : 'bg-gray-200'
+                    }`} />
                 )}
               </div>
             ))}
@@ -360,11 +334,10 @@ const BookingPage = () => {
                     <button
                       key={date}
                       onClick={() => setSelectedDate(date)}
-                      className={`p-4 rounded-xl border-2 transition-all whitespace-nowrap cursor-pointer ${
-                        selectedDate === date
-                          ? 'border-[#D4AF37] bg-gradient-to-br from-[#D4AF37]/10 to-[#F4D03F]/10 shadow-lg'
-                          : 'border-gray-200 hover:border-[#D4AF37]/50'
-                      }`}
+                      className={`p-4 rounded-xl border-2 transition-all whitespace-nowrap cursor-pointer ${selectedDate === date
+                        ? 'border-[#D4AF37] bg-gradient-to-br from-[#D4AF37]/10 to-[#F4D03F]/10 shadow-lg'
+                        : 'border-gray-200 hover:border-[#D4AF37]/50'
+                        }`}
                     >
                       <div className="text-sm text-gray-500 mb-1">
                         {formatDate(date).split(' ')[2]}
@@ -380,21 +353,29 @@ const BookingPage = () => {
               {selectedDate && (
                 <div className="mb-8">
                   <h3 className="text-lg font-semibold text-[#1A1A1A] mb-4">Saat</h3>
-                  <div className="grid grid-cols-3 md:grid-cols-5 gap-3">
-                    {timeSlots.map((time) => (
-                      <button
-                        key={time}
-                        onClick={() => setSelectedTime(time)}
-                        className={`p-3 rounded-xl border-2 transition-all font-semibold whitespace-nowrap cursor-pointer ${
-                          selectedTime === time
+                  {timeSlots.length > 0 ? (
+                    <div className="grid grid-cols-3 md:grid-cols-5 gap-3">
+                      {timeSlots.map((time) => (
+                        <button
+                          key={time}
+                          onClick={() => setSelectedTime(time)}
+                          className={`p-3 rounded-xl border-2 transition-all font-semibold whitespace-nowrap cursor-pointer ${selectedTime === time
                             ? 'border-[#D4AF37] bg-gradient-to-br from-[#D4AF37] to-[#F4D03F] text-white shadow-lg'
                             : 'border-gray-200 hover:border-[#D4AF37]/50 text-[#1A1A1A]'
-                        }`}
-                      >
-                        {time}
-                      </button>
-                    ))}
-                  </div>
+                            }`}
+                        >
+                          {time}
+                        </button>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-center">
+                      <i className="ri-time-line text-2xl text-amber-500 mb-2"></i>
+                      <p className="text-amber-700">
+                        Bu tarih için uygun saat kalmadı. Lütfen başka bir tarih seçin.
+                      </p>
+                    </div>
+                  )}
                 </div>
               )}
 

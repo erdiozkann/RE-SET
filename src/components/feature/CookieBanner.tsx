@@ -8,24 +8,58 @@ interface CookiePreferences {
   functional: boolean;
 }
 
+const DEFAULT_PREFERENCES: CookiePreferences = {
+  necessary: true,
+  analytics: false,
+  functional: false
+};
+
+const deserializePreferences = (rawValue: string | null): CookiePreferences | null => {
+  if (!rawValue) return null;
+
+  if (rawValue === 'accepted') {
+    return { ...DEFAULT_PREFERENCES, analytics: true, functional: true };
+  }
+
+  if (rawValue === 'rejected') {
+    return { ...DEFAULT_PREFERENCES, analytics: false, functional: false };
+  }
+
+  try {
+    const parsed = JSON.parse(rawValue) as Partial<CookiePreferences>;
+    if (parsed && typeof parsed === 'object') {
+      return {
+        necessary: true,
+        analytics: Boolean(parsed.analytics),
+        functional: Boolean(parsed.functional)
+      };
+    }
+  } catch {
+    return null;
+  }
+
+  return null;
+};
+
 export default function CookieBanner() {
   const [showBanner, setShowBanner] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
-  const [preferences, setPreferences] = useState<CookiePreferences>({
-    necessary: true,
-    analytics: false,
-    functional: false
-  });
+  const [preferences, setPreferences] = useState<CookiePreferences>(DEFAULT_PREFERENCES);
 
   useEffect(() => {
-    const consent = localStorage.getItem('cookieConsent');
-    if (!consent) {
+    const stored = localStorage.getItem('cookieConsent');
+    const savedPreferences = deserializePreferences(stored);
+
+    if (!savedPreferences) {
+      if (stored) {
+        localStorage.removeItem('cookieConsent');
+      }
       setShowBanner(true);
-    } else {
-      const savedPreferences = JSON.parse(consent);
-      setPreferences(savedPreferences);
-      applyConsent(savedPreferences);
+      return;
     }
+
+    setPreferences(savedPreferences);
+    applyConsent(savedPreferences);
   }, []);
 
   const applyConsent = (prefs: CookiePreferences) => {

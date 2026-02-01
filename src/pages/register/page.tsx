@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { authHelpers } from '../../lib/supabase';
+import { useAuth } from '../../contexts/AuthContext';
 import { getUserFriendlyErrorMessage } from '../../lib/errors';
 import { useToast } from '../../components/ToastContainer';
 import SEO from '../../components/SEO';
@@ -9,6 +9,7 @@ import SEO from '../../components/SEO';
 export default function RegisterPage() {
   const navigate = useNavigate();
   const toast = useToast();
+  const { signUp } = useAuth();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -43,7 +44,7 @@ export default function RegisterPage() {
     setLoading(true);
 
     try {
-      await authHelpers.signUp(
+      await signUp(
         formData.email,
         formData.password,
         formData.name,
@@ -73,7 +74,7 @@ export default function RegisterPage() {
   if (success) {
     return (
       <>
-        <SEO 
+        <SEO
           title="Kayıt Başarılı - Reset Danışmanlık"
           description="Reset Danışmanlık kayıt işlemi başarılı"
         />
@@ -97,7 +98,7 @@ export default function RegisterPage() {
 
   return (
     <>
-      <SEO 
+      <SEO
         title="Kayıt Ol - Reset Danışmanlık"
         description="Reset Danışmanlık hesabı oluşturun"
       />

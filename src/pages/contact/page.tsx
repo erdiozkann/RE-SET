@@ -103,7 +103,7 @@ export default function ContactPage() {
     },
     {
       question: 'Hangi konularda destek veriyorsunuz?',
-      answer: 'Yaşam koçluğu, kişisel gelişim, kariyer planlama, ilişki danışmanlığı, stres yönetimi ve mindfulness konularında uzmanım.'
+      answer: 'Demartini Metodu, değer belirleme, Breakthrough Experience, yaşam dengeleme ve dönüşüm süreçleri konularında uzmanım.'
     },
     {
       question: 'Online seanslar mevcut mu?',
@@ -157,19 +157,19 @@ export default function ContactPage() {
     <>
       <SEO
         title="İletişim | Reset - Şafak Özkan"
-        description="Sorularınız için bana ulaşabilir, ücretsiz keşif seansınızı planlayabilirsiniz. İstanbul Nişantaşı'nda yaşam koçluğu ve kişisel gelişim danışmanlığı hizmetleri."
-        keywords="iletişim, randevu, yaşam koçu iletişim, danışmanlık randevusu"
+        description="Sorularınız için bana ulaşabilir, ücretsiz keşif seansınızı planlayabilirsiniz. İstanbul Nişantaşı'nda Demartini Metodu ve değer belirleme danışmanlığı hizmetleri."
+        keywords="iletişim, randevu, demartini metodu iletişim, danışmanlık randevusu, demartini metodu istanbul"
         schema={schema}
       />
       <div className="bg-white">
         {/* Hero Section */}
-        <section className="py-16 md:py-24 bg-gradient-to-br from-[#F5F5F5] to-white">
+        <section className="py-10 md:py-14 bg-gradient-to-br from-[#F5F5F5] to-white">
           <div className="max-w-7xl mx-auto px-4 md:px-8">
             <div className="text-center">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif text-[#1A1A1A] mb-6 leading-tight">
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-serif text-[#1A1A1A] mb-4 leading-tight">
                 İletişim
               </h1>
-              <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
+              <p className="text-base md:text-lg text-gray-600 max-w-2xl mx-auto">
                 Sorularınız için bana ulaşabilir, ücretsiz keşif seansınızı 
                 planlayabilirsiniz.
               </p>
@@ -178,12 +178,12 @@ export default function ContactPage() {
         </section>
 
         {/* Contact Form & Info */}
-        <section className="py-16 md:py-24 bg-white">
+        <section className="py-10 md:py-14 bg-white">
           <div className="max-w-7xl mx-auto px-4 md:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
               {/* Contact Form */}
               <div>
-                <h2 className="text-2xl md:text-3xl font-serif text-[#1A1A1A] mb-6">
+                <h2 className="text-xl md:text-2xl font-serif text-[#1A1A1A] mb-5">
                   Mesaj Gönderin
                 </h2>
                 
@@ -262,9 +262,9 @@ export default function ContactPage() {
                     >
                       <option value="">Konu seçin</option>
                       <option value="consultation">Ücretsiz Danışma</option>
-                      <option value="life-coaching">Yaşam Koçluğu</option>
-                      <option value="career-coaching">Kariyer Koçluğu</option>
-                      <option value="relationship">İlişki Danışmanlığı</option>
+                      <option value="demartini-method">Demartini Metodu</option>
+                      <option value="value-determination">Değer Belirleme</option>
+                      <option value="breakthrough-experience">Breakthrough Experience</option>
                       <option value="other">Diğer</option>
                     </select>
                   </div>
@@ -312,11 +312,11 @@ export default function ContactPage() {
               
               {/* Contact Info */}
               <div>
-                <h2 className="text-2xl md:text-3xl font-serif text-[#1A1A1A] mb-6">
+                <h2 className="text-xl md:text-2xl font-serif text-[#1A1A1A] mb-5">
                   İletişim Bilgileri
                 </h2>
                 
-                <div className="space-y-6 mb-12">
+                <div className="space-y-5 mb-8">
                   {contactInfoDisplay.map((info, index) => (
                     <div key={index} className="flex items-start space-x-4">
                       <div className="w-12 h-12 flex items-center justify-center bg-[#D4AF37]/10 rounded-full flex-shrink-0">
@@ -346,13 +346,13 @@ export default function ContactPage() {
         </section>
 
         {/* FAQ */}
-        <section className="py-16 md:py-24 bg-[#F5F5F5]">
+        <section className="py-10 md:py-14 bg-[#F5F5F5]">
           <div className="max-w-4xl mx-auto px-4 md:px-8">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-serif text-[#1A1A1A] mb-4">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl md:text-3xl font-serif text-[#1A1A1A] mb-3">
                 Sık Sorulan Sorular
               </h2>
-              <p className="text-lg text-gray-600">
+              <p className="text-base text-gray-600">
                 Merak ettiğiniz konularda hızlı yanıtlar
               </p>
             </div>
@@ -378,12 +378,12 @@ export default function ContactPage() {
         </section>
 
         {/* CTA */}
-        <section className="py-16 md:py-24 bg-gradient-to-br from-[#1A1A1A] to-[#2A2A2A]">
+        <section className="py-10 md:py-14 bg-gradient-to-br from-[#1A1A1A] to-[#2A2A2A]">
           <div className="max-w-4xl mx-auto px-4 md:px-8 text-center">
-            <h2 className="text-3xl md:text-4xl font-serif text-white mb-6">
+            <h2 className="text-2xl md:text-3xl font-serif text-white mb-4">
               Ücretsiz Keşif Görüşmesi
             </h2>
-            <p className="text-lg text-white/80 mb-8 leading-relaxed">
+            <p className="text-base text-white/80 mb-6 leading-relaxed">
               Birlikte çalışıp çalışamayacağımızı keşfetmek için 30 dakikalık 
               ücretsiz bir görüşme yapabiliriz.
             </p>

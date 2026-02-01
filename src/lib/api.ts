@@ -93,7 +93,7 @@ export const usersApi = {
       .from('users')
       .select('*')
       .order('created_at', { ascending: false });
-    
+
     if (error) throw error;
     return data.map(({ password, ...user }) => user);
   },
@@ -105,7 +105,7 @@ export const usersApi = {
       .eq('role', 'CLIENT')
       .eq('approved', false)
       .order('registered_at', { ascending: false });
-    
+
     if (error) throw error;
     return data.map(({ password, ...user }) => user);
   },
@@ -117,7 +117,7 @@ export const usersApi = {
       .select('*')
       .eq('email', email)
       .single();
-    
+
     if (fetchError) throw fetchError;
 
     // Kullanıcıyı onayla
@@ -127,7 +127,7 @@ export const usersApi = {
       .eq('email', email)
       .select()
       .single();
-    
+
     if (error) throw error;
 
     // Clients tablosunda bu email var mı kontrol et
@@ -147,7 +147,7 @@ export const usersApi = {
           phone: userData.phone || null,
           is_active: true
         }]);
-      
+
       if (clientError) {
         console.error('Client oluşturma hatası:', clientError);
         // Hata olsa bile devam et, kullanıcı onaylandı
@@ -163,7 +163,7 @@ export const usersApi = {
       .from('users')
       .delete()
       .eq('email', email);
-    
+
     if (error) throw error;
     return true;
   },
@@ -175,7 +175,7 @@ export const usersApi = {
       .eq('email', email)
       .select()
       .single();
-    
+
     if (error) throw error;
     const { password, ...user } = data;
     return user;
@@ -186,7 +186,7 @@ export const usersApi = {
       .from('users')
       .delete()
       .eq('email', email);
-    
+
     if (error) throw error;
     return true;
   }
@@ -198,7 +198,7 @@ export const servicesApi = {
     const { data, error } = await supabase
       .from('services')
       .select('*');
-    
+
     if (error) throw error;
     return data || [];
   },
@@ -208,7 +208,7 @@ export const servicesApi = {
       .from('services')
       .insert([service])
       .select();
-    
+
     if (error) throw error;
     return data?.[0];
   },
@@ -219,7 +219,7 @@ export const servicesApi = {
       .update(updates)
       .eq('id', id)
       .select();
-    
+
     if (error) throw error;
     return data?.[0];
   },
@@ -229,7 +229,7 @@ export const servicesApi = {
       .from('services')
       .delete()
       .eq('id', id);
-    
+
     if (error) throw error;
     return true;
   }
@@ -242,9 +242,9 @@ export const appointmentsApi = {
       .from('appointments')
       .select('*')
       .order('created_at', { ascending: false });
-    
+
     if (error) throw error;
-    
+
     // Map snake_case DB fields to camelCase for frontend
     return (data || []).map(row => ({
       id: row.id,
@@ -268,9 +268,9 @@ export const appointmentsApi = {
       .select('*')
       .eq('client_email', email)
       .order('created_at', { ascending: false });
-    
+
     if (error) throw error;
-    
+
     // Map snake_case DB fields to camelCase for frontend
     return (data || []).map(row => ({
       id: row.id,
@@ -304,7 +304,7 @@ export const appointmentsApi = {
         status: appointment.status || 'PENDING'
       }])
       .select();
-    
+
     if (error) throw error;
     return data?.[0];
   },
@@ -315,7 +315,7 @@ export const appointmentsApi = {
       .update({ status })
       .eq('id', id)
       .select();
-    
+
     if (error) throw error;
     return data?.[0];
   },
@@ -326,7 +326,7 @@ export const appointmentsApi = {
       .update(updates)
       .eq('id', id)
       .select();
-    
+
     if (error) throw error;
     return data?.[0];
   },
@@ -336,7 +336,7 @@ export const appointmentsApi = {
       .from('appointments')
       .delete()
       .eq('id', id);
-    
+
     if (error) throw error;
     return true;
   }
@@ -349,9 +349,9 @@ export const clientsApi = {
       .from('clients')
       .select('*')
       .order('created_at', { ascending: false });
-    
+
     if (error) throw error;
-    
+
     // Bakiye hesapla ve field'ları map'le
     return (data || []).map(client => ({
       ...client,
@@ -371,7 +371,7 @@ export const clientsApi = {
       .select('*')
       .eq('email', email)
       .single();
-    
+
     if (error) return null;
     return data;
   },
@@ -384,13 +384,13 @@ export const clientsApi = {
       phone: client.phone || null,
       notes: client.notes || null
     };
-    
+
     const { data, error } = await supabase
       .from('clients')
       .insert([clientData])
       .select()
       .single();
-    
+
     if (error) throw error;
     return data;
   },
@@ -402,7 +402,7 @@ export const clientsApi = {
       .eq('id', id)
       .select()
       .single();
-    
+
     if (error) throw error;
     return data;
   },
@@ -412,7 +412,7 @@ export const clientsApi = {
       .from('clients')
       .delete()
       .eq('id', id);
-    
+
     if (error) throw error;
   }
 };
@@ -426,7 +426,7 @@ const clampProgressValue = (value: number | null | undefined): number => {
 const mapProgressRecord = (row: any): ProgressRecord => {
   // JSONB metrics varsa onu kullan, yoksa eski kolonlardan oluştur
   let metrics: Record<string, number> = {};
-  
+
   if (row.metrics && typeof row.metrics === 'object') {
     // JSONB'den metrikleri al
     metrics = row.metrics;
@@ -460,7 +460,7 @@ export const progressMetricsApi = {
       .select('*')
       .eq('is_active', true)
       .order('order_index', { ascending: true });
-    
+
     if (error) throw error;
     return (data || []).map((row: any) => ({
       id: row.id,
@@ -490,7 +490,7 @@ export const progressMetricsApi = {
       }])
       .select()
       .single();
-    
+
     if (error) throw error;
     return {
       id: data.id,
@@ -508,7 +508,7 @@ export const progressMetricsApi = {
 
   async update(id: string, updates: Partial<CreateProgressMetricInput>): Promise<ProgressMetric> {
     const payload: any = {};
-    
+
     if (updates.label !== undefined) payload.label = updates.label;
     if (updates.description !== undefined) payload.description = updates.description;
     if (updates.icon !== undefined) payload.icon = updates.icon;
@@ -522,7 +522,7 @@ export const progressMetricsApi = {
       .eq('id', id)
       .select()
       .single();
-    
+
     if (error) throw error;
     return {
       id: data.id,
@@ -543,7 +543,7 @@ export const progressMetricsApi = {
       .from('progress_metrics')
       .delete()
       .eq('id', id);
-    
+
     if (error) throw error;
     return true;
   }
@@ -556,7 +556,7 @@ export const progressApi = {
       .select('*')
       .eq('client_id', clientId)
       .order('session_date', { ascending: true });
-    
+
     if (error) throw error;
     return (data || []).map(mapProgressRecord);
   },
@@ -581,14 +581,14 @@ export const progressApi = {
       .insert([payload])
       .select()
       .single();
-    
+
     if (error) throw error;
     return mapProgressRecord(data);
   },
 
   async update(id: string, record: Partial<CreateProgressRecordInput>): Promise<ProgressRecord> {
     const payload: any = {};
-    
+
     if (record.sessionDate !== undefined) payload.session_date = record.sessionDate;
     if (record.metrics !== undefined) payload.metrics = record.metrics;
     if (record.summary !== undefined) payload.summary = record.summary || null;
@@ -606,7 +606,7 @@ export const progressApi = {
       .eq('id', id)
       .select()
       .single();
-    
+
     if (error) throw error;
     return mapProgressRecord(data);
   },
@@ -616,7 +616,7 @@ export const progressApi = {
       .from('progress_records')
       .delete()
       .eq('id', id);
-    
+
     if (error) throw error;
     return true;
   }
@@ -630,7 +630,7 @@ export const resourcesApi = {
       .select('*')
       .eq('client_id', clientId)
       .order('date', { ascending: false });
-    
+
     if (error) throw error;
     return data;
   },
@@ -648,7 +648,7 @@ export const resourcesApi = {
       }])
       .select()
       .single();
-    
+
     if (error) throw error;
     return data;
   },
@@ -658,7 +658,7 @@ export const resourcesApi = {
       .from('client_resources')
       .delete()
       .eq('id', id);
-    
+
     if (error) throw error;
     return true;
   }
@@ -668,13 +668,13 @@ export const resourcesApi = {
 export const reviewsApi = {
   async getAll(adminView = false) {
     let query = supabase.from('reviews').select('*');
-    
+
     if (!adminView) {
       query = query.eq('approved', true);
     }
-    
+
     const { data, error } = await query.order('date', { ascending: false });
-    
+
     if (error) throw error;
     return data;
   },
@@ -685,7 +685,7 @@ export const reviewsApi = {
       .insert([review])
       .select()
       .single();
-    
+
     if (error) throw error;
     return data;
   },
@@ -696,16 +696,16 @@ export const reviewsApi = {
       .select('approved')
       .eq('id', id)
       .single();
-    
+
     if (!review) throw new Error('Review not found');
-    
+
     const { data, error } = await supabase
       .from('reviews')
       .update({ approved: !review.approved })
       .eq('id', id)
       .select()
       .single();
-    
+
     if (error) throw error;
     return data;
   },
@@ -715,7 +715,7 @@ export const reviewsApi = {
       .from('reviews')
       .delete()
       .eq('id', id);
-    
+
     if (error) throw error;
     return true;
   }
@@ -728,7 +728,7 @@ export const messagesApi = {
       .from('contact_messages')
       .select('*')
       .order('date', { ascending: false });
-    
+
     if (error) throw error;
     return data || [];
   },
@@ -747,7 +747,7 @@ export const messagesApi = {
       }])
       .select()
       .single();
-    
+
     if (error) throw error;
     return data;
   },
@@ -759,7 +759,7 @@ export const messagesApi = {
       .eq('id', id)
       .select()
       .single();
-    
+
     if (error) throw error;
     return data;
   },
@@ -769,7 +769,7 @@ export const messagesApi = {
       .from('contact_messages')
       .delete()
       .eq('id', id);
-    
+
     if (error) {
       handleSupabaseError(error);
     }
@@ -784,7 +784,7 @@ export const configApi = {
       .from('working_config')
       .select('*')
       .single();
-    
+
     if (error) throw error;
     return {
       startHour: data.start_hour,
@@ -805,7 +805,7 @@ export const configApi = {
       })
       .select()
       .single();
-    
+
     if (error) throw error;
     return data;
   }
@@ -817,7 +817,7 @@ export const certificatesApi = {
     const { data, error } = await supabase
       .from('certificates')
       .select('*');
-    
+
     if (error) throw error;
     return data || [];
   },
@@ -827,7 +827,7 @@ export const certificatesApi = {
       .from('certificates')
       .insert([cert])
       .select();
-    
+
     if (error) throw error;
     return data?.[0];
   },
@@ -838,7 +838,7 @@ export const certificatesApi = {
       .update(updates)
       .eq('id', id)
       .select();
-    
+
     if (error) throw error;
     return data?.[0];
   },
@@ -848,7 +848,7 @@ export const certificatesApi = {
       .from('certificates')
       .delete()
       .eq('id', id);
-    
+
     if (error) throw error;
     return true;
   }
@@ -904,7 +904,7 @@ export const contentApi = {
   async updateContactInfo(updates: UpdateContentInput): Promise<ContactInfo> {
     // Önce mevcut kaydı al
     const { data: existing } = await supabase.from('contact_info').select('id').limit(1).single();
-    
+
     if (!existing?.id) {
       throw new ApiError('İletişim bilgisi bulunamadı', 'NOT_FOUND', 404);
     }
@@ -946,7 +946,7 @@ export const contentApi = {
       .select('*')
       .eq('type', 'kvkk')
       .single();
-    
+
     if (error && error.code !== 'PGRST116') {
       console.error('KVKK içeriği alınırken hata:', error);
     }
@@ -955,19 +955,19 @@ export const contentApi = {
 
   async updateKvkkContent(content: string): Promise<void> {
     const existing = await this.getKvkkContent();
-    
+
     if (existing) {
       const { error } = await supabase
         .from('legal_contents')
         .update({ content, updated_at: new Date().toISOString() })
         .eq('id', existing.id);
-      
+
       if (error) throw new ApiError('KVKK içeriği güncellenemedi', 'UPDATE_FAILED', 500);
     } else {
       const { error } = await supabase
         .from('legal_contents')
         .insert({ type: 'kvkk', content });
-      
+
       if (error) throw new ApiError('KVKK içeriği oluşturulamadı', 'CREATE_FAILED', 500);
     }
   },
@@ -979,7 +979,7 @@ export const contentApi = {
       .select('*')
       .eq('type', 'privacy')
       .single();
-    
+
     if (error && error.code !== 'PGRST116') {
       console.error('Gizlilik içeriği alınırken hata:', error);
     }
@@ -988,19 +988,19 @@ export const contentApi = {
 
   async updatePrivacyContent(content: string): Promise<void> {
     const existing = await this.getPrivacyContent();
-    
+
     if (existing) {
       const { error } = await supabase
         .from('legal_contents')
         .update({ content, updated_at: new Date().toISOString() })
         .eq('id', existing.id);
-      
+
       if (error) throw new ApiError('Gizlilik içeriği güncellenemedi', 'UPDATE_FAILED', 500);
     } else {
       const { error } = await supabase
         .from('legal_contents')
         .insert({ type: 'privacy', content });
-      
+
       if (error) throw new ApiError('Gizlilik içeriği oluşturulamadı', 'CREATE_FAILED', 500);
     }
   },
@@ -1012,7 +1012,7 @@ export const contentApi = {
       .select('*')
       .eq('type', 'cookies')
       .single();
-    
+
     if (error && error.code !== 'PGRST116') {
       console.error('Çerez politikası içeriği alınırken hata:', error);
     }
@@ -1021,19 +1021,19 @@ export const contentApi = {
 
   async updateCookiesContent(content: string): Promise<void> {
     const existing = await this.getCookiesContent();
-    
+
     if (existing) {
       const { error } = await supabase
         .from('legal_contents')
         .update({ content, updated_at: new Date().toISOString() })
         .eq('id', existing.id);
-      
+
       if (error) throw new ApiError('Çerez politikası içeriği güncellenemedi', 'UPDATE_FAILED', 500);
     } else {
       const { error } = await supabase
         .from('legal_contents')
         .insert({ type: 'cookies', content });
-      
+
       if (error) throw new ApiError('Çerez politikası içeriği oluşturulamadı', 'CREATE_FAILED', 500);
     }
   }
@@ -1045,7 +1045,7 @@ export const methodsApi = {
     const { data, error } = await supabase
       .from('methods')
       .select('*');
-    
+
     if (error) throw error;
     return data || [];
   },
@@ -1055,7 +1055,7 @@ export const methodsApi = {
       .from('methods')
       .insert([method])
       .select();
-    
+
     if (error) throw error;
     return data?.[0];
   },
@@ -1066,7 +1066,7 @@ export const methodsApi = {
       .update(updates)
       .eq('id', id)
       .select();
-    
+
     if (error) throw error;
     return data?.[0];
   },
@@ -1076,7 +1076,7 @@ export const methodsApi = {
       .from('methods')
       .delete()
       .eq('id', id);
-    
+
     if (error) throw error;
     return true;
   }
@@ -1200,7 +1200,7 @@ export const createPdfForClient = async (clientId: string, summaryText: string) 
 
   const clientName = data?.name || 'Danışan';
   const date = new Date().toISOString().split('T')[0];
-  
+
   const pdfContent = `
 RESET - ŞAFAK ÖZKAN DANIŞMANLIK
 Gelişim Raporu
@@ -1212,7 +1212,7 @@ ${summaryText}
 
 Bu rapor Reset - Şafak Özkan Danışmanlık tarafından oluşturulmuştur.
   `.trim();
-  
+
   // Fix Base64 encoding
   const encoder = new TextEncoder();
   const uint8Array = encoder.encode(pdfContent);
@@ -1222,7 +1222,7 @@ Bu rapor Reset - Şafak Özkan Danışmanlık tarafından oluşturulmuştur.
   }
   const base64Content = btoa(binaryString);
   const dataUrl = `data:text/plain;base64,${base64Content}`;
-  
+
   return await resourcesApi.create({
     clientId,
     type: 'PDF',
@@ -1249,4 +1249,220 @@ export const getHomeworkSuggestion = async (): Promise<string> => {
   const randomIndex = Math.floor(Math.random() * homeworkSuggestions.length);
   await new Promise(resolve => setTimeout(resolve, 500));
   return homeworkSuggestions[randomIndex];
+};
+
+// YouTube API
+export const youtubeApi = {
+  async getAll() {
+    const { data, error } = await supabase
+      .from('youtube_videos')
+      .select('*')
+      .order('published_at', { ascending: false });
+
+    if (error) throw error;
+    return (data || []).map(v => ({
+      id: v.id,
+      youtubeId: v.youtube_id,
+      title: v.title,
+      description: v.description,
+      thumbnail: v.thumbnail,
+      publishedAt: v.published_at,
+      isPublished: v.is_published ?? true,
+      viewCount: v.view_count || 0,
+      duration: v.duration || '',
+      category: v.category || 'Genel'
+    }));
+  },
+
+  async getPublished() {
+    const { data, error } = await supabase
+      .from('youtube_videos')
+      .select('*')
+      .eq('is_published', true)
+      .order('published_at', { ascending: false });
+
+    if (error) throw error;
+    return (data || []).map(v => ({
+      id: v.id,
+      youtubeId: v.youtube_id,
+      title: v.title,
+      description: v.description,
+      thumbnail: v.thumbnail,
+      publishedAt: v.published_at,
+      isPublished: v.is_published ?? true,
+      viewCount: v.view_count || 0,
+      duration: v.duration || '',
+      category: v.category || 'Genel'
+    }));
+  },
+
+  async create(video: any) {
+    const { data, error } = await supabase
+      .from('youtube_videos')
+      .insert([{
+        youtube_id: video.youtubeId,
+        title: video.title,
+        description: video.description,
+        thumbnail: video.thumbnail,
+        published_at: video.publishedAt,
+        is_published: video.isPublished ?? true,
+        duration: video.duration,
+        category: video.category
+      }])
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  },
+
+  async update(id: string, updates: any) {
+    const dbUpdates: any = {};
+    if (updates.youtubeId) dbUpdates.youtube_id = updates.youtubeId;
+    if (updates.title) dbUpdates.title = updates.title;
+    if (updates.description !== undefined) dbUpdates.description = updates.description;
+    if (updates.thumbnail) dbUpdates.thumbnail = updates.thumbnail;
+    if (updates.publishedAt) dbUpdates.published_at = updates.publishedAt;
+    if (updates.isPublished !== undefined) dbUpdates.is_published = updates.isPublished;
+    if (updates.duration) dbUpdates.duration = updates.duration;
+    if (updates.category) dbUpdates.category = updates.category;
+
+    const { data, error } = await supabase
+      .from('youtube_videos')
+      .update(dbUpdates)
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  },
+
+  async delete(id: string) {
+    const { error } = await supabase
+      .from('youtube_videos')
+      .delete()
+      .eq('id', id);
+
+    if (error) throw error;
+    return true;
+  }
+};
+
+// Ads Tracking APIs
+export const adAccountsApi = {
+  async getAll() {
+    const { data, error } = await supabase
+      .from('ad_accounts')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.warn('ad_accounts sorgusu:', error);
+      return [];
+    }
+    return data || [];
+  },
+
+  async create(account: any) {
+    const { data, error } = await supabase
+      .from('ad_accounts')
+      .insert([account])
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  },
+
+  async update(id: string, updates: any) {
+    const { data, error } = await supabase
+      .from('ad_accounts')
+      .update(updates)
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  },
+
+  async delete(id: string) {
+    const { error } = await supabase
+      .from('ad_accounts')
+      .delete()
+      .eq('id', id);
+
+    if (error) throw error;
+    return true;
+  }
+};
+
+export const adCampaignsApi = {
+  async getAll() {
+    const { data, error } = await supabase
+      .from('ad_campaigns')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.warn('ad_campaigns sorgusu:', error);
+      return [];
+    }
+    return data || [];
+  },
+
+  async getByAccount(accountId: string) {
+    const { data, error } = await supabase
+      .from('ad_campaigns')
+      .select('*')
+      .eq('account_id', accountId);
+
+    if (error) return [];
+    return data || [];
+  }
+};
+
+export const adMetricsApi = {
+  async getAll() {
+    const { data, error } = await supabase
+      .from('ad_metrics')
+      .select('*')
+      .order('date', { ascending: false });
+
+    if (error) {
+      console.warn('ad_metrics sorgusu:', error);
+      return [];
+    }
+    return data || [];
+  }
+};
+
+export const adConversionsApi = {
+  async getAll() {
+    const { data, error } = await supabase
+      .from('ad_conversions')
+      .select('*')
+      .order('conversion_date', { ascending: false });
+
+    if (error) {
+      console.warn('ad_conversions sorgusu:', error);
+      return [];
+    }
+    return data || [];
+  }
+};
+
+export const adROISummaryApi = {
+  async getAll() {
+    const { data, error } = await supabase
+      .from('ad_roi_summary')
+      .select('*');
+
+    if (error) {
+      console.warn('ad_roi_summary sorgusu:', error);
+      return [];
+    }
+    return data || [];
+  }
 };
