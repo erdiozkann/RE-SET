@@ -1,0 +1,24 @@
+{
+  "projectId": "6035127d-74fa-462b-befa-3580a04618ab",
+  "status": "init",
+  "type": "backend",
+  "scope": "codebase",
+  "localEndpoint": "http://localhost:5001",
+  "loginUser": "info@re-set.com.tr",
+  "loginPassword": "123456",
+  "localPort": 5001,
+  "serverMode": "development",
+  "additionalInstruction": "Focus on backend API testing only (Admin Login, Client retrieval).",
+  "variantOptions": {
+    "numVariants":1,
+    "creativeRange":1,
+    "aspectsToFocusOn":["functionality"]
+  },
+  "executionArgs": {
+    "localPort": 5001,
+    "serverMode": "development",
+    "needLogin": true,
+    "testPlanId": "",
+    "testIds": []
+  }
+}
