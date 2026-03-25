@@ -24,10 +24,17 @@ export default function LoginPage() {
   useEffect(() => {
     if (!authLoading && user) {
       const from = (location.state as { from?: { pathname: string } })?.from?.pathname;
+      const fromIsAdminRoute = from?.startsWith('/admin');
+
       if (user.role === 'ADMIN') {
         navigate(from || '/admin', { replace: true });
+      } else if (user.approved) {
+        // Non-admin users should never be redirected back into admin routes
+        const safeTarget = from && !fromIsAdminRoute ? from : '/client-panel';
+        navigate(safeTarget, { replace: true });
       } else {
-        navigate(from || '/client-panel', { replace: true });
+        // Unapproved users should not get stuck in loading state
+        setLoading(false);
       }
     }
   }, [user, authLoading, navigate, location]);
@@ -37,20 +44,31 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
+      console.log('Login attempt started:', { email });
       const loggedInUser = await signIn(email, password);
+      console.log('Login successful:', loggedInUser);
 
       toast.success('Giriş başarılı! Yönlendiriliyorsunuz...');
 
-      // SPA-uyumlu yönlendirme (window.location yerine navigate)
-      setTimeout(() => {
-        if (loggedInUser.role === 'ADMIN') {
-          navigate('/admin', { replace: true });
-        } else {
-          navigate('/client-panel', { replace: true });
-        }
-      }, 500);
+      // Explicit navigation for immediate feedback
+      console.log('Determining navigation path for role:', loggedInUser.role);
+
+      if (loggedInUser.role === 'ADMIN') {
+        console.log('Redirecting to /admin');
+        navigate('/admin', { replace: true });
+      } else if (loggedInUser.approved) {
+        console.log('Redirecting to /client-panel');
+        navigate('/client-panel', { replace: true });
+      } else {
+        console.warn('User not approved, staying on page');
+        // Stay on page, show toast (already handled by error in AuthContext usually, but if success returns unapproved?)
+        // AuthContext throws if unapproved, so we actually won't reach here for unapproved users effectively.
+        // But if we do (e.g. slight race), we just stop loading.
+        setLoading(false);
+      }
 
     } catch (error) {
+      console.error('Login error caught in page:', error);
       const message = getUserFriendlyErrorMessage(error);
       toast.error(message);
       setLoading(false);
@@ -81,14 +99,8 @@ export default function LoginPage() {
     }
   };
 
-  // Auth yüklenirken bekle
-  if (authLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-amber-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-teal-600"></div>
-      </div>
-    );
-  }
+  // No manual loader to avoid flash
+
 
   return (
     <>
@@ -96,6 +108,7 @@ export default function LoginPage() {
         title="Giriş Yap - RE-SET Demartini Metodu"
         description="RE-SET Demartini Metodu hesabınıza giriş yapın. Randevularınızı yönetin, ilerleme kayıtlarınızı görüntüleyin."
         keywords="giriş, login, danışan girişi, admin girişi"
+        noindex
       />
 
       <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-amber-50 flex items-center justify-center px-4 py-12">

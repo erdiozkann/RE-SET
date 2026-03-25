@@ -108,6 +108,7 @@ export default function ResetPasswordPage() {
                 <SEO
                     title="Geçersiz Link - RE-SET"
                     description="Şifre sıfırlama linki geçersiz veya süresi dolmuş."
+                    noindex
                 />
                 <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-amber-50 flex items-center justify-center px-4 py-12">
                     <div className="w-full max-w-md">
@@ -138,6 +139,7 @@ export default function ResetPasswordPage() {
             <SEO
                 title="Yeni Şifre Belirle - RE-SET"
                 description="Hesabınız için yeni şifre belirleyin."
+                noindex
             />
 
             <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-amber-50 flex items-center justify-center px-4 py-12">

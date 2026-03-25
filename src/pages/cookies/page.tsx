@@ -81,7 +81,7 @@ export default function CookiesPage() {
     '@type': 'WebPage',
     name: 'Çerez Politikası',
     description: 'Reset web sitesinde kullanılan çerezler, amaçları ve yönetim seçenekleri hakkında detaylı bilgi.',
-    url: `${siteUrl}/cerez-politikasi`
+    url: `${siteUrl}/cookies`
   };
 
   return (
@@ -89,7 +89,7 @@ export default function CookiesPage() {
       <SEO
         title="Çerez Politikası"
         description="Reset web sitesinde kullanılan çerezler, amaçları ve yönetim seçenekleri hakkında detaylı bilgi."
-        canonical="/cerez-politikasi"
+        canonical="/cookies"
         schema={schema}
       />
 

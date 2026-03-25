@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { reviewsApi } from '../../../lib/api';
 import { useToast } from '../../../components/ToastContainer';
 import { getUserFriendlyErrorMessage } from '../../../lib/errors';
@@ -16,11 +16,7 @@ export default function ReviewsTab() {
     rating: 5
   });
 
-  useEffect(() => {
-    loadReviews();
-  }, []);
-
-  const loadReviews = async () => {
+  const loadReviews = useCallback(async () => {
     try {
       const data = await reviewsApi.getAll(true); // Admin view - tüm yorumları getir
       setReviews(data);
@@ -30,7 +26,11 @@ export default function ReviewsTab() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
+
+  useEffect(() => {
+    loadReviews();
+  }, [loadReviews]);
 
   const handleAdd = () => {
     setFormData({ name: '', text: '', rating: 5 });
@@ -134,9 +134,8 @@ export default function ReviewsTab() {
           {reviews.map((review) => (
             <div
               key={review.id}
-              className={`bg-white rounded-xl border p-6 hover:shadow-md transition-shadow ${
-                review.approved ? 'border-gray-200' : 'border-yellow-300 bg-yellow-50'
-              }`}
+              className={`bg-white rounded-xl border p-6 hover:shadow-md transition-shadow ${review.approved ? 'border-gray-200' : 'border-yellow-300 bg-yellow-50'
+                }`}
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1">
@@ -165,11 +164,10 @@ export default function ReviewsTab() {
                   <button
                     type="button"
                     onClick={() => handleToggleApproval(review.id)}
-                    className={`px-3 py-2 rounded-lg transition-colors ${
-                      review.approved
-                        ? 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200'
-                        : 'bg-green-100 text-green-700 hover:bg-green-200'
-                    }`}
+                    className={`px-3 py-2 rounded-lg transition-colors ${review.approved
+                      ? 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200'
+                      : 'bg-green-100 text-green-700 hover:bg-green-200'
+                      }`}
                     title={review.approved ? 'Onayı Kaldır' : 'Onayla'}
                   >
                     <i className={review.approved ? 'ri-eye-off-line' : 'ri-check-line'}></i>
@@ -194,7 +192,7 @@ export default function ReviewsTab() {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto">
           <div className="bg-white rounded-xl p-6 max-w-md w-full my-auto max-h-[90vh] overflow-y-auto">
             <h3 className="text-xl font-semibold text-[#1A1A1A] mb-4">Yeni Yorum Ekle</h3>
-            
+
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -222,11 +220,10 @@ export default function ReviewsTab() {
                       className="p-1 transition-transform hover:scale-110"
                     >
                       <i
-                        className={`text-2xl ${
-                          star <= formData.rating
-                            ? 'ri-star-fill text-yellow-400'
-                            : 'ri-star-line text-gray-300'
-                        }`}
+                        className={`text-2xl ${star <= formData.rating
+                          ? 'ri-star-fill text-yellow-400'
+                          : 'ri-star-line text-gray-300'
+                          }`}
                       ></i>
                     </button>
                   ))}

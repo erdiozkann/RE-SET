@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import type { AdAccount, AdCampaign, AdMetrics, AdConversion, AdROISummary } from '../../../types';
 import { adAccountsApi, adCampaignsApi, adMetricsApi, adConversionsApi, adROISummaryApi } from '../../../lib/api';
 
@@ -27,11 +27,7 @@ export default function AdsTab() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     setLoading(true);
     try {
       const [accountsRes, campaignsRes, metricsRes, conversionsRes, roiRes] = await Promise.allSettled([
@@ -47,12 +43,16 @@ export default function AdsTab() {
       if (metricsRes.status === 'fulfilled') setMetrics(metricsRes.value);
       if (conversionsRes.status === 'fulfilled') setConversions(conversionsRes.value);
       if (roiRes.status === 'fulfilled') setRoiData(roiRes.value);
-    } catch (error) {
-      console.error('Error loading ads data:', error);
+    } catch {
+      console.error('Error loading ads data');
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
 
   // 📊 Accounts Tab
   const renderAccountsTab = () => (
@@ -76,7 +76,7 @@ export default function AdsTab() {
                 <label className="block text-sm font-semibold text-gray-700 mb-1">Platform</label>
                 <select
                   value={formData.platform}
-                  onChange={(e) => setFormData({ ...formData, platform: e.target.value as any })}
+                  onChange={(e) => setFormData({ ...formData, platform: e.target.value as 'google_ads' | 'meta_ads' | 'tiktok_ads' })}
                   className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
                   required
                 >
@@ -171,9 +171,8 @@ export default function AdsTab() {
                 <h4 className="font-semibold text-gray-800">{account.accountName}</h4>
                 <p className="text-sm text-gray-600">{getPlatformLabel(account.platform)}</p>
               </div>
-              <span className={`px-2 py-1 rounded text-xs font-semibold ${
-                account.isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
-              }`}>
+              <span className={`px-2 py-1 rounded text-xs font-semibold ${account.isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                }`}>
                 {account.isActive ? '✓ Aktif' : 'İnaktif'}
               </span>
             </div>
@@ -208,11 +207,10 @@ export default function AdsTab() {
             <button
               key={platform}
               onClick={() => setSelectedPlatform(platform)}
-              className={`px-3 py-1 rounded text-sm ${
-                selectedPlatform === platform
-                  ? 'bg-[#D4AF37] text-black font-semibold'
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
+              className={`px-3 py-1 rounded text-sm ${selectedPlatform === platform
+                ? 'bg-[#D4AF37] text-black font-semibold'
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
             >
               {getPlatformLabel(platform)}
             </button>
@@ -235,11 +233,10 @@ export default function AdsTab() {
                 <tr key={campaign.id} className="hover:bg-gray-100">
                   <td className="border border-gray-300 px-3 py-2 font-semibold">{campaign.campaignName}</td>
                   <td className="border border-gray-300 px-3 py-2">
-                    <span className={`px-2 py-1 rounded text-xs font-semibold ${
-                      campaign.status === 'active' ? 'bg-green-100 text-green-800' :
+                    <span className={`px-2 py-1 rounded text-xs font-semibold ${campaign.status === 'active' ? 'bg-green-100 text-green-800' :
                       campaign.status === 'paused' ? 'bg-yellow-100 text-yellow-800' :
-                      'bg-red-100 text-red-800'
-                    }`}>
+                        'bg-red-100 text-red-800'
+                      }`}>
                       {getStatusLabel(campaign.status)}
                     </span>
                   </td>
@@ -303,9 +300,9 @@ export default function AdsTab() {
             <p className="text-xs text-gray-600 mb-1">Gösterim</p>
             <p className="text-xl font-bold text-blue-700">{totalImpressions.toLocaleString('tr-TR')}</p>
           </div>
-          <div className="bg-purple-50 border border-purple-200 rounded p-3">
+          <div className="bg-cyan-50 border border-cyan-200 rounded p-3">
             <p className="text-xs text-gray-600 mb-1">Tıklamalar</p>
-            <p className="text-xl font-bold text-purple-700">{totalClicks.toLocaleString('tr-TR')}</p>
+            <p className="text-xl font-bold text-cyan-700">{totalClicks.toLocaleString('tr-TR')}</p>
           </div>
           <div className="bg-green-50 border border-green-200 rounded p-3">
             <p className="text-xs text-gray-600 mb-1">Dönüşümler</p>
@@ -375,11 +372,10 @@ export default function AdsTab() {
             <button
               key={platform}
               onClick={() => setSelectedPlatform(platform)}
-              className={`px-3 py-1 rounded text-sm ${
-                selectedPlatform === platform
-                  ? 'bg-[#D4AF37] text-black font-semibold'
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
+              className={`px-3 py-1 rounded text-sm ${selectedPlatform === platform
+                ? 'bg-[#D4AF37] text-black font-semibold'
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
             >
               {getPlatformLabel(platform)}
             </button>
@@ -438,11 +434,10 @@ export default function AdsTab() {
             <button
               key={platform}
               onClick={() => setSelectedPlatform(platform)}
-              className={`px-3 py-1 rounded text-sm ${
-                selectedPlatform === platform
-                  ? 'bg-[#D4AF37] text-black font-semibold'
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
+              className={`px-3 py-1 rounded text-sm ${selectedPlatform === platform
+                ? 'bg-[#D4AF37] text-black font-semibold'
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
             >
               {getPlatformLabel(platform)}
             </button>
@@ -468,11 +463,10 @@ export default function AdsTab() {
                     {roi.totalRevenue ? `₺${roi.totalRevenue.toFixed(2)}` : '-'}
                   </td>
                   <td className="border border-gray-300 px-3 py-2 text-right">
-                    <span className={`font-bold ${
-                      roi.roiPercentage && roi.roiPercentage >= 0
-                        ? 'text-green-700'
-                        : 'text-red-700'
-                    }`}>
+                    <span className={`font-bold ${roi.roiPercentage && roi.roiPercentage >= 0
+                      ? 'text-green-700'
+                      : 'text-red-700'
+                      }`}>
                       {roi.roiPercentage ? `${roi.roiPercentage.toFixed(2)}%` : '-'}
                     </span>
                   </td>
@@ -498,9 +492,29 @@ export default function AdsTab() {
 
     setIsSubmitting(true);
     try {
-      const newAccount = await adAccountsApi.create(formData);
+      let apiPlatform: 'GOOGLE' | 'FACEBOOK' | 'TIKTOK';
+      switch (formData.platform) {
+        case 'google_ads':
+          apiPlatform = 'GOOGLE';
+          break;
+        case 'meta_ads':
+          apiPlatform = 'FACEBOOK';
+          break;
+        case 'tiktok_ads':
+          apiPlatform = 'TIKTOK';
+          break;
+        default:
+          apiPlatform = 'GOOGLE';
+      }
+
+      const newAccount = await adAccountsApi.create({
+        platform: apiPlatform,
+        name: formData.accountName,
+        account_id: formData.accountId,
+        status: formData.isActive ? 'ACTIVE' : 'DISABLED'
+      });
       setAccounts([newAccount, ...accounts]);
-      
+
       // Reset form
       setFormData({
         platform: 'google_ads',
@@ -548,11 +562,10 @@ export default function AdsTab() {
           <button
             key={tab.id}
             onClick={() => setActiveSubTab(tab.id as AdsSubTab)}
-            className={`px-4 py-2 font-semibold whitespace-nowrap ${
-              activeSubTab === tab.id
-                ? 'border-b-2 border-[#D4AF37] text-[#D4AF37]'
-                : 'text-gray-600 hover:text-gray-800'
-            }`}
+            className={`px-4 py-2 font-semibold whitespace-nowrap ${activeSubTab === tab.id
+              ? 'border-b-2 border-[#D4AF37] text-[#D4AF37]'
+              : 'text-gray-600 hover:text-gray-800'
+              }`}
           >
             {tab.label}
           </button>

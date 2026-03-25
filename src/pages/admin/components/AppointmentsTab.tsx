@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { appointmentsApi } from '../../../lib/api';
 import { useToast } from '../../../components/ToastContainer';
 import { getUserFriendlyErrorMessage } from '../../../lib/errors';
@@ -11,11 +11,7 @@ export default function AppointmentsTab() {
   const [loading, setLoading] = useState(true);
   const toast = useToast();
 
-  useEffect(() => {
-    loadAppointments();
-  }, []);
-
-  const loadAppointments = async () => {
+  const loadAppointments = useCallback(async () => {
     try {
       setLoading(true);
       const data = await appointmentsApi.getAll();
@@ -26,7 +22,11 @@ export default function AppointmentsTab() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
+
+  useEffect(() => {
+    loadAppointments();
+  }, [loadAppointments]);
 
   const handleConfirm = async (id: string) => {
     try {
@@ -86,11 +86,10 @@ export default function AppointmentsTab() {
             <button
               key={status}
               onClick={() => setFilter(status)}
-              className={`px-4 py-2 rounded-full font-semibold transition-all whitespace-nowrap ${
-                filter === status
-                  ? 'bg-gradient-to-r from-[#D4AF37] to-[#F4D03F] text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              }`}
+              className={`px-4 py-2 rounded-full font-semibold transition-all whitespace-nowrap ${filter === status
+                ? 'bg-gradient-to-r from-[#D4AF37] to-[#F4D03F] text-white'
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
             >
               {status === 'ALL' ? 'Tümü' : status === 'PENDING' ? 'Bekleyen' : status === 'CONFIRMED' ? 'Onaylı' : 'İptal'}
             </button>

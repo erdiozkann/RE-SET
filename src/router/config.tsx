@@ -19,14 +19,18 @@ const KVKKPage = lazy(() => import('../pages/kvkk/page'));
 const PrivacyPage = lazy(() => import('../pages/privacy/page'));
 const CopyrightPage = lazy(() => import('../pages/copyright/page'));
 const NotFoundPage = lazy(() => import('../pages/NotFound'));
+// Defense-in-depth: Only import DebugPage in DEV
+const DebugPage = import.meta.env.DEV ? lazy(() => import('../pages/debug/page')) : null;
 import CookiesPage from '../pages/cookies/page';
 
 import ProtectedRoute from '../components/ProtectedRoute';
 
+import PageTransition from '../components/PageTransition';
+
 const routes: RouteObject[] = [
   {
     path: '/',
-    element: <Layout />,
+    element: <Layout />, // Layout already handles its children transitions
     children: [
       { index: true, element: <HomePage /> },
       { path: 'about', element: <AboutPage /> },
@@ -43,39 +47,71 @@ const routes: RouteObject[] = [
   },
   {
     path: '/login',
-    element: <LoginPage />,
+    element: (
+      <PageTransition>
+        <LoginPage />
+      </PageTransition>
+    ),
   },
   {
     path: '/register',
-    element: <RegisterPage />,
+    element: (
+      <PageTransition>
+        <RegisterPage />
+      </PageTransition>
+    ),
   },
   {
     path: '/reset-password',
-    element: <ResetPasswordPage />,
+    element: (
+      <PageTransition>
+        <ResetPasswordPage />
+      </PageTransition>
+    ),
   },
   {
     path: '/admin',
     element: (
-      <ProtectedRoute requireAdmin>
-        <AdminPage />
-      </ProtectedRoute>
+      <PageTransition>
+        <ProtectedRoute requireAdmin>
+          <AdminPage />
+        </ProtectedRoute>
+      </PageTransition>
     ),
   },
   {
     path: '/client-panel',
     element: (
-      <ProtectedRoute>
-        <ClientPanelPage />
-      </ProtectedRoute>
+      <PageTransition>
+        <ProtectedRoute>
+          <ClientPanelPage />
+        </ProtectedRoute>
+      </PageTransition>
     ),
   },
   {
     path: '/cookies',
-    element: <CookiesPage />,
+    element: (
+      <PageTransition>
+        <CookiesPage />
+      </PageTransition>
+    ),
   },
+  ...(import.meta.env.DEV && DebugPage ? [{
+    path: '/debug',
+    element: (
+      <PageTransition>
+        <DebugPage />
+      </PageTransition>
+    ),
+  }] : []),
   {
     path: '*',
-    element: <NotFoundPage />,
+    element: (
+      <PageTransition>
+        <NotFoundPage />
+      </PageTransition>
+    ),
   },
 ];
 

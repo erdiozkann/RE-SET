@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { clientsApi } from '../../../lib/api';
 import { useToast } from '../../../components/ToastContainer';
 import { getUserFriendlyErrorMessage } from '../../../lib/errors';
@@ -13,11 +13,7 @@ export default function AccountsTab() {
   const [clientForm, setClientForm] = useState({ phone: '', notes: '' });
   const [saving, setSaving] = useState(false);
 
-  useEffect(() => {
-    loadClients();
-  }, []);
-
-  const loadClients = async () => {
+  const loadClients = useCallback(async () => {
     try {
       const data = await clientsApi.getAll();
       setClients(data);
@@ -27,7 +23,11 @@ export default function AccountsTab() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
+
+  useEffect(() => {
+    loadClients();
+  }, [loadClients]);
 
   useEffect(() => {
     if (selectedClient) {
@@ -130,8 +130,8 @@ export default function AccountsTab() {
           label: 'Son 30 Günde',
           value: stats.newThisMonth,
           icon: 'ri-calendar-event-line',
-          bg: 'bg-purple-50',
-          color: 'text-purple-700'
+          bg: 'bg-slate-50',
+          color: 'text-slate-700'
         }].map((card) => (
           <div key={card.label} className={`${card.bg} rounded-xl p-4 border border-gray-100`}>
             <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-3 ${card.color} bg-white/80`}>
@@ -161,11 +161,10 @@ export default function AccountsTab() {
                 <button
                   key={client.id}
                   onClick={() => setSelectedClient(client)}
-                  className={`w-full text-left px-4 py-3 rounded-lg border transition-colors cursor-pointer ${
-                    selectedClient?.id === client.id
-                      ? 'bg-[#D4AF37] border-[#D4AF37] text-white'
-                      : 'bg-white border-gray-200 hover:border-gray-300'
-                  }`}
+                  className={`w-full text-left px-4 py-3 rounded-lg border transition-colors cursor-pointer ${selectedClient?.id === client.id
+                    ? 'bg-[#D4AF37] border-[#D4AF37] text-white'
+                    : 'bg-white border-gray-200 hover:border-gray-300'
+                    }`}
                 >
                   <p className="font-semibold truncate">{client.name}</p>
                   <p className="text-sm truncate opacity-75">{client.email}</p>

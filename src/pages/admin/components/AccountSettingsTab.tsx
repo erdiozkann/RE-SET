@@ -2,10 +2,11 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../../../lib/supabase';
 import { useToast } from '../../../components/ToastContainer';
 import { getUserFriendlyErrorMessage } from '../../../lib/errors';
+import type { User } from '../../../types';
 
 export default function AccountSettingsTab() {
   const toast = useToast();
-  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [currentUser, setCurrentUser] = useState<Partial<User> | null>(null);
   const [loading, setLoading] = useState(true);
 
   const [emailForm, setEmailForm] = useState({
@@ -114,6 +115,10 @@ export default function AccountSettingsTab() {
   };
 
   const handlePasswordChange = async () => {
+    if (!currentUser) {
+      toast.error('Kullanıcı oturumu bulunamadı');
+      return;
+    }
     if (!passwordForm.currentPassword || !passwordForm.newPassword || !passwordForm.confirmPassword) {
       toast.error('Lütfen tüm alanları doldurun');
       return;

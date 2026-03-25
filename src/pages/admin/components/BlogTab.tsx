@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, useRef } from 'react';
+import { useEffect, useMemo, useState, useRef, useCallback } from 'react';
 import { blogApi, storageApi } from '../../../lib/api';
 import { useToast } from '../../../components/ToastContainer';
 import { getUserFriendlyErrorMessage } from '../../../lib/errors';
@@ -30,24 +30,20 @@ export default function BlogTab() {
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    
+
     setUploadingImage(true);
     try {
       const url = await storageApi.uploadFile('blog-images', file);
       setFormData({ ...formData, image: url });
       toast.success('Görsel yüklendi');
-    } catch (error) {
+    } catch {
       toast.error('Görsel yüklenemedi. Supabase Storage bucket kontrol edin.');
     } finally {
       setUploadingImage(false);
     }
   };
 
-  useEffect(() => {
-    loadPosts();
-  }, []);
-
-  const loadPosts = async () => {
+  const loadPosts = useCallback(async () => {
     try {
       setLoading(true);
       const data = await blogApi.getAll();
@@ -58,11 +54,15 @@ export default function BlogTab() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
+
+  useEffect(() => {
+    loadPosts();
+  }, [loadPosts]);
 
   const handleAdd = () => {
     setEditingPost(null);
-  setFormData(createEmptyForm());
+    setFormData(createEmptyForm());
     setShowModal(true);
   };
 

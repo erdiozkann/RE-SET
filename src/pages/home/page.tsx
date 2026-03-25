@@ -1,80 +1,69 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import SEO from '../../components/SEO';
 import ReviewsSlider from '../../components/feature/ReviewsSlider';
 import { servicesApi, contentApi, methodsApi } from '../../lib/api';
 import type { ServiceType, HeroContent, AboutContent, ContactInfo, Method } from '../../types';
 
+
+
 export default function HomePage() {
+  /* Supabase Only Data Flow */
   const [services, setServices] = useState<ServiceType[]>([]);
   const [methods, setMethods] = useState<Method[]>([]);
   const [heroContent, setHeroContent] = useState<HeroContent | null>(null);
   const [aboutContent, setAboutContent] = useState<AboutContent | null>(null);
   const [contactInfo, setContactInfo] = useState<ContactInfo | null>(null);
-  const [loading, setLoading] = useState(true);
+
+  // Loading states
+  const [heroLoading, setHeroLoading] = useState(true);
 
   // Hero image loading state
   const [heroImageLoaded, setHeroImageLoaded] = useState(false);
   const heroImageRef = useRef<HTMLImageElement>(null);
 
-  useEffect(() => {
-    loadData();
 
-    // Preload hero image
-    if (heroImageRef.current?.complete && heroImageRef.current?.naturalHeight !== 0) {
-      setHeroImageLoaded(true);
-    }
+
+  const loadData = useCallback(() => {
+    // Independent data fetching for progressive rendering
+    // 1. Hero Content (Critical Priority)
+    setHeroLoading(true);
+    contentApi.getHeroContents()
+      .then(data => {
+        if (data && data.length > 0) {
+          setHeroContent(data[0]);
+        }
+      })
+      .catch(err => console.error('Hero Load Error:', err))
+      .finally(() => setHeroLoading(false));
+
+    // 2. Contact Info (High Priority for Header/CTA)
+    contentApi.getContactInfo()
+      .then(data => data && setContactInfo(data))
+      .catch(err => console.error('Contact Load Error:', err));
+
+    // 3. About Content
+    contentApi.getAboutContents()
+      .then(data => {
+        if (data && data.length > 0) setAboutContent(data[0]);
+      })
+      .catch(err => console.error('About Load Error:', err));
+
+    // 4. Services
+    servicesApi.getAll()
+      .then(data => setServices(data || []))
+      .catch(err => console.error('Services Load Error:', err));
+
+    // 5. Methods
+    methodsApi.getAll()
+      .then(data => setMethods(data || []))
+      .catch(err => console.error('Methods Load Error:', err));
+
   }, []);
 
-  const loadData = async () => {
-    console.log('🔄 Data loading started...');
-
-    const fetchData = async () => {
-      try {
-        console.log('📡 Fetching services...');
-        const servicesData = await servicesApi.getAll();
-        console.log('✅ Services fetched:', servicesData?.length);
-        setServices(servicesData || []);
-
-        console.log('📡 Fetching methods...');
-        const methodsData = await methodsApi.getAll();
-        console.log('✅ Methods fetched:', methodsData?.length);
-        setMethods(methodsData || []);
-
-        console.log('📡 Fetching hero content...');
-        const heroData = await contentApi.getHeroContents();
-        console.log('✅ Hero fetched:', heroData?.length, 'items');
-        if (heroData && heroData.length > 0) setHeroContent(heroData[0]);
-
-        console.log('📡 Fetching about content...');
-        const aboutData = await contentApi.getAboutContents();
-        console.log('✅ About fetched:', aboutData?.length, 'items');
-        if (aboutData && aboutData.length > 0) setAboutContent(aboutData[0]);
-
-        console.log('📡 Fetching contact info...');
-        const contactData = await contentApi.getContactInfo();
-        console.log('✅ Contact fetched:', contactData);
-        if (contactData) setContactInfo(contactData);
-
-      } catch (error) {
-        console.error('❌ Data loading critical error:', error);
-      }
-    };
-
-    // Race between data fetching and a 10-second timeout
-    const timeoutPromise = new Promise((_, reject) => {
-      setTimeout(() => reject(new Error('Data loading timed out (10s)')), 10000);
-    });
-
-    try {
-      await Promise.race([fetchData(), timeoutPromise]);
-    } catch (error) {
-      console.warn('⚠️ Data loading finished with warnings or timeout:', error);
-    } finally {
-      console.log('🏁 Loading finished, unblocking UI.');
-      setLoading(false);
-    }
-  };
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
 
 
   const handleWhatsAppClick = () => {
@@ -83,40 +72,8 @@ export default function HomePage() {
     window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
   };
 
-  // Varsayılan değerler
-  const defaultHero = {
-    title: 'Demartini Metodu ile Hayatınızı Dönüştürün',
-    description: 'İstanbul\'da sertifikalı Demartini Metodu uygulayıcısı Şafak Özkan ile değerlerinizi keşfedin, hayat dengenizi bulun.',
-    image: '', // Kullanıcı isteği: Sadece admin panelinden eklenen resim görünsün, varsayılan olmasın
-    text_color: '#1A1A1A'
-  };
-
-  const defaultAbout = {
-    title: 'Şafak Özkan',
-    paragraph1: '15 yılı aşkın deneyimimle, bireylerin ve çiftlerin yaşamlarında anlamlı değişimler yaratmalarına yardımcı oluyorum.',
-    paragraph2: 'Amacım, sizin içsel gücünüzü keşfetmenize ve hayallerinize ulaşmanız için gerekli araçları edinmenize yardımcı olmak.',
-    image: '' // Varsayılan resim kaldırıldı
-  };
-
-  // Yükleme durumu
-  if (loading) {
-    return (
-      <div className="py-16 flex items-center justify-center bg-gradient-to-br from-teal-50 via-white to-amber-50 h-screen">
-        <div className="text-center">
-          <i className="ri-loader-4-line text-4xl text-teal-600 animate-spin mb-4"></i>
-          <p className="text-gray-600">Yükleniyor...</p>
-        </div>
-      </div>
-    );
-  }
-
-  // Kullanılacak veriler (veritabanından veya varsayılan)
-  const displayHero = heroContent || defaultHero;
-  const displayAbout = aboutContent || defaultAbout;
-
-  // Resimler için fallback zinciri
-  const heroImage = displayHero.image || defaultHero.image;
-  const aboutImage = displayAbout.image || defaultAbout.image;
+  // Hata durumu - Global hata yerine konsola yazıyoruz, UI devam ediyor.
+  // Kritik hata (Hero yoksa) için render içinde kontrol edeceğiz.
 
   const schema = [
     {
@@ -125,8 +82,8 @@ export default function HomePage() {
       name: 'Reset - Şafak Özkan Demartini Metodu',
       description: 'İstanbul\'da Demartini Metodu uygulayıcısı. Değer belirleme, yaşam dengeleme ve kişisel dönüşüm danışmanlığı.',
       url: 'https://re-set.com.tr',
-      telephone: contactInfo?.phone || '+90 532 123 45 67',
-      email: contactInfo?.email || 'info@re-set.com.tr',
+      telephone: contactInfo?.phone || '',
+      email: contactInfo?.email || '',
       address: {
         '@type': 'PostalAddress',
         addressLocality: 'İstanbul',
@@ -174,6 +131,38 @@ export default function HomePage() {
     }
   ];
 
+  if (heroLoading) {
+    return (
+      <div className="bg-white">
+        {/* Hero Skeleton */}
+        <div className="relative min-h-[90vh] flex items-center bg-gray-50 overflow-hidden animate-pulse">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
+            <div className="max-w-xl">
+              <div className="h-12 bg-gray-200 rounded w-3/4 mb-4"></div>
+              <div className="h-12 bg-gray-200 rounded w-1/2 mb-6"></div>
+              <div className="h-4 bg-gray-200 rounded w-full mb-2"></div>
+              <div className="h-4 bg-gray-200 rounded w-2/3 mb-8"></div>
+              <div className="flex gap-4">
+                <div className="h-14 bg-gray-200 rounded-full w-40"></div>
+                <div className="h-14 bg-gray-200 rounded-full w-48"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Additional Skeletons for other sections if needed, but Hero is critical for 'First Paint' */}
+        <div className="py-20 px-8 max-w-7xl mx-auto">
+          <div className="h-10 bg-gray-200 rounded w-1/3 mb-10 mx-auto"></div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="h-64 bg-gray-200 rounded-2xl"></div>
+            <div className="h-64 bg-gray-200 rounded-2xl"></div>
+            <div className="h-64 bg-gray-200 rounded-2xl"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <SEO
@@ -184,105 +173,111 @@ export default function HomePage() {
       />
 
       {/* Hero Section */}
-      <section className="relative min-h-[80vh] flex items-center justify-center bg-gradient-to-br from-teal-50 via-white to-amber-50 overflow-hidden">
-        {/* Hero Background Image with Progressive Loading */}
-        {heroImage && (
-          <div className="absolute inset-0 z-0">
-            {/* Skeleton placeholder */}
-            {!heroImageLoaded && (
-              <div className="absolute inset-0 bg-gradient-to-br from-gray-100 via-gray-200 to-gray-100">
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer" />
+      {heroContent && (
+        <section className="relative min-h-[90vh] flex items-start bg-gradient-to-br from-teal-50 via-white to-amber-50 overflow-hidden">
+          {/* Hero Background Image with Progressive Loading */}
+          {heroContent.image && (
+            <div className="absolute inset-0 z-0">
+              {/* Skeleton placeholder */}
+              {!heroImageLoaded && (
+                <div className="absolute inset-0 bg-gray-50 animate-pulse" />
+              )}
+              <img
+                ref={heroImageRef}
+                src={heroContent.image}
+                alt="Hero Background"
+                className={`w-full h-full object-cover object-top transition-opacity duration-700 ${heroImageLoaded ? 'opacity-100' : 'opacity-0'}`}
+                fetchPriority="high"
+                loading="eager"
+                decoding="sync"
+                onLoad={() => setHeroImageLoaded(true)}
+                onError={() => {
+                  setHeroImageLoaded(false);
+                }}
+              />
+            </div>
+          )}
+
+          {/* Content Container - Sol üst köşeye hizalanmış */}
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10 pt-24 md:pt-32">
+            <div className="max-w-xl">
+              <h1
+                className="text-3xl md:text-5xl font-serif mb-4 leading-tight drop-shadow-sm"
+                style={{ color: heroContent.text_color || '#1A1A1A' }}
+              >
+                {heroContent.title}
+              </h1>
+              <p
+                className="text-base md:text-lg mb-0 drop-shadow-sm"
+                style={{ color: heroContent.text_color || '#4B5563' }}
+              >
+                {heroContent.description}
+              </p>
+
+              {/* Butonlar - Bir tık aşağı çekildi */}
+              <div className="flex flex-col sm:flex-row items-start gap-3 mt-8 md:mt-12">
+                <Link
+                  to="/booking"
+                  className="px-8 py-4 bg-[#D4AF37] text-[#1A1A1A] rounded-full font-semibold hover:bg-[#C19B2E] transition-all shadow-lg hover:shadow-xl text-lg"
+                >
+                  Randevu Al
+                </Link>
+                <button
+                  onClick={handleWhatsAppClick}
+                  className="px-8 py-4 bg-[#D4AF37] text-[#1A1A1A] rounded-full font-semibold hover:bg-[#C19B2E] transition-all shadow-lg hover:shadow-xl flex items-center gap-2 text-lg"
+                >
+                  <i className="ri-whatsapp-line text-xl"></i>
+                  WhatsApp ile İletişim
+                </button>
               </div>
-            )}
-            <img
-              ref={heroImageRef}
-              src={heroImage}
-              alt="Hero Background"
-              className={`w-full h-full object-cover transition-opacity duration-700 ${heroImageLoaded ? 'opacity-100 hero-image-loaded' : 'opacity-0'
-                }`}
-              fetchPriority="high"
-              loading="eager"
-              decoding="sync"
-              onLoad={() => setHeroImageLoaded(true)}
-              onError={() => {
-                console.error('Hero image failed to load:', heroImage);
-                // Sadece opacity 0 kalsın, display none yapma ki düzelirse görünsün
-                setHeroImageLoaded(false);
-              }}
-            />
+            </div>
           </div>
-        )}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-          <h1
-            className="text-4xl md:text-5xl font-serif mb-4"
-            style={{ color: displayHero.text_color || '#1A1A1A' }}
-          >
-            {displayHero.title}
-          </h1>
-          <p
-            className="text-lg md:text-xl mb-6 max-w-2xl mx-auto"
-            style={{ color: displayHero.text_color || '#4B5563' }}
-          >
-            {displayHero.description}
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link
-              to="/booking"
-              className="px-6 py-3 bg-[#D4AF37] text-[#1A1A1A] rounded-full font-semibold hover:bg-[#C19B2E] transition-all shadow-lg hover:shadow-xl"
-            >
-              Randevu Al
-            </Link>
-            <button
-              onClick={handleWhatsAppClick}
-              className="px-6 py-3 bg-[#D4AF37] text-[#1A1A1A] rounded-full font-semibold hover:bg-[#C19B2E] transition-all shadow-lg hover:shadow-xl flex items-center gap-2"
-            >
-              <i className="ri-whatsapp-line text-xl"></i>
-              WhatsApp ile İletişim
-            </button>
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* About Section */}
-      <section className="py-12 md:py-20 bg-gradient-to-br from-[#F5F5F5] to-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-            <div>
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif text-[#1A1A1A] mb-4 leading-tight">
-                {displayAbout.title}
-              </h2>
-              <p className="text-lg md:text-xl text-[#D4AF37] mb-4 font-medium">
-                Sertifikalı Demartini Metodu Uygulayıcısı
-              </p>
-              <p className="text-base text-gray-600 leading-relaxed mb-3">
-                {displayAbout.paragraph1}
-              </p>
-              <p className="text-base text-gray-600 leading-relaxed mb-6">
-                {displayAbout.paragraph2}
-              </p>
-              <Link
-                to="/about"
-                className="inline-block px-6 py-3 bg-[#D4AF37] text-[#1A1A1A] rounded-full font-semibold hover:bg-[#C19B2E] transition-colors"
-              >
-                Daha Fazla Bilgi
-              </Link>
-            </div>
-            <div className="relative flex justify-center">
-              <div className="aspect-square w-full max-w-md rounded-2xl overflow-hidden shadow-xl bg-gray-100 flex items-center justify-center">
-                {aboutImage ? (
-                  <img
-                    src={aboutImage}
-                    alt="Şafak Özkan"
-                    className="w-full h-full object-cover object-center"
-                  />
-                ) : (
-                  <i className="ri-user-smile-line text-6xl text-gray-300"></i>
-                )}
+      {aboutContent && (
+        <section className="py-12 md:py-20 bg-gradient-to-br from-[#F5F5F5] to-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+              <div>
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif text-[#1A1A1A] mb-4 leading-tight">
+                  {aboutContent.title}
+                </h2>
+                <p className="text-lg md:text-xl text-[#D4AF37] mb-4 font-medium">
+                  Sertifikalı Demartini Metodu Uygulayıcısı
+                </p>
+                <p className="text-base text-gray-600 leading-relaxed mb-3">
+                  {aboutContent.paragraph1}
+                </p>
+                <p className="text-base text-gray-600 leading-relaxed mb-6">
+                  {aboutContent.paragraph2}
+                </p>
+                <Link
+                  to="/about"
+                  className="inline-block px-6 py-3 bg-[#D4AF37] text-[#1A1A1A] rounded-full font-semibold hover:bg-[#C19B2E] transition-colors"
+                >
+                  Daha Fazla Bilgi
+                </Link>
+              </div>
+              <div className="relative flex justify-center">
+                <div className="aspect-square w-full max-w-md rounded-2xl overflow-hidden shadow-xl bg-gray-100 flex items-center justify-center">
+                  {aboutContent.image ? (
+                    <img
+                      src={aboutContent.image}
+                      alt="Şafak Özkan"
+                      className="w-full h-full object-cover object-center"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <i className="ri-user-smile-line text-6xl text-gray-300"></i>
+                  )}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
 
       {/* Services Section */}

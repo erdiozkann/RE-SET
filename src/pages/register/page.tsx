@@ -77,6 +77,7 @@ export default function RegisterPage() {
         <SEO
           title="Kayıt Başarılı - Reset Danışmanlık"
           description="Reset Danışmanlık kayıt işlemi başarılı"
+          noindex
         />
         <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-amber-50 flex items-center justify-center px-4">
           <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center">
@@ -101,6 +102,7 @@ export default function RegisterPage() {
       <SEO
         title="Kayıt Ol - Reset Danışmanlık"
         description="Reset Danışmanlık hesabı oluşturun"
+        noindex
       />
       <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-amber-50 flex items-center justify-center px-4 py-12">
         <div className="max-w-md w-full">

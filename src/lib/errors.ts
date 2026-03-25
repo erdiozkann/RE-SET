@@ -3,12 +3,17 @@
  */
 
 export class ApiError extends Error {
+  public code?: string;
+  public statusCode?: number;
+
   constructor(
     message: string,
-    public code?: string,
-    public statusCode?: number
+    code?: string,
+    statusCode?: number
   ) {
     super(message);
+    this.code = code;
+    this.statusCode = statusCode;
     this.name = 'ApiError';
     Object.setPrototypeOf(this, ApiError.prototype);
   }
@@ -24,8 +29,11 @@ export class ApiError extends Error {
 }
 
 export class AuthError extends Error {
-  constructor(message: string, public code?: string) {
+  public code?: string;
+
+  constructor(message: string, code?: string) {
     super(message);
+    this.code = code;
     this.name = 'AuthError';
     Object.setPrototypeOf(this, AuthError.prototype);
   }
@@ -40,8 +48,11 @@ export class AuthError extends Error {
 }
 
 export class ValidationError extends Error {
-  constructor(message: string, public field?: string) {
+  public field?: string;
+
+  constructor(message: string, field?: string) {
     super(message);
+    this.field = field;
     this.name = 'ValidationError';
     Object.setPrototypeOf(this, ValidationError.prototype);
   }

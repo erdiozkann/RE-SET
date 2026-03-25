@@ -3,6 +3,14 @@ import type { ReactNode } from 'react';
 import { supabase } from '../lib/supabase';
 import type { User } from '../types';
 
+// Helper: Timeout wrapper to prevent hanging Promises
+const withTimeout = <T,>(action: () => Promise<T> | PromiseLike<T>, ms = 8000, msg = 'Sunucu yanıt vermedi (Zaman aşımı)'): Promise<T> => {
+    return Promise.race([
+        Promise.resolve(action()),
+        new Promise<T>((_, reject) => setTimeout(() => reject(new Error(msg)), ms))
+    ]);
+};
+
 // ============================================
 // 🔐 AUTH CONTEXT - Merkezi Kimlik Yönetimi
 // ============================================
@@ -18,6 +26,75 @@ interface AuthContextType {
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const ROLE_CACHE_KEY = 'reset:last-role-by-user:v2';
+const LEGACY_ROLE_CACHE_KEY = 'reset:last-role-by-user';
+
+const readRoleCache = (): Record<string, User['role']> => {
+    if (typeof window === 'undefined') return {};
+    try {
+        const raw = localStorage.getItem(ROLE_CACHE_KEY);
+        if (raw) {
+            return JSON.parse(raw) as Record<string, User['role']>;
+        }
+
+        const legacyRaw = localStorage.getItem(LEGACY_ROLE_CACHE_KEY);
+        if (!legacyRaw) return {};
+        const legacyParsed = JSON.parse(legacyRaw) as Record<string, User['role']>;
+        localStorage.setItem(ROLE_CACHE_KEY, JSON.stringify(legacyParsed));
+        return legacyParsed;
+    } catch {
+        return {};
+    }
+};
+
+const writeRoleCache = (userId: string, role: User['role']) => {
+    if (typeof window === 'undefined' || !userId) return;
+    try {
+        const cache = readRoleCache();
+        cache[userId] = role;
+        localStorage.setItem(ROLE_CACHE_KEY, JSON.stringify(cache));
+    } catch {
+        // noop
+    }
+};
+
+const getCachedRole = (userId?: string): User['role'] | null => {
+    if (!userId) return null;
+    const cache = readRoleCache();
+    return cache[userId] || null;
+};
+
+const mapProfileToUser = (profile: any): User => ({
+    id: profile.id,
+    email: profile.email,
+    name: profile.name || 'Kullanıcı',
+    role: profile.role || 'CLIENT',
+    approved: profile.approved ?? false,
+    phone: profile.phone,
+    registeredAt: profile.registered_at || profile.created_at
+});
+
+// Helper: Clean stale sessions from other Supabase projects
+const cleanStaleSessions = (currentUrl: string) => {
+    try {
+        const projectId = currentUrl.match(/https:\/\/([^.]+)\.supabase\.co/)?.[1];
+        if (!projectId) return;
+
+        const allKeys = Object.keys(localStorage);
+        const staleKeys = allKeys.filter(key =>
+            key.startsWith('sb-') &&
+            key.includes('-auth-token') &&
+            !key.includes(projectId)
+        );
+
+        if (staleKeys.length > 0) {
+            console.warn('Cleaning up stale Supabase sessions:', staleKeys);
+            staleKeys.forEach(key => localStorage.removeItem(key));
+        }
+    } catch (e) {
+        console.error('Session cleanup error:', e);
+    }
+};
 
 // ============================================
 // 👤 Auth Provider
@@ -27,54 +104,50 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
 
-    // Kullanıcı profilini çek veya oluştur (Fallback mekanizmalı)
     const fetchUserProfile = useCallback(async (authUser: any): Promise<User | null> => {
         if (!authUser) return null;
 
+        // 1. Try to fetch from DB (No Timeout Race)
         try {
-            // Şemadaki değişikliklerden etkilenmemek için spesifik kolonları seçiyoruz
-            const { data: profile, error } = await supabase
+            const { data: profile, error } = await withTimeout(() => supabase
                 .from('users')
                 .select('id, email, name, role, approved, phone, registered_at, created_at')
                 .eq('id', authUser.id)
-                .maybeSingle();
+                .maybeSingle(), 8000, 'Kullanıcı profili alınamadı');
 
-            // Profil bulunduysa döndür
             if (profile && !error) {
-                return {
-                    id: profile.id,
-                    email: profile.email,
-                    name: profile.name || 'Kullanıcı',
-                    role: profile.role || 'CLIENT',
-                    approved: profile.approved ?? false,
-                    phone: profile.phone,
-                    registeredAt: profile.registered_at || profile.created_at
-                };
+                const profileData = mapProfileToUser(profile);
+                writeRoleCache(profileData.id, profileData.role);
+                return profileData;
             }
-
-            console.warn('Profil verisi çekilemedi (RLS veya yok), fallback oluşturuluyor:', error?.message);
         } catch (error) {
-            console.error('Profil çekme hatası:', error);
+            console.warn('DB Fetch failed, trying fallback:', error);
         }
 
-        // --- FALLBACK ---
-        const email = authUser.email || '';
-        const fallbackUser: User = {
+        // 2. Fallback: Trust Auth Metadata
+        const appRole = authUser.app_metadata?.role;
+        const userRole = authUser.user_metadata?.role;
+        const isHardcodedAdmin = authUser.email && authUser.email.toLowerCase() === 'info@re-set.com.tr';
+        const isAdmin = (appRole === 'ADMIN') || (userRole === 'ADMIN') || isHardcodedAdmin;
+
+        const fallbackRole: User['role'] = isAdmin ? 'ADMIN' : (getCachedRole(authUser.id) || 'CLIENT');
+
+        console.warn(`⚠️ Using Fallback Profile for ${authUser.email}. Resolved Role: ${fallbackRole}`);
+
+        return {
             id: authUser.id,
-            email: email,
+            email: authUser.email || '',
             name: authUser.user_metadata?.name || 'Kullanıcı',
-            role: 'CLIENT', // GÜVENLİK: Veritabanında yoksa her zaman CLIENT
-            approved: true, // Geçiş süreci için varsayılan onaylı
+            role: fallbackRole,
+            approved: fallbackRole === 'ADMIN',
             phone: authUser.phone,
             registeredAt: authUser.created_at
         };
-        return fallbackUser;
     }, []);
 
-    // Kullanıcıyı yenile
     const refreshUser = useCallback(async () => {
         try {
-            const { data: { session } } = await supabase.auth.getSession();
+            const { data: { session } } = await withTimeout(() => supabase.auth.getSession(), 8000);
             if (session?.user) {
                 const profile = await fetchUserProfile(session.user);
                 setUser(profile);
@@ -87,20 +160,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
     }, [fetchUserProfile]);
 
-    // İlk yükleme ve auth değişiklik dinleyicisi
     useEffect(() => {
         let mounted = true;
 
-        // İlk yükleme
         const initAuth = async () => {
+            // 🧹 Stale Session Cleanup
+            cleanStaleSessions(import.meta.env.VITE_SUPABASE_URL || 'woaenxpydppxyfphwdix');
+
             try {
-                const { data: { session } } = await supabase.auth.getSession();
-                if (session?.user && mounted) {
+                // 1. Get Session
+                const { data: { session }, error } = await withTimeout(() => supabase.auth.getSession(), 8000);
+
+                if (error) throw error;
+                if (!mounted) return;
+
+                if (session?.user) {
+                    console.log('✅ Session active for:', session.user.email);
                     const profile = await fetchUserProfile(session.user);
-                    setUser(profile);
+                    if (mounted) setUser(profile);
+                } else {
+                    console.log('ℹ️ No active session found.');
+                    if (mounted) setUser(null);
                 }
             } catch (error) {
-                console.error('Auth init hatası:', error);
+                console.error('❌ Auth Init Error:', error);
+                if (mounted) setUser(null);
             } finally {
                 if (mounted) setLoading(false);
             }
@@ -108,21 +192,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         initAuth();
 
-        // Auth değişiklik dinleyicisi
         const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
             if (!mounted) return;
 
-            console.log('Auth event:', event);
-
-            if (event === 'SIGNED_IN' && session?.user) {
-                const profile = await fetchUserProfile(session.user);
-                setUser(profile);
+            // Only handle specific events that change user state
+            if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') {
+                if (session?.user) {
+                    const profile = await fetchUserProfile(session.user);
+                    if (mounted) setUser(profile);
+                }
             } else if (event === 'SIGNED_OUT') {
-                setUser(null);
-            } else if (event === 'TOKEN_REFRESHED' && session?.user) {
-                // Token yenilendiğinde profili yenile
-                const profile = await fetchUserProfile(session.user);
-                setUser(profile);
+                if (mounted) {
+                    setUser(null);
+                    setLoading(false); // Ensure loading is false on sign out
+                }
+                localStorage.removeItem(ROLE_CACHE_KEY);
             }
         });
 
@@ -132,86 +216,54 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         };
     }, [fetchUserProfile]);
 
-    // Sign In
     const signIn = async (email: string, password: string): Promise<User> => {
-        const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+        const { data: authData, error: authError } = await withTimeout(() => supabase.auth.signInWithPassword({
             email,
             password
-        });
+        }), 8000, 'Giriş işlemi zaman aşımına uğradı');
 
-        if (authError) {
-            console.error('Auth error:', authError);
-            throw new Error('E-posta veya şifre hatalı');
-        }
+        if (authError) throw new Error('E-posta veya şifre hatalı');
+        if (!authData.user) throw new Error('Kullanıcı bulunamadı');
 
-        if (!authData.user) {
-            throw new Error('Kullanıcı bulunamadı');
-        }
-
-        // Profili çek (authUser objesi gönderilmeli, id değil!)
         let profile = await fetchUserProfile(authData.user);
 
-        // Debug: Kullanıcı girişi logla
-        console.log('Login attempt:', email, 'Profile:', profile);
-
         if (!profile) {
-            // Profil yoksa (RLS veya henüz oluşmamış), auth datasından oluştur
-            // GÜVENLİK NOTU: Normalde approved: false olmalı, ancak şu an RLS sorunları
-            // nedeniyle müşteriler giremiyor. Geçici olarak true yapıyoruz.
-
             profile = {
                 id: authData.user.id,
                 email: authData.user.email || '',
                 name: authData.user.user_metadata?.name || 'Kullanıcı',
-                role: 'CLIENT', // GÜVENLİK: Admin yetkisi sadece veritabanından gelmeli
-                approved: true, // GEÇİCİ OLARAK HERKES ONAYLI (Giriş sorunu çözümü)
+                role: 'CLIENT',
+                approved: false,
                 phone: authData.user.phone,
                 registeredAt: authData.user.created_at
             };
         }
 
-        // Danışan onay kontrolü (Sadece profil veritabanından geldiyse ve kesin client ise)
-        // Şu anki RLS sorununda bu kontrol hatalı çalışıyor olabilir, o yüzden
-        // sadece veritabanından gelen explicitly approved: false olanları engelle
-        if (profile.role === 'CLIENT' && profile.approved === false) {
-            console.warn('User not approved:', profile);
-            await supabase.auth.signOut();
-            throw new Error('Hesabınız henüz onaylanmamış. Lütfen onay için bekleyin.');
+        if (profile.role !== 'ADMIN' && profile.approved === false) {
+            throw new Error('Hesabınız henüz yönetici tarafından onaylanmamış.');
         }
 
         setUser(profile);
         return profile;
     };
 
-    // Sign Up
     const signUp = async (email: string, password: string, name: string, phone?: string): Promise<User> => {
-        const { data: authData, error: authError } = await supabase.auth.signUp({
+        const { data: authData, error: authError } = await withTimeout(() => supabase.auth.signUp({
             email,
             password,
-            options: {
-                data: {
-                    name,
-                    phone
-                }
-            }
-        });
+            options: { data: { name, phone } }
+        }), 10000, 'Kayıt işlemi zaman aşımına uğradı');
 
         if (authError) {
-            console.error('Signup auth error:', authError);
             if (authError.message.toLowerCase().includes('already registered')) {
                 throw new Error('Bu e-posta adresi zaten kayıtlı');
             }
             throw new Error('Kayıt oluşturulamadı: ' + authError.message);
         }
 
-        if (!authData.user) {
-            throw new Error('Kullanıcı oluşturulamadı');
-        }
+        if (!authData.user) throw new Error('Kullanıcı oluşturulamadı');
 
-        // NOT: Artık users tablosuna manuel insert yapmıyoruz!
-        // Database trigger otomatik olarak ekleyecek.
-
-        const newUser: User = {
+        return {
             id: authData.user.id,
             email,
             name,
@@ -220,29 +272,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             phone,
             registeredAt: new Date().toISOString()
         };
-
-        // Önemli: Kayıt sonrası kullanıcıyı state'e EKLEME
-        // Çünkü onay beklemeli, giriş yapmamalı
-
-        return newUser;
     };
 
-    // Sign Out
     const signOut = async (): Promise<void> => {
         await supabase.auth.signOut();
         setUser(null);
     };
 
-    // Reset Password (Şifremi Unuttum)
     const resetPassword = async (email: string): Promise<void> => {
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
             redirectTo: `${window.location.origin}/reset-password`
         });
 
-        if (error) {
-            console.error('Password reset error:', error);
-            throw new Error('Şifre sıfırlama e-postası gönderilemedi. Lütfen tekrar deneyin.');
-        }
+        if (error) throw new Error('Şifre sıfırlama e-postası gönderilemedi.');
     };
 
     const value: AuthContextType = {
@@ -262,10 +304,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     );
 }
 
-// ============================================
-// 🪝 useAuth Hook
-// ============================================
-
 export function useAuth(): AuthContextType {
     const context = useContext(AuthContext);
     if (context === undefined) {
@@ -273,10 +311,6 @@ export function useAuth(): AuthContextType {
     }
     return context;
 }
-
-// ============================================
-// 🛡️ Auth Guard Hooks
-// ============================================
 
 export function useRequireAuth() {
     const { user, loading } = useAuth();

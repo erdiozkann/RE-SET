@@ -11,15 +11,15 @@ export default function Header() {
   const isActive = (path: string) => location.pathname === path;
 
   useEffect(() => {
-    const fetchContactInfo = async () => {
+    const fetchData = async () => {
       try {
         const data = await contentApi.getContactInfo();
         if (data) setContactInfo(data);
-      } catch (error) {
-        console.error('Header contact info fetch error:', error);
+      } catch {
+        // Silent fail
       }
     };
-    fetchContactInfo();
+    fetchData();
   }, []);
 
   const navLinks = [
@@ -33,12 +33,18 @@ export default function Header() {
   ];
 
   return (
-    <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
+    <header className="bg-white/95 backdrop-blur-md border-b border-gray-100 sticky top-0 z-50 transition-all duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <Link to="/" className="flex items-center cursor-pointer">
-            <span className="text-2xl font-serif font-bold text-[#1A1A1A]">RESET</span>
+          <Link to="/" className="flex items-center cursor-pointer group min-w-[120px]">
+            {contactInfo?.logo_url && (
+              <img
+                src={contactInfo.logo_url}
+                alt="Reset Logo"
+                className="h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+              />
+            )}
           </Link>
 
           {/* Desktop Navigation */}
@@ -47,7 +53,7 @@ export default function Header() {
               <Link
                 key={link.path}
                 to={link.path}
-                className={`text-sm font-medium transition-colors cursor-pointer whitespace-nowrap ${isActive(link.path)
+                className={`text-sm font-medium transition-all duration-200 cursor-pointer whitespace-nowrap hover-underline ${isActive(link.path)
                   ? 'text-[#D4AF37]'
                   : 'text-gray-700 hover:text-[#D4AF37]'
                   }`}
@@ -56,23 +62,22 @@ export default function Header() {
               </Link>
             ))}
 
-            {/* YouTube Button (Dinamik) */}
-            {contactInfo?.youtube && (
+            <div className="flex items-center space-x-4 ml-4">
               <Link
                 to="/youtube"
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all cursor-pointer bg-red-600 text-white hover:bg-red-700"
+                className="flex items-center space-x-2 bg-red-600 text-white px-5 py-2 rounded-full hover:bg-red-700 transition-colors duration-200 font-medium items-center"
               >
-                <i className="ri-youtube-fill text-lg"></i>
-                <span className="text-sm font-medium">YouTube</span>
+                <i className="ri-youtube-fill text-xl"></i>
+                <span>YouTube</span>
               </Link>
-            )}
 
-            <Link
-              to="/login"
-              className="bg-[#D4AF37] text-[#1A1A1A] px-6 py-2 font-medium whitespace-nowrap cursor-pointer transition-all hover:bg-[#C19B2E]"
-            >
-              Giriş Yap
-            </Link>
+              <Link
+                to="/login"
+                className="bg-[#D4AF37] text-[#1A1A1A] px-6 py-2 font-medium whitespace-nowrap cursor-pointer transition-all duration-200 hover:bg-[#C19B2E] hover-lift rounded-lg"
+              >
+                Giriş Yap
+              </Link>
+            </div>
           </nav>
 
           {/* Mobile Menu Button */}
@@ -103,25 +108,24 @@ export default function Header() {
               </Link>
             ))}
 
-            {/* YouTube Button - Mobile */}
-            {contactInfo?.youtube && (
+            <div className="flex items-center space-x-3 pt-4 border-t border-gray-100">
               <Link
                 to="/youtube"
                 onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-2 py-2 text-red-600 font-medium cursor-pointer"
+                className="flex-1 flex items-center justify-center space-x-2 bg-red-600 text-white px-4 py-3 rounded-lg hover:bg-red-700 transition-colors duration-200 font-medium"
               >
                 <i className="ri-youtube-fill text-xl"></i>
-                YouTube
+                <span>YouTube</span>
               </Link>
-            )}
 
-            <Link
-              to="/login"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block bg-[#D4AF37] text-[#1A1A1A] px-6 py-3 font-medium text-center cursor-pointer"
-            >
-              Giriş Yap
-            </Link>
+              <Link
+                to="/login"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex-1 bg-[#D4AF37] text-[#1A1A1A] px-6 py-3 font-medium text-center cursor-pointer rounded-lg"
+              >
+                Giriş Yap
+              </Link>
+            </div>
           </nav>
         </div>
       )}

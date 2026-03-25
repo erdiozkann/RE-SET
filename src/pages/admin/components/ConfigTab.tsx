@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { configApi } from '../../../lib/api';
 import { useToast } from '../../../components/ToastContainer';
 import { getUserFriendlyErrorMessage } from '../../../lib/errors';
@@ -16,11 +16,7 @@ export default function ConfigTab() {
   const [showSuccess, setShowSuccess] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadConfig();
-  }, []);
-
-  const loadConfig = async () => {
+  const loadConfig = useCallback(async () => {
     try {
       const data = await configApi.get();
       setConfig(data);
@@ -30,7 +26,11 @@ export default function ConfigTab() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
+
+  useEffect(() => {
+    loadConfig();
+  }, [loadConfig]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

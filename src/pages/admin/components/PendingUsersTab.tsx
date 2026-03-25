@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { usersApi } from '../../../lib/api';
 import { useToast } from '../../../components/ToastContainer';
 import { getUserFriendlyErrorMessage } from '../../../lib/errors';
@@ -9,11 +9,7 @@ export default function PendingUsersTab() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadPendingUsers();
-  }, []);
-
-  const loadPendingUsers = async () => {
+  const loadPendingUsers = useCallback(async () => {
     try {
       const data = await usersApi.getPending();
       setUsers(data);
@@ -23,7 +19,11 @@ export default function PendingUsersTab() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
+
+  useEffect(() => {
+    loadPendingUsers();
+  }, [loadPendingUsers]);
 
   const handleApprove = async (email: string) => {
     try {

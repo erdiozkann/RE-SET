@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { methodsApi } from '../../../lib/api';
 import { useToast } from '../../../components/ToastContainer';
 import { getUserFriendlyErrorMessage } from '../../../lib/errors';
@@ -43,11 +43,7 @@ export default function MethodsTab() {
     { value: 'ri-plant-line', label: 'Bitki' }
   ];
 
-  useEffect(() => {
-    loadMethods();
-  }, []);
-
-  const loadMethods = async () => {
+  const loadMethods = useCallback(async () => {
     try {
       const data = await methodsApi.getAll();
       setMethods(data);
@@ -57,7 +53,11 @@ export default function MethodsTab() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
+
+  useEffect(() => {
+    loadMethods();
+  }, [loadMethods]);
 
   const handleAdd = () => {
     setEditingMethod(null);
@@ -238,16 +238,14 @@ export default function MethodsTab() {
                       key={icon.value}
                       type="button"
                       onClick={() => setFormData({ ...formData, icon: icon.value })}
-                      className={`w-full h-12 flex items-center justify-center border-2 rounded-lg transition-all cursor-pointer ${
-                        formData.icon === icon.value
+                      className={`w-full h-12 flex items-center justify-center border-2 rounded-lg transition-all cursor-pointer ${formData.icon === icon.value
                           ? 'border-[#D4AF37] bg-[#D4AF37]/10'
                           : 'border-gray-200 hover:border-[#D4AF37]'
-                      }`}
+                        }`}
                       title={icon.label}
                     >
-                      <i className={`${icon.value} text-2xl ${
-                        formData.icon === icon.value ? 'text-[#D4AF37]' : 'text-gray-600'
-                      }`}></i>
+                      <i className={`${icon.value} text-2xl ${formData.icon === icon.value ? 'text-[#D4AF37]' : 'text-gray-600'
+                        }`}></i>
                     </button>
                   ))}
                 </div>

@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { servicesApi } from '../../../lib/api';
 import { useToast } from '../../../components/ToastContainer';
 import { getUserFriendlyErrorMessage } from '../../../lib/errors';
@@ -18,11 +18,7 @@ export default function ServicesTab() {
     price: ''
   });
 
-  useEffect(() => {
-    loadServices();
-  }, []);
-
-  const loadServices = async () => {
+  const loadServices = useCallback(async () => {
     try {
       const data = await servicesApi.getAll();
       setServices(data);
@@ -32,7 +28,11 @@ export default function ServicesTab() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
+
+  useEffect(() => {
+    loadServices();
+  }, [loadServices]);
 
   const handleAdd = () => {
     setEditingService(null);
@@ -66,7 +66,7 @@ export default function ServicesTab() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
       if (editingService) {
         await servicesApi.update(editingService.id, formData);
@@ -75,7 +75,7 @@ export default function ServicesTab() {
         await servicesApi.create(formData);
         toast.success('Hizmet başarılı şekilde eklendi');
       }
-      
+
       setShowModal(false);
       await loadServices();
     } catch (error) {

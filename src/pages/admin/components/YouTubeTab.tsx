@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { youtubeApi } from '../../../lib/api';
 import { useToast } from '../../../components/ToastContainer';
 import type { YouTubeVideo } from '../../../types';
@@ -18,21 +18,21 @@ export default function YouTubeTab() {
     category: 'Demartini Metodu'
   });
 
-  useEffect(() => {
-    loadVideos();
-  }, []);
-
-  const loadVideos = async () => {
+  const loadVideos = useCallback(async () => {
     try {
       setLoading(true);
       const data = await youtubeApi.getAll();
       setVideos(data);
-    } catch (error) {
+    } catch {
       toast.error('Videolar yüklenirken hata oluştu');
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
+
+  useEffect(() => {
+    loadVideos();
+  }, [loadVideos]);
 
   const extractYouTubeId = (input: string): string => {
     // YouTube URL'den video ID çıkar
@@ -58,12 +58,17 @@ export default function YouTubeTab() {
         await youtubeApi.update(editingVideo.id, { ...formData, youtubeId });
         toast.success('Video güncellendi');
       } else {
-        await youtubeApi.create({ ...formData, youtubeId });
+        await youtubeApi.create({
+          ...formData,
+          youtubeId,
+          thumbnail: `https://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg`,
+          publishedAt: new Date().toISOString()
+        });
         toast.success('Video eklendi');
       }
       resetForm();
       loadVideos();
-    } catch (error) {
+    } catch {
       toast.error('İşlem sırasında hata oluştu');
     }
   };
@@ -87,7 +92,7 @@ export default function YouTubeTab() {
       await youtubeApi.delete(id);
       toast.success('Video silindi');
       loadVideos();
-    } catch (error) {
+    } catch {
       toast.error('Video silinirken hata oluştu');
     }
   };
@@ -97,7 +102,7 @@ export default function YouTubeTab() {
       await youtubeApi.update(video.id, { isPublished: !video.isPublished });
       toast.success(video.isPublished ? 'Video yayından kaldırıldı' : 'Video yayınlandı');
       loadVideos();
-    } catch (error) {
+    } catch {
       toast.error('İşlem sırasında hata oluştu');
     }
   };
@@ -300,8 +305,8 @@ export default function YouTubeTab() {
                   <button
                     onClick={() => handleTogglePublish(video)}
                     className={`px-3 py-1.5 rounded text-sm ${video.isPublished
-                        ? 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200'
-                        : 'bg-green-100 text-green-700 hover:bg-green-200'
+                      ? 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200'
+                      : 'bg-green-100 text-green-700 hover:bg-green-200'
                       }`}
                   >
                     {video.isPublished ? <i className="ri-eye-off-line"></i> : <i className="ri-eye-line"></i>}

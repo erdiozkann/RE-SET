@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import type { ClarityCommand } from '../../lib/clarity';
 
@@ -46,6 +46,44 @@ export default function CookieBanner() {
   const [showSettings, setShowSettings] = useState(false);
   const [preferences, setPreferences] = useState<CookiePreferences>(DEFAULT_PREFERENCES);
 
+  const enableGoogleAnalytics = useCallback(() => {
+    // Google Analytics will be enabled via index.html
+    window.gtag?.('consent', 'update', {
+      analytics_storage: 'granted'
+    });
+  }, []);
+
+  const disableGoogleAnalytics = useCallback(() => {
+    window.gtag?.('consent', 'update', {
+      analytics_storage: 'denied'
+    });
+  }, []);
+
+  const enableMicrosoftClarity = useCallback(() => {
+    // Microsoft Clarity will be enabled via index.html
+    if (window.clarity) {
+      window.clarity('consent');
+    }
+  }, []);
+
+  const disableMicrosoftClarity = useCallback(() => {
+    // Disable Clarity tracking
+    if (window.clarity) {
+      window.clarity('stop');
+    }
+  }, []);
+
+  const applyConsent = useCallback((prefs: CookiePreferences) => {
+    // Google Analytics
+    if (prefs.analytics) {
+      enableGoogleAnalytics();
+      enableMicrosoftClarity();
+    } else {
+      disableGoogleAnalytics();
+      disableMicrosoftClarity();
+    }
+  }, [enableGoogleAnalytics, disableGoogleAnalytics, enableMicrosoftClarity, disableMicrosoftClarity]);
+
   useEffect(() => {
     const stored = localStorage.getItem('cookieConsent');
     const savedPreferences = deserializePreferences(stored);
@@ -60,45 +98,7 @@ export default function CookieBanner() {
 
     setPreferences(savedPreferences);
     applyConsent(savedPreferences);
-  }, []);
-
-  const applyConsent = (prefs: CookiePreferences) => {
-    // Google Analytics
-    if (prefs.analytics) {
-      enableGoogleAnalytics();
-      enableMicrosoftClarity();
-    } else {
-      disableGoogleAnalytics();
-      disableMicrosoftClarity();
-    }
-  };
-
-  const enableGoogleAnalytics = () => {
-    // Google Analytics will be enabled via index.html
-    window.gtag?.('consent', 'update', {
-      analytics_storage: 'granted'
-    });
-  };
-
-  const disableGoogleAnalytics = () => {
-    window.gtag?.('consent', 'update', {
-      analytics_storage: 'denied'
-    });
-  };
-
-  const enableMicrosoftClarity = () => {
-    // Microsoft Clarity will be enabled via index.html
-    if (window.clarity) {
-      window.clarity('consent');
-    }
-  };
-
-  const disableMicrosoftClarity = () => {
-    // Disable Clarity tracking
-    if (window.clarity) {
-      window.clarity('stop');
-    }
-  };
+  }, [applyConsent]);
 
   const handleAcceptAll = () => {
     const allAccepted = {
@@ -141,8 +141,8 @@ export default function CookieBanner() {
   if (!showBanner) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center p-4 pointer-events-none">
-      <div className="pointer-events-auto w-full max-w-4xl">
+    <div className="fixed bottom-0 left-0 right-0 z-[9999] p-4">
+      <div className="max-w-4xl mx-auto">
         {!showSettings ? (
           // Simple Banner
           <div className="bg-white rounded-lg shadow-2xl border border-gray-200 p-6">
@@ -159,7 +159,7 @@ export default function CookieBanner() {
                 </div>
               </div>
             </div>
-            
+
             <p className="text-sm text-gray-600 mb-4">
               Sitemizi kullanarak, <Link to="/cookies" className="text-[#D4AF37] hover:underline cursor-pointer">Çerez Politikamızı</Link> kabul etmiş olursunuz. Çerezler, site performansını analiz etmek ve size daha iyi hizmet sunmak için kullanılır.
             </p>
@@ -225,13 +225,11 @@ export default function CookieBanner() {
                   <h4 className="font-semibold text-gray-900">Performans ve Analitik Çerezler</h4>
                   <button
                     onClick={() => handlePreferenceChange('analytics')}
-                    className={`w-12 h-6 rounded-full relative transition-colors cursor-pointer ${
-                      preferences.analytics ? 'bg-[#D4AF37]' : 'bg-gray-300'
-                    }`}
+                    className={`w-12 h-6 rounded-full relative transition-colors cursor-pointer ${preferences.analytics ? 'bg-[#D4AF37]' : 'bg-gray-300'
+                      }`}
                   >
-                    <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-transform ${
-                      preferences.analytics ? 'right-1' : 'left-1'
-                    }`}></div>
+                    <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-transform ${preferences.analytics ? 'right-1' : 'left-1'
+                      }`}></div>
                   </button>
                 </div>
                 <p className="text-sm text-gray-600 mb-2">
@@ -248,13 +246,11 @@ export default function CookieBanner() {
                   <h4 className="font-semibold text-gray-900">İşlevsellik Çerezleri</h4>
                   <button
                     onClick={() => handlePreferenceChange('functional')}
-                    className={`w-12 h-6 rounded-full relative transition-colors cursor-pointer ${
-                      preferences.functional ? 'bg-[#D4AF37]' : 'bg-gray-300'
-                    }`}
+                    className={`w-12 h-6 rounded-full relative transition-colors cursor-pointer ${preferences.functional ? 'bg-[#D4AF37]' : 'bg-gray-300'
+                      }`}
                   >
-                    <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-transform ${
-                      preferences.functional ? 'right-1' : 'left-1'
-                    }`}></div>
+                    <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-transform ${preferences.functional ? 'right-1' : 'left-1'
+                      }`}></div>
                   </button>
                 </div>
                 <p className="text-sm text-gray-600">

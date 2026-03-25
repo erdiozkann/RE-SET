@@ -9,7 +9,9 @@ Allow: /
 
 Disallow: /login
 Disallow: /register
+Disallow: /reset-password
 Disallow: /admin
 Disallow: /client-panel
+Disallow: /debug
 
 Sitemap: https://re-set.com.tr/sitemap.xml

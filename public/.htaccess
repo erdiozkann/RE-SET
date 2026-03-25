@@ -1,118 +1,26 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
-  
-  # HTTPS yönlendirmesi (SSL aktifse yorumu kaldırın)
-  # RewriteCond %{HTTPS} off
-  # RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
-  
-  # www eklemek veya kaldırmak için (ihtiyaca göre birini seçin)
-  # www EKLEMEK için:
-  # RewriteCond %{HTTP_HOST} !^www\. [NC]
-  # RewriteRule ^(.*)$ https://www.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
-  
-  # www KALDIRMAK için:
-  # RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
-  # RewriteRule ^(.*)$ https://%1%{REQUEST_URI} [L,R=301]
-  
-  # SPA (Single Page Application) routing için
-  # index.html'i hariç tut
-  RewriteRule ^index\.html$ - [L]
-  
-  # Dosya veya klasör değilse index.html'e yönlendir
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteCond %{REQUEST_FILENAME} !-l
-  RewriteRule . /index.html [L]
+
+  # 1. Force HTTPS
+  RewriteCond %{HTTPS} off
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+  # 2. Serve existing files directly
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # 3. For all other requests, rewrite to index.html (SPA Fallback)
+  RewriteRule ^ index.html [L]
 </IfModule>
 
-# Gzip sıkıştırma - Performans artışı
-<IfModule mod_deflate.c>
-  AddOutputFilterByType DEFLATE text/html
-  AddOutputFilterByType DEFLATE text/css
-  AddOutputFilterByType DEFLATE text/javascript
-  AddOutputFilterByType DEFLATE application/javascript
-  AddOutputFilterByType DEFLATE application/x-javascript
-  AddOutputFilterByType DEFLATE application/json
-  AddOutputFilterByType DEFLATE application/xml
-  AddOutputFilterByType DEFLATE text/xml
-  AddOutputFilterByType DEFLATE image/svg+xml
-</IfModule>
-
-# Tarayıcı önbelleği - Performans artışı
-<IfModule mod_expires.c>
-  ExpiresActive On
-  
-  # HTML - Önbelleğe alma
-  ExpiresByType text/html "access plus 0 seconds"
-  
-  # CSS ve JavaScript
-  ExpiresByType text/css "access plus 1 year"
-  ExpiresByType application/javascript "access plus 1 year"
-  ExpiresByType text/javascript "access plus 1 year"
-  
-  # Görseller
-  ExpiresByType image/jpeg "access plus 1 month"
-  ExpiresByType image/jpg "access plus 1 month"
-  ExpiresByType image/png "access plus 1 month"
-  ExpiresByType image/gif "access plus 1 month"
-  ExpiresByType image/svg+xml "access plus 1 month"
-  ExpiresByType image/webp "access plus 1 month"
-  ExpiresByType image/x-icon "access plus 1 year"
-  
-  # Fontlar
-  ExpiresByType font/ttf "access plus 1 year"
-  ExpiresByType font/woff "access plus 1 year"
-  ExpiresByType font/woff2 "access plus 1 year"
-  
-  # Diğer dosyalar
-  ExpiresByType application/pdf "access plus 1 month"
-  ExpiresByType application/json "access plus 0 seconds"
-</IfModule>
-
-# Cache-Control headers
-<IfModule mod_headers.c>
-  # HTML dosyaları - Her zaman yeniden doğrula
-  <FilesMatch "\.(html|htm)$">
-    Header set Cache-Control "no-cache, no-store, must-revalidate"
-    Header set Pragma "no-cache"
-    Header set Expires "0"
-  </FilesMatch>
-  
-  # CSS ve JavaScript - 1 yıl önbellek
-  <FilesMatch "\.(css|js)$">
-    Header set Cache-Control "max-age=31536000, public"
-  </FilesMatch>
-  
-  # Görseller - 1 ay önbellek
-  <FilesMatch "\.(jpg|jpeg|png|gif|svg|webp|ico)$">
-    Header set Cache-Control "max-age=2592000, public"
-  </FilesMatch>
-  
-  # Fontlar - 1 yıl önbellek
-  <FilesMatch "\.(ttf|woff|woff2|eot)$">
-    Header set Cache-Control "max-age=31536000, public"
-  </FilesMatch>
-  
-  # Güvenlik başlıkları
-  Header set X-Content-Type-Options "nosniff"
-  Header set X-Frame-Options "SAMEORIGIN"
-  Header set X-XSS-Protection "1; mode=block"
-  Header set Referrer-Policy "strict-origin-when-cross-origin"
-</IfModule>
-
-# Dosya listesini engelle
+# Optional: Disable directory listing
 Options -Indexes
 
-# .htaccess ve .env dosyalarına erişimi engelle
-<FilesMatch "^\.">
-  Order allow,deny
-  Deny from all
-</FilesMatch>
-
-# PHP hatalarını gizle (güvenlik)
-php_flag display_errors Off
-
-# Özel hata sayfaları (isteğe bağlı)
-# ErrorDocument 404 /index.html
-# ErrorDocument 500 /index.html
+# Optional: Cache control for static assets
+<IfModule mod_headers.c>
+  <FilesMatch "\.(js|css|gif|png|jpg|jpeg|svg|webp|ico)$">
+    Header set Cache-Control "max-age=31536000, public"
+  </FilesMatch>
+</IfModule>

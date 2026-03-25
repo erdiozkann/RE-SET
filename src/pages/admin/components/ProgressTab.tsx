@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { progressApi, clientsApi } from '../../../lib/api';
 import { useToast } from '../../../components/ToastContainer';
 import { getUserFriendlyErrorMessage } from '../../../lib/errors';
@@ -28,11 +28,7 @@ export default function ProgressTab() {
   const [editingRecord, setEditingRecord] = useState<ProgressRecord | null>(null);
   const [editForm, setEditForm] = useState<CreateProgressRecordInput>(createEmptyRecord(''));
 
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
       const clientsData = await clientsApi.getAll();
       setClients(clientsData);
@@ -42,7 +38,11 @@ export default function ProgressTab() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
 
   const loadProgressRecords = async (clientId: string) => {
     try {
@@ -253,7 +253,7 @@ export default function ProgressTab() {
               {
                 label: 'Merkeziyetlilik',
                 key: 'centeredness' as MetricKey,
-                color: 'bg-purple-500'
+                color: 'bg-slate-500'
               }
             ]).map((metric) => (
               <div key={metric.key}>
@@ -310,13 +310,13 @@ export default function ProgressTab() {
         <div className="grid gap-4">
           {records.map((record) => {
             const isEditing = editingRecord?.id === record.id;
-            const emotionalPercent = Math.max(0, Math.min(100, 
+            const emotionalPercent = Math.max(0, Math.min(100,
               isEditing ? (editForm.emotionalClarity ?? 0) : (record.emotionalClarity ?? 0)
             ));
-            const mentalPercent = Math.max(0, Math.min(100, 
+            const mentalPercent = Math.max(0, Math.min(100,
               isEditing ? (editForm.mentalClarity ?? 0) : (record.mentalClarity ?? 0)
             ));
-            const centeredPercent = Math.max(0, Math.min(100, 
+            const centeredPercent = Math.max(0, Math.min(100,
               isEditing ? (editForm.centeredness ?? 0) : (record.centeredness ?? 0)
             ));
 
@@ -377,7 +377,7 @@ export default function ProgressTab() {
                     )}
                   </div>
                 </div>
-                
+
                 <div className="grid grid-cols-3 gap-4 mb-4">
                   {isEditing ? (
                     <>
@@ -449,7 +449,7 @@ export default function ProgressTab() {
                           />
                           <div className="flex-1 bg-gray-200 rounded-full h-2">
                             <div
-                              className="bg-purple-500 h-2 rounded-full"
+                              className="bg-slate-500 h-2 rounded-full"
                               style={{ width: `${centeredPercent}%` }}
                             ></div>
                           </div>
@@ -488,7 +488,7 @@ export default function ProgressTab() {
                         <div className="flex items-center gap-2">
                           <div className="flex-1 bg-gray-200 rounded-full h-2">
                             <div
-                              className="bg-purple-500 h-2 rounded-full"
+                              className="bg-slate-500 h-2 rounded-full"
                               style={{ width: `${centeredPercent}%` }}
                             ></div>
                           </div>

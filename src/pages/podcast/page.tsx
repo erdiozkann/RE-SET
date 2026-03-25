@@ -5,6 +5,7 @@ import type { PodcastEpisode as Podcast } from '../../types';
 
 export default function PodcastPage() {
   const [podcasts, setPodcasts] = useState<Podcast[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [currentPodcast, setCurrentPodcast] = useState<Podcast | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -25,7 +26,8 @@ export default function PodcastPage() {
       }
     } catch (err) {
       console.error('Podcast yuklenemedi:', err);
-      // Loading removed
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -98,7 +100,17 @@ export default function PodcastPage() {
     return date.getDate() + ' ' + months[date.getMonth()] + ' ' + date.getFullYear();
   };
 
-
+  const PodcastSkeleton = () => (
+    <div className="p-5 rounded-xl border border-gray-100 bg-white animate-pulse">
+      <div className="flex items-center gap-4">
+        <div className="w-14 h-14 rounded-lg bg-gray-200 flex-shrink-0"></div>
+        <div className="flex-1 min-w-0">
+          <div className="h-5 bg-gray-200 rounded w-3/4 mb-2"></div>
+          <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <>
@@ -123,7 +135,13 @@ export default function PodcastPage() {
         <div className="max-w-4xl mx-auto px-4 md:px-8">
           <h2 className="text-xl md:text-2xl font-serif text-[#1A1A1A] mb-6">Bolumler</h2>
 
-          {podcasts.length === 0 ? (
+          {isLoading ? (
+            <div className="space-y-4 pb-32">
+              <PodcastSkeleton />
+              <PodcastSkeleton />
+              <PodcastSkeleton />
+            </div>
+          ) : podcasts.length === 0 ? (
             <div className="text-center py-12">
               <i className="ri-mic-line text-6xl text-gray-300 mb-4 block"></i>
               <p className="text-gray-500">Henuz podcast yuklenmemis.</p>

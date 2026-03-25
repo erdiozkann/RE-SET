@@ -123,4 +123,28 @@ export type UpdateContentInput = {
   image?: string;
   story?: string;
   text_color?: string;
+  logo_url?: string;
 };
+
+export type CreateYouTubeVideoInput = {
+  youtubeId: string;
+  title: string;
+  description?: string;
+  thumbnail: string;
+  publishedAt: string;
+  isPublished?: boolean;
+  duration?: string;
+  category?: string;
+};
+
+export type UpdateYouTubeVideoInput = Partial<CreateYouTubeVideoInput>;
+
+export type CreateAdAccountInput = {
+  name: string;
+  platform: 'GOOGLE' | 'FACEBOOK' | 'INSTAGRAM' | 'TIKTOK' | 'LINKEDIN';
+  account_id: string; // External ID
+  status?: 'ACTIVE' | 'PAUSED' | 'DISABLED';
+  currency?: string;
+};
+
+export type UpdateAdAccountInput = Partial<CreateAdAccountInput>;

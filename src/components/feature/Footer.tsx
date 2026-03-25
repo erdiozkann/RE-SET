@@ -31,7 +31,15 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Logo & Description */}
           <div className="col-span-1 md:col-span-2">
-            <span className="text-2xl font-serif font-bold text-white mb-4 block">RESET</span>
+            {contactInfo?.logo_url ? (
+              <img
+                src={contactInfo.logo_url}
+                alt="Reset Logo"
+                className="h-12 w-auto object-contain mb-4 grayscale hover:grayscale-0 transition-all duration-300"
+              />
+            ) : (
+              <span className="text-2xl font-serif font-bold text-white mb-4 block">RESET</span>
+            )}
 
             <p className="text-gray-400 mb-4">
               Demartini Metodu ile değerlerinizi keşfedin, yaşamınızı dengeleyin.

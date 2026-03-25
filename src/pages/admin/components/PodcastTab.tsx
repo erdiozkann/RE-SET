@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, useRef } from 'react';
+import { useEffect, useMemo, useState, useRef, useCallback } from 'react';
 import { podcastApi, storageApi } from '../../../lib/api';
 import { useToast } from '../../../components/ToastContainer';
 import { getUserFriendlyErrorMessage } from '../../../lib/errors';
@@ -24,18 +24,14 @@ export default function PodcastTab() {
   const [showModal, setShowModal] = useState(false);
   const [editingEpisode, setEditingEpisode] = useState<PodcastEpisode | null>(null);
   const [formData, setFormData] = useState(createEmptyForm());
-  
+
   // File upload states
   const [uploadingImage, setUploadingImage] = useState(false);
   const [uploadingAudio, setUploadingAudio] = useState(false);
   const imageInputRef = useRef<HTMLInputElement>(null);
   const audioInputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    loadEpisodes();
-  }, []);
-
-  const loadEpisodes = async () => {
+  const loadEpisodes = useCallback(async () => {
     try {
       setLoading(true);
       const data = await podcastApi.getAll();
@@ -46,7 +42,11 @@ export default function PodcastTab() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
+
+  useEffect(() => {
+    loadEpisodes();
+  }, [loadEpisodes]);
 
   const handleAdd = () => {
     setEditingEpisode(null);
@@ -120,13 +120,13 @@ export default function PodcastTab() {
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    
+
     setUploadingImage(true);
     try {
       const url = await storageApi.uploadFile('podcast-images', file);
       setFormData({ ...formData, image: url });
       toast.success('Görsel yüklendi');
-    } catch (error) {
+    } catch {
       toast.error('Görsel yüklenemedi');
     } finally {
       setUploadingImage(false);
@@ -136,13 +136,13 @@ export default function PodcastTab() {
   const handleAudioUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    
+
     setUploadingAudio(true);
     try {
       const url = await storageApi.uploadFile('podcast-audio', file);
       setFormData({ ...formData, audioUrl: url });
       toast.success('Ses dosyası yüklendi');
-    } catch (error) {
+    } catch {
       toast.error('Ses dosyası yüklenemedi');
     } finally {
       setUploadingAudio(false);

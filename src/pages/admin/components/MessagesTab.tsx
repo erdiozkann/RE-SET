@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { messagesApi } from '../../../lib/api';
 import { useToast } from '../../../components/ToastContainer';
 import { getUserFriendlyErrorMessage } from '../../../lib/errors';
@@ -10,10 +10,6 @@ export default function MessagesTab() {
   const [loading, setLoading] = useState(true);
   const [selectedMessage, setSelectedMessage] = useState<ContactMessage | null>(null);
 
-  useEffect(() => {
-    loadMessages();
-  }, []);
-
   const sortMessages = (list: ContactMessage[]) =>
     [...list].sort((a, b) => {
       if (a.read === b.read) {
@@ -22,7 +18,7 @@ export default function MessagesTab() {
       return a.read ? 1 : -1;
     });
 
-  const loadMessages = async () => {
+  const loadMessages = useCallback(async () => {
     try {
       const data = await messagesApi.getAll();
       setMessages(sortMessages(data));
@@ -32,7 +28,11 @@ export default function MessagesTab() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
+
+  useEffect(() => {
+    loadMessages();
+  }, [loadMessages]);
 
   const handleMarkRead = async (id: string) => {
     try {
@@ -100,13 +100,12 @@ export default function MessagesTab() {
                 <button
                   key={msg.id}
                   onClick={() => setSelectedMessage(msg)}
-                  className={`w-full text-left px-4 py-3 rounded-lg border transition-colors cursor-pointer ${
-                    selectedMessage?.id === msg.id
-                      ? 'bg-[#D4AF37] border-[#D4AF37] text-white'
-                      : msg.read
-                        ? 'bg-white border-gray-200 hover:border-gray-300'
-                        : 'bg-yellow-50 border-yellow-200 hover:border-yellow-300'
-                  }`}
+                  className={`w-full text-left px-4 py-3 rounded-lg border transition-colors cursor-pointer ${selectedMessage?.id === msg.id
+                    ? 'bg-[#D4AF37] border-[#D4AF37] text-white'
+                    : msg.read
+                      ? 'bg-white border-gray-200 hover:border-gray-300'
+                      : 'bg-yellow-50 border-yellow-200 hover:border-yellow-300'
+                    }`}
                 >
                   <div className="flex items-center justify-between gap-2">
                     <p className="font-semibold truncate">{msg.name}</p>

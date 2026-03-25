@@ -232,7 +232,8 @@ export interface ProfileImage {
   id: string;
   name: string;
   url: string;
-  location: 'about-hero' | 'home-about' | 'other';
+  location: 'about-hero' | 'home-about' | 'logo' | 'other';
+  type?: 'logo' | 'profile' | 'hero' | 'other';
 }
 
 export interface HeroContent {
@@ -265,6 +266,7 @@ export interface ContactInfo {
   workingHours: string;
   instagram?: string;
   youtube?: string;
+  logo_url?: string;
 }
 
 export interface Method {

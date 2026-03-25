@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { AppRoutes } from './router';
 import { ErrorBoundary } from './components/ErrorBoundary';
@@ -12,7 +13,13 @@ function App() {
         <ToastProvider>
           <BrowserRouter basename="/">
             <ScrollToTop />
-            <AppRoutes />
+            <Suspense fallback={
+              <div className="flex items-center justify-center min-h-screen">
+                <div className="w-12 h-12 border-4 border-[#D4AF37] border-t-transparent rounded-full animate-spin"></div>
+              </div>
+            }>
+              <AppRoutes />
+            </Suspense>
           </BrowserRouter>
         </ToastProvider>
       </AuthProvider>

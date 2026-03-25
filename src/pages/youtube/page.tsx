@@ -103,8 +103,8 @@ export default function YouTube() {
                   key={category}
                   onClick={() => setFilter(category)}
                   className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${filter === category
-                      ? 'bg-[#111111] text-white shadow-md transform scale-105'
-                      : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 hover:border-gray-300'
+                    ? 'bg-[#111111] text-white shadow-md transform scale-105'
+                    : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 hover:border-gray-300'
                     }`}
                 >
                   {category}
@@ -126,11 +126,10 @@ export default function YouTube() {
             </div>
           ) : filteredVideos.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
-              {filteredVideos.map((video, index) => (
+              {filteredVideos.map((video) => (
                 <div
                   key={video.id}
                   className="group cursor-pointer bg-white rounded-2xl transition-all duration-300 hover:-translate-y-2"
-                  style={{ animation: `fadeInUp 0.6s ease-out ${index * 0.1}s backwards` }}
                   onClick={() => setSelectedVideo(video)}
                 >
                   {/* Thumbnail Container */}
@@ -256,13 +255,7 @@ export default function YouTube() {
           </a>
         </div>
       </section>
-
-      <style>{`
-        @keyframes fadeInUp {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
     </>
   );
 }
+

@@ -9,6 +9,8 @@ interface SEOProps {
   canonical?: string;
   schema?: object;
   lastModified?: string;
+  noindex?: boolean;
+  nofollow?: boolean;
 }
 
 export default function SEO({
@@ -19,13 +21,20 @@ export default function SEO({
   ogType = 'website',
   canonical,
   schema,
-  lastModified
+  lastModified,
+  noindex = false,
+  nofollow = false
 }: SEOProps) {
-  const siteUrl = 'https://re-set.com.tr';
+  const siteUrl = (import.meta.env.VITE_SITE_URL || 'https://re-set.com.tr').replace(/\/$/, '');
   const fullTitle = `${title} | Reset - Şafak Özkan Danışmanlık`;
-  const canonicalUrl = canonical ? `${siteUrl}${canonical}` : siteUrl;
 
   useEffect(() => {
+    const canonicalPath = canonical || window.location.pathname || '/';
+    const canonicalUrl = canonicalPath.startsWith('http')
+      ? canonicalPath
+      : new URL(canonicalPath, `${siteUrl}/`).toString();
+    const robotsDirectives = `${noindex ? 'noindex' : 'index'}, ${nofollow ? 'nofollow' : 'follow'}`;
+
     // Set document title
     document.title = fullTitle;
 
@@ -41,6 +50,14 @@ export default function SEO({
       }
       
       element.setAttribute('content', content);
+    };
+
+    const removeMetaTag = (name: string, isProperty = false) => {
+      const attribute = isProperty ? 'property' : 'name';
+      const element = document.querySelector(`meta[${attribute}="${name}"]`);
+      if (element) {
+        element.remove();
+      }
     };
 
     // Set or update link tags
@@ -60,14 +77,18 @@ export default function SEO({
     setMetaTag('description', description);
     if (keywords) {
       setMetaTag('keywords', keywords);
+    } else {
+      removeMetaTag('keywords');
     }
     setMetaTag('author', 'Şafak Özkan');
-    setMetaTag('robots', 'index, follow');
+    setMetaTag('robots', robotsDirectives);
     setMetaTag('language', 'Turkish');
     setMetaTag('revisit-after', '7 days');
     
     if (lastModified) {
       setMetaTag('last-modified', lastModified);
+    } else {
+      removeMetaTag('last-modified');
     }
 
     // Open Graph tags
@@ -90,22 +111,28 @@ export default function SEO({
 
     // Schema.org JSON-LD
     if (schema) {
-      let scriptElement = document.querySelector('script[type="application/ld+json"]');
+      let scriptElement = document.querySelector('#seo-json-ld') as HTMLScriptElement | null;
       
       if (!scriptElement) {
         scriptElement = document.createElement('script');
+        scriptElement.id = 'seo-json-ld';
         scriptElement.setAttribute('type', 'application/ld+json');
         document.head.appendChild(scriptElement);
       }
       
       scriptElement.textContent = JSON.stringify(schema);
+    } else {
+      const existingSchema = document.querySelector('#seo-json-ld');
+      if (existingSchema) {
+        existingSchema.remove();
+      }
     }
 
     // Cleanup function
     return () => {
       // Optional: Remove meta tags on unmount if needed
     };
-  }, [title, description, keywords, ogImage, ogType, canonical, schema, lastModified, fullTitle, canonicalUrl]);
+  }, [title, description, keywords, ogImage, ogType, canonical, schema, lastModified, fullTitle, noindex, nofollow, siteUrl]);
 
   return null;
 }

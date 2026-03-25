@@ -35,107 +35,114 @@ export default function ClientPanelPage() {
       return;
     }
 
+    if (user.role === 'ADMIN') {
+      navigate('/admin', { replace: true });
+      return;
+    }
+
     if (user.role !== 'CLIENT') {
       navigate('/login', { replace: true });
       return;
     }
 
+    const loadClientData = async (email: string) => {
+      try {
+        setLoading(true);
+
+        // Kullanıcının client kaydını bul
+        const { data: clients, error: clientError } = await supabase
+          .from('clients')
+          .select('*')
+          .eq('email', email)
+          .maybeSingle();
+
+        if (clientError) {
+          console.error('Client sorgu hatası:', clientError);
+          setLoading(false);
+          return;
+        }
+
+        // Client kaydı yoksa boş veri ile devam et
+        if (!clients) {
+          console.log('Client kaydı bulunamadı, boş veri ile devam ediliyor');
+          setLoading(false);
+          return;
+        }
+
+        // Randevuları yükle
+        const { data: appts } = await supabase
+          .from('appointments')
+          .select('*')
+          .eq('client_id', clients.id)
+          .order('date', { ascending: false });
+
+        if (appts) {
+          setAppointments(appts.map((a: any) => ({
+            id: a.id,
+            clientId: a.client_id,
+            clientName: a.client_name,
+            clientEmail: a.client_email,
+            clientPhone: a.client_phone,
+            date: a.date,
+            time: a.time,
+            serviceType: a.service_type,
+            serviceTitle: a.service_title,
+            status: ((a.status || 'PENDING') as string).toUpperCase() as Appointment['status'],
+            notes: a.notes,
+            createdAt: a.created_at
+          })));
+        }
+
+        // Gelişim kayıtlarını yükle
+        const { data: progress } = await supabase
+          .from('progress_records')
+          .select('*')
+          .eq('client_id', clients.id)
+          .order('session_date', { ascending: true });
+
+        if (progress) {
+          setProgressRecords(progress.map((p: any) => ({
+            id: p.id,
+            clientId: p.client_id,
+            sessionDate: p.session_date,
+            metrics: p.metrics || {},
+            emotionalClarity: clampProgressPercentage(p.emotional_clarity),
+            mentalClarity: clampProgressPercentage(p.mental_clarity),
+            centeredness: clampProgressPercentage(p.centeredness),
+            summary: p.summary || p.notes || ''
+          })));
+        }
+
+        // Kaynakları yükle
+        const { data: res } = await supabase
+          .from('client_resources')
+          .select('*')
+          .eq('client_id', clients.id)
+          .order('date', { ascending: false });
+
+        if (res) {
+          setResources(res.map((r: any) => ({
+            id: r.id,
+            clientId: r.client_id,
+            type: r.type,
+            title: r.title,
+            description: r.description,
+            url: r.url,
+            date: r.date
+          })));
+        }
+      } catch (error) {
+        console.error('Veri yükleme hatası:', error);
+        toast.error(getUserFriendlyErrorMessage(error));
+      } finally {
+        setLoading(false);
+      }
+    };
+
     loadClientData(user.email);
-  }, [user, authLoading, navigate]);
+  }, [user, authLoading, navigate, toast]);
 
-  const loadClientData = async (email: string) => {
-    try {
-      setLoading(true);
 
-      // Kullanıcının client kaydını bul
-      const { data: clients, error: clientError } = await supabase
-        .from('clients')
-        .select('*')
-        .eq('email', email)
-        .maybeSingle();
-
-      if (clientError) {
-        console.error('Client sorgu hatası:', clientError);
-        setLoading(false);
-        return;
-      }
-
-      // Client kaydı yoksa boş veri ile devam et
-      if (!clients) {
-        console.log('Client kaydı bulunamadı, boş veri ile devam ediliyor');
-        setLoading(false);
-        return;
-      }
-
-      // Randevuları yükle
-      const { data: appts } = await supabase
-        .from('appointments')
-        .select('*')
-        .eq('client_id', clients.id)
-        .order('date', { ascending: false });
-
-      if (appts) {
-        setAppointments(appts.map((a: any) => ({
-          id: a.id,
-          clientId: a.client_id,
-          clientName: a.client_name,
-          clientEmail: a.client_email,
-          clientPhone: a.client_phone,
-          date: a.date,
-          time: a.time,
-          serviceType: a.service_type,
-          serviceTitle: a.service_title,
-          status: ((a.status || 'PENDING') as string).toUpperCase() as Appointment['status'],
-          notes: a.notes,
-          createdAt: a.created_at
-        })));
-      }
-
-      // Gelişim kayıtlarını yükle
-      const { data: progress } = await supabase
-        .from('progress_records')
-        .select('*')
-        .eq('client_id', clients.id)
-        .order('session_date', { ascending: true });
-
-      if (progress) {
-        setProgressRecords(progress.map((p: any) => ({
-          id: p.id,
-          clientId: p.client_id,
-          sessionDate: p.session_date,
-          metrics: p.metrics || {},
-          emotionalClarity: clampProgressPercentage(p.emotional_clarity),
-          mentalClarity: clampProgressPercentage(p.mental_clarity),
-          centeredness: clampProgressPercentage(p.centeredness),
-          summary: p.summary || p.notes || ''
-        })));
-      }
-
-      // Kaynakları yükle
-      const { data: res } = await supabase
-        .from('client_resources')
-        .select('*')
-        .eq('client_id', clients.id)
-        .order('date', { ascending: false });
-
-      if (res) {
-        setResources(res.map((r: any) => ({
-          id: r.id,
-          clientId: r.client_id,
-          type: r.type,
-          title: r.title,
-          description: r.description,
-          url: r.url,
-          date: r.date
-        })));
-      }
-    } catch (error) {
-      console.error('Veri yükleme hatası:', error);
-      toast.error(getUserFriendlyErrorMessage(error));
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleLogout = async () => {
     await signOut();
@@ -202,6 +209,7 @@ export default function ClientPanelPage() {
         <SEO
           title="Danışan Paneli - Reset Danışmanlık"
           description="Reset Danışmanlık danışan paneli"
+          noindex
         />
         <div className="min-h-screen bg-gray-50 flex items-center justify-center">
           <div className="text-center">
@@ -218,6 +226,7 @@ export default function ClientPanelPage() {
       <SEO
         title="Danışan Paneli - Reset Danışmanlık"
         description="Reset Danışmanlık danışan paneli"
+        noindex
       />
       <div className="min-h-screen bg-gray-50 py-8">
         <div className="max-w-6xl mx-auto px-4">
@@ -410,7 +419,7 @@ export default function ClientPanelPage() {
                               ? 'bg-green-100 text-green-700'
                               : appointment.status === 'PENDING'
                                 ? 'bg-yellow-100 text-yellow-700'
-                                : 'bg-red-100 text-red-700'
+                                : 'bg-slate-100 text-slate-700'
                               }`}
                           >
                             {appointment.status === 'CONFIRMED'
@@ -442,12 +451,12 @@ export default function ClientPanelPage() {
                           <div className="flex items-center gap-2">
                             <i className={`text-2xl ${resource.type === 'PDF' ? 'ri-file-pdf-line text-red-500' :
                               resource.type === 'NOTE' ? 'ri-file-text-line text-blue-500' :
-                                resource.type === 'AUDIO' ? 'ri-music-line text-purple-500' :
+                                resource.type === 'AUDIO' ? 'ri-music-line text-cyan-500' :
                                   'ri-link text-green-500'
                               }`}></i>
                             <span className={`text-xs font-medium px-2 py-1 rounded-full ${resource.type === 'PDF' ? 'bg-red-100 text-red-700' :
                               resource.type === 'NOTE' ? 'bg-blue-100 text-blue-700' :
-                                resource.type === 'AUDIO' ? 'bg-purple-100 text-purple-700' :
+                                resource.type === 'AUDIO' ? 'bg-cyan-100 text-cyan-700' :
                                   'bg-green-100 text-green-700'
                               }`}>
                               {resource.type}
@@ -483,7 +492,7 @@ export default function ClientPanelPage() {
           {activeTab === 'progress' && (
             <div className="space-y-6">
               {/* Gelişim Grafiği */}
-              <div className="bg-white rounded-lg shadow-sm p-6">
+              <div className="bg-white rounded-lg shadow-sm p-[6px]">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Gelişim Grafiğim</h3>
                 {chartData.length === 0 ? (
                   <div className="text-center py-12 text-gray-500">
@@ -555,7 +564,7 @@ export default function ClientPanelPage() {
                       <path
                         d={createPath(chartData.map(d => d.centeredness ?? 0))}
                         fill="none"
-                        stroke="#3b82f6"
+                        stroke="#64748b"
                         strokeWidth="2"
                         strokeDasharray="2,3"
                       />
@@ -565,7 +574,7 @@ export default function ClientPanelPage() {
                           cx={getXPosition(i, chartData.length)}
                           cy={getYPosition(d.centeredness ?? 0)}
                           r="4"
-                          fill="#3b82f6"
+                          fill="#64748b"
                         />
                       ))}
 
@@ -595,7 +604,7 @@ export default function ClientPanelPage() {
                         <span className="text-sm text-gray-600">Zihinsel Netlik</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <div className="w-8 h-0.5 bg-blue-500 border-dotted border-t-2 border-blue-500"></div>
+                        <div className="w-8 h-0.5 bg-slate-500 border-dotted border-t-2 border-slate-500"></div>
                         <span className="text-sm text-gray-600">Merkezlenme</span>
                       </div>
                     </div>
@@ -626,7 +635,7 @@ export default function ClientPanelPage() {
                           <div className="flex gap-4 text-xs">
                             <span className="text-teal-600">DN: {record.emotionalClarity ?? 0}/100</span>
                             <span className="text-[#1A1A1A]">ZN: {record.mentalClarity ?? 0}/100</span>
-                            <span className="text-blue-500">M: {record.centeredness ?? 0}/100</span>
+                            <span className="text-slate-500">M: {record.centeredness ?? 0}/100</span>
                           </div>
                         </div>
                         <div className="bg-gray-50 rounded-lg p-3">
