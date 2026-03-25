@@ -1,21 +1,21 @@
 {
   "projectId": "6035127d-74fa-462b-befa-3580a04618ab",
   "status": "init",
-  "type": "backend",
+  "type": "frontend",
   "scope": "codebase",
-  "localEndpoint": "http://localhost:5001",
+  "localEndpoint": "http://localhost:3000",
+  "localPort": 3000,
+  "serverMode": "development",
   "loginUser": "info@re-set.com.tr",
   "loginPassword": "123456",
-  "localPort": 5001,
-  "serverMode": "development",
-  "additionalInstruction": "Focus on backend API testing only (Admin Login, Client retrieval).",
+  "additionalInstruction": "Test RE-SET Spiritual Coaching Platform on localhost:3000. Verify Login and Dashboard functionality.",
   "variantOptions": {
-    "numVariants":1,
-    "creativeRange":1,
-    "aspectsToFocusOn":["functionality"]
+    "numVariants": 1,
+    "creativeRange": 1,
+    "aspectsToFocusOn": ["functionality"]
   },
   "executionArgs": {
-    "localPort": 5001,
+    "localPort": 3000,
     "serverMode": "development",
     "needLogin": true,
     "testPlanId": "",
