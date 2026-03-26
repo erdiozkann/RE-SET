@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../contexts/AuthContext';
 import { getUserFriendlyErrorMessage } from '../../lib/errors';
 import { useToast } from '../../components/ToastContainer';
 import SEO from '../../components/SEO';
 
 export default function LoginPage() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
   const toast = useToast();
@@ -122,25 +124,25 @@ export default function LoginPage() {
               <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-teal-500 to-teal-600 rounded-2xl mb-4">
                 <i className="ri-user-line text-3xl text-white"></i>
               </div>
-              <h1 className="text-2xl font-bold text-gray-900 mb-2">Hoş Geldiniz</h1>
-              <p className="text-gray-600 text-sm">Hesabınıza giriş yapın</p>
-            </div>
-
-            {/* Giriş Formu */}
-            {error && (
-              <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg animate-shake">
-                <div className="flex items-start gap-3">
-                  <i className="ri-error-warning-line text-red-600 text-xl mt-0.5"></i>
-                  <p className="text-sm text-red-800 font-medium">{error}</p>
-                </div>
+                <h1 className="text-2xl font-bold text-gray-900 mb-2">{t('auth.login_title')}</h1>
+                <p className="text-gray-600 text-sm">{t('auth.login_subtitle')}</p>
               </div>
-            )}
-
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                  E-posta Adresi
-                </label>
+  
+              {/* Giriş Formu */}
+              {error && (
+                <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg animate-shake">
+                  <div className="flex items-start gap-3">
+                    <i className="ri-error-warning-line text-red-600 text-xl mt-0.5"></i>
+                    <p className="text-sm text-red-800 font-medium">{error}</p>
+                  </div>
+                </div>
+              )}
+  
+              <form onSubmit={handleSubmit} className="space-y-5">
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                    {t('auth.email')}
+                  </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <i className="ri-mail-line text-gray-400"></i>
@@ -160,7 +162,7 @@ export default function LoginPage() {
 
               <div>
                 <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-                  Şifre
+                  {t('auth.password')}
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -189,7 +191,7 @@ export default function LoginPage() {
                   }}
                   className="text-sm text-teal-600 hover:text-teal-700 font-medium transition-colors"
                 >
-                  Şifremi Unuttum
+                  {t('auth.forgot_password_link')}
                 </button>
               </div>
 
@@ -201,12 +203,12 @@ export default function LoginPage() {
                 {loading ? (
                   <>
                     <i className="ri-loader-4-line animate-spin"></i>
-                    <span>Giriş Yapılıyor...</span>
+                    <span>{t('auth.logging_in')}</span>
                   </>
                 ) : (
                   <>
                     <i className="ri-login-box-line"></i>
-                    <span>Giriş Yap</span>
+                    <span>{t('auth.login_button')}</span>
                   </>
                 )}
               </button>
@@ -215,12 +217,12 @@ export default function LoginPage() {
             {/* Kayıt Linki */}
             <div className="mt-6 text-center">
               <p className="text-sm text-gray-600">
-                Hesabınız yok mu?{' '}
+                {t('auth.no_account')}{' '}
                 <Link
                   to="/register"
                   className="text-teal-600 hover:text-teal-700 font-medium transition-colors"
                 >
-                  Kayıt Olun
+                  {t('auth.register_link')}
                 </Link>
               </p>
             </div>
@@ -232,7 +234,7 @@ export default function LoginPage() {
                 className="flex items-center justify-center gap-2 text-sm text-gray-600 hover:text-gray-900 transition-colors"
               >
                 <i className="ri-arrow-left-line"></i>
-                <span>Ana Sayfaya Dön</span>
+                <span>{t('auth.back_to_home')}</span>
               </Link>
             </div>
           </div>
@@ -245,7 +247,7 @@ export default function LoginPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 animate-fade-in">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold text-gray-900">Şifremi Unuttum</h2>
+              <h2 className="text-xl font-bold text-gray-900">{t('auth.forgot_password_modal.title')}</h2>
               <button
                 onClick={() => setShowResetModal(false)}
                 className="p-2 hover:bg-gray-100 rounded-full transition-colors"
@@ -255,13 +257,13 @@ export default function LoginPage() {
             </div>
 
             <p className="text-sm text-gray-600 mb-6">
-              E-posta adresinizi girin, size şifre sıfırlama linki gönderelim.
+              {t('auth.forgot_password_modal.description')}
             </p>
 
             <form onSubmit={handleResetPassword} className="space-y-4">
               <div>
                 <label htmlFor="resetEmail" className="block text-sm font-medium text-gray-700 mb-2">
-                  E-posta Adresi
+                  {t('auth.email')}
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -284,11 +286,11 @@ export default function LoginPage() {
               <div className="flex gap-3">
                 <button
                   type="button"
-                  onClick={() => setShowResetModal(false)}
+                   onClick={() => setShowResetModal(false)}
                   className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors"
                   disabled={resetLoading}
                 >
-                  İptal
+                  {t('auth.forgot_password_modal.cancel')}
                 </button>
                 <button
                   type="submit"
@@ -298,12 +300,12 @@ export default function LoginPage() {
                   {resetLoading ? (
                     <>
                       <i className="ri-loader-4-line animate-spin"></i>
-                      <span>Gönderiliyor...</span>
+                      <span>{t('auth.forgot_password_modal.sending')}</span>
                     </>
                   ) : (
                     <>
                       <i className="ri-mail-send-line"></i>
-                      <span>Gönder</span>
+                      <span>{t('auth.forgot_password_modal.send')}</span>
                     </>
                   )}
                 </button>

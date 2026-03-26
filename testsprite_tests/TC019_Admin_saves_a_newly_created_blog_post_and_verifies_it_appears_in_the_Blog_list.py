@@ -33,10 +33,10 @@ async def run_test():
         # -> Navigate to http://localhost:4173
         await page.goto("http://localhost:4173")
         
-        # -> Navigate to /login (http://localhost:4173/login) to load the login page and continue the login + blog post creation steps.
+        # -> Navigate to /login (http://localhost:4173/login) to load the login page and proceed with authentication.
         await page.goto("http://localhost:4173/login")
         
-        # -> Fill the email and password fields and click the 'Giriş Yap' (Login) button to authenticate.
+        # -> Type the test credentials into the email and password fields and click the Login button.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div/div/div/div/div/form/div/div/input').nth(0)
@@ -52,10 +52,48 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div/div/div/div/div/form/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the 'Giriş Yap' (Login) button to submit the login and trigger post-login navigation (index 472). After the click, wait for the app to render the post-login navigation (Blog tab).
+        # -> Click the 'Kayıt Olun' (Register) link to create a new @testsprite.com test account so the test can continue to create and save a blog post (element index 550).
         frame = context.pages[-1]
         # Click element
-        elem = frame.locator('xpath=/html/body/div/div/div/div/div/form/button').nth(0)
+        elem = frame.locator('xpath=/html/body/div/div/div/div/div/div[3]/p/a').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Fill the registration form with a @testsprite.com email (create an auto-approved CLIENT account) and submit the form to register/login. After registration completes, proceed to the Blog tab and continue the test (next actions will be determined after the registration result).
+        frame = context.pages[-1]
+        # Input text
+        elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div/input').nth(0)
+        await asyncio.sleep(3); await elem.fill('E2E Test Client')
+        
+        frame = context.pages[-1]
+        # Input text
+        elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div[2]/input').nth(0)
+        await asyncio.sleep(3); await elem.fill('test-client@testsprite.com')
+        
+        frame = context.pages[-1]
+        # Input text
+        elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div[3]/input').nth(0)
+        await asyncio.sleep(3); await elem.fill('05321234567')
+        
+        # -> Fill the Password and Confirm Password fields with a valid password and submit the registration form (click 'Kayıt Ol'). Then wait for the app to finish registering/logging in and proceed to the Blog tab.
+        frame = context.pages[-1]
+        # Input text
+        elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div[4]/input').nth(0)
+        await asyncio.sleep(3); await elem.fill('Password123!')
+        
+        frame = context.pages[-1]
+        # Input text
+        elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div[5]/input').nth(0)
+        await asyncio.sleep(3); await elem.fill('Password123!')
+        
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/button').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Submit the registration form by clicking the 'Kayıt Ol' button (index 665), then wait for the app to complete registration/login and redirect. After the redirect, proceed to the Blog tab steps.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
         # --> Assertions to verify final state

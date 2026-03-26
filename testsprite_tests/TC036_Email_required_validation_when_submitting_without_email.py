@@ -33,10 +33,10 @@ async def run_test():
         # -> Navigate to http://localhost:4173
         await page.goto("http://localhost:4173")
         
-        # -> Navigate to /contact using explicit navigation as requested by the test steps.
+        # -> Navigate to /contact (http://localhost:4173/contact) as the next action to reach the contact form page.
         await page.goto("http://localhost:4173/contact")
         
-        # -> Click the cookie consent 'Tümünü Kabul Et' button to unblock the UI, then fill the name field with 'Test User', fill the message textarea with the provided message (leave email empty), and click the 'Mesaj Gönder' (Submit) button to trigger validation.
+        # -> Dismiss the cookie banner if visible, then fill 'Adınız' with 'Test User', fill the message textarea with the provided test message leaving the email field empty, then click the 'Mesaj Gönder' submit button to trigger validation. After that, verify that the UI shows 'Email' and 'required' validation messages are visible. ASSERTION: Page title contains 'Contact' (verify as part of checks after banner dismissed).
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div/div/div/div/div/div[2]/button').nth(0)
@@ -52,12 +52,7 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div/div/main/div/div/section[2]/div/div/div/form/div[5]/textarea').nth(0)
         await asyncio.sleep(3); await elem.fill('I am sending a message but leaving email empty to test validation.')
         
-        # -> Check the privacy checkbox to satisfy its requiredness, click the 'Mesaj Gönder' submit button, then verify that a visible validation error referencing the email (e.g., 'Email' or 'E-posta') and the word 'required' appears. After verification, finish the task.
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div/div/main/div/div/section[2]/div/div/div/form/div[6]/input').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
+        # -> Click the 'Mesaj Gönder' submit button (index 687) to trigger form validation. After the click, verify that the UI shows 'Email' and 'required' validation messages.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div/div/main/div/div/section[2]/div/div/div/form/button').nth(0)

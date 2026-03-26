@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface SEOProps {
   title: string;
@@ -25,6 +26,7 @@ export default function SEO({
   noindex = false,
   nofollow = false
 }: SEOProps) {
+  const { i18n } = useTranslation();
   const siteUrl = (import.meta.env.VITE_SITE_URL || 'https://re-set.com.tr').replace(/\/$/, '');
   const fullTitle = `${title} | Reset - Şafak Özkan Danışmanlık`;
 
@@ -82,7 +84,7 @@ export default function SEO({
     }
     setMetaTag('author', 'Şafak Özkan');
     setMetaTag('robots', robotsDirectives);
-    setMetaTag('language', 'Turkish');
+    setMetaTag('language', i18n.language && i18n.language.startsWith('tr') ? 'Turkish' : 'English');
     setMetaTag('revisit-after', '7 days');
     
     if (lastModified) {
@@ -98,7 +100,7 @@ export default function SEO({
     setMetaTag('og:url', canonicalUrl, true);
     setMetaTag('og:image', ogImage, true);
     setMetaTag('og:site_name', 'Reset - Şafak Özkan Danışmanlık', true);
-    setMetaTag('og:locale', 'tr_TR', true);
+    setMetaTag('og:locale', i18n.language && i18n.language.startsWith('tr') ? 'tr_TR' : 'en_US', true);
 
     // Twitter Card tags
     setMetaTag('twitter:card', 'summary_large_image');

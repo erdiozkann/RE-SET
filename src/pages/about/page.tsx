@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import Button from '../../components/base/Button';
 import type { Certificate } from '../../types';
 import SEO from '../../components/SEO';
 import { certificatesApi, contentApi } from '../../lib/api';
-
 export default function About() {
+  const { t } = useTranslation();
   const [certificates, setCertificates] = useState<Certificate[]>([]);
   const [aboutContent, setAboutContent] = useState<any>(null);
   const [heroImage, setHeroImage] = useState<string>('');
@@ -95,7 +96,7 @@ export default function About() {
       <div className="py-16 flex items-center justify-center bg-gradient-to-br from-teal-50 via-white to-amber-50 h-screen">
         <div className="text-center">
           <i className="ri-loader-4-line text-4xl text-teal-600 animate-spin mb-4"></i>
-          <p className="text-gray-600">Yükleniyor...</p>
+          <p className="text-gray-600">{t('common.loading') || 'Yükleniyor...'}</p>
         </div>
       </div>
     );
@@ -104,9 +105,9 @@ export default function About() {
   return (
     <>
       <SEO
-        title="Şafak Özkan | Sertifikalı Demartini Metodu Uygulayıcısı İstanbul"
-        description="İstanbul'da sertifikalı Demartini Metodu uygulayıcısı Şafak Özkan. 15 yılı aşkın deneyimle değer belirleme, Breakthrough Experience ve yaşam dengeleme alanlarında uzman."
-        keywords="şafak özkan, demartini metodu uygulayıcısı, demartini metodu istanbul, değer belirleme, breakthrough experience, yaşam dengeleme, demartini metodu türkiye"
+        title={t('about.seo.title')}
+        description={t('about.seo.description')}
+        keywords={t('about.seo.keywords')}
         schema={schema}
       />
 
@@ -124,13 +125,13 @@ export default function About() {
                     {aboutContent.title}
                   </h1>
                   <p className="text-lg md:text-xl text-[#D4AF37] mb-4 font-medium">
-                    Sertifikalı Demartini Metodu Uygulayıcısı
+                    {t('about.hero_subtitle')}
                   </p>
                   <p className="text-base text-gray-600 leading-relaxed mb-6">
                     {aboutContent.paragraph1}
                   </p>
                   <Button variant="primary" size="lg">
-                    Randevu Al
+                    {t('about.appointment_button')}
                   </Button>
                 </div>
                 <div className="relative flex justify-center">
@@ -155,7 +156,7 @@ export default function About() {
           <section className="py-12 md:py-16 bg-white">
             <div className="max-w-4xl mx-auto px-4 md:px-8">
               <h2 className="text-2xl md:text-3xl font-serif text-[#1A1A1A] mb-6 text-center">
-                Hikayem
+                {t('about.story_title')}
               </h2>
               <div className="prose prose-lg max-w-none text-gray-700">
                 {aboutContent.story && aboutContent.story.split('\n').map((paragraph: string, index: number) => (
@@ -180,7 +181,7 @@ export default function About() {
             <section className="py-12 md:py-16 bg-[#F5F5F5]">
               <div className="max-w-7xl mx-auto px-4 md:px-8">
                 <h2 className="text-2xl md:text-3xl font-serif text-[#1A1A1A] mb-8 text-center">
-                  Sertifikalar & Eğitimler
+                  {t('about.certificates_title')}
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {certificates.map((cert) => (
@@ -205,29 +206,29 @@ export default function About() {
           <section className="py-12 md:py-16 bg-white">
             <div className="max-w-6xl mx-auto px-4 md:px-8">
               <h2 className="text-2xl md:text-3xl font-serif text-[#1A1A1A] mb-8 text-center">
-                Yaklaşımım
+                {t('about.approach_title')}
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {[
                   {
                     icon: "ri-heart-line",
-                    title: "Empati Odaklı",
-                    description: "Her bireyin kendine özgü hikayesi olduğuna inanır, yargısız bir ortam sunarım."
+                    title: t('about.approaches.empathy_title'),
+                    description: t('about.approaches.empathy_desc')
                   },
                   {
                     icon: "ri-lightbulb-line",
-                    title: "Çözüm Odaklı",
-                    description: "Geçmişte takılıp kalmak yerine, geleceğe yönelik çözümler üretiriz."
+                    title: t('about.approaches.solution_title'),
+                    description: t('about.approaches.solution_desc')
                   },
                   {
                     icon: "ri-compass-3-line",
-                    title: "Kişiye Özel",
-                    description: "Standart reçeteler yerine, size özel stratejiler geliştiririz."
+                    title: t('about.approaches.custom_title'),
+                    description: t('about.approaches.custom_desc')
                   },
                   {
                     icon: "ri-seedling-line",
-                    title: "Büyüme Odaklı",
-                    description: "Sürekli gelişim ve öğrenme sürecini desteklerim."
+                    title: t('about.approaches.growth_title'),
+                    description: t('about.approaches.growth_desc')
                   }
                 ].map((approach, index) => (
                   <div key={index} className="text-center">
@@ -250,14 +251,13 @@ export default function About() {
           <section className="py-12 md:py-16 bg-gradient-to-br from-[#1A1A1A] to-[#2A2A2A]">
             <div className="max-w-4xl mx-auto px-4 md:px-8 text-center">
               <h2 className="text-2xl md:text-3xl font-serif text-white mb-4">
-                Birlikte Yolculuğa Çıkmaya Hazır mısınız?
+                {t('about.cta_title')}
               </h2>
               <p className="text-base text-white/80 mb-6 leading-relaxed">
-                Değişim için ilk adımı atmaya hazır olduğunuzda, ben burada olacağım.
-                Ücretsiz keşif seansınızı rezerve edin.
+                {t('about.cta_desc')}
               </p>
               <Button variant="primary" size="lg">
-                Ücretsiz Görüşme
+                {t('about.cta_button')}
               </Button>
             </div>
           </section>

@@ -33,51 +33,13 @@ async def run_test():
         # -> Navigate to http://localhost:4173
         await page.goto("http://localhost:4173")
         
-        # -> Click the 'Giriş Yap' (login) link to open the login form so credentials can be entered. ASSERTION: 'Giriş Yap' link is visible on the page.
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div/div/header/div/div/nav/div/a[2]').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
-        # -> Fill the login form with test credentials (example@gmail.com / password123) and submit the login form.
-        frame = context.pages[-1]
-        # Input text
-        elem = frame.locator('xpath=/html/body/div/div/div/div/div/form/div/div/input').nth(0)
-        await asyncio.sleep(3); await elem.fill('example@gmail.com')
-        
-        frame = context.pages[-1]
-        # Input text
-        elem = frame.locator('xpath=/html/body/div/div/div/div/div/form/div[2]/div/input').nth(0)
-        await asyncio.sleep(3); await elem.fill('password123')
-        
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div/div/div/div/div/form/button').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
-        # -> Navigate to /booking as the explicit test step requires (use navigate to http://localhost:4173/booking).
+        # -> Navigate to /booking as the test explicitly requests and load the booking page UI so the booking form can be tested.
         await page.goto("http://localhost:4173/booking")
         
-        # -> Open the login form from the booking page (click 'Evet, Giriş Yap') so credentials can be entered and authentication can proceed.
+        # -> Dismiss the cookie consent banner by clicking 'Tümünü Kabul Et' so the booking UI and login links are accessible.
         frame = context.pages[-1]
         # Click element
-        elem = frame.locator('xpath=/html/body/div/div/main/div/div/div/div[2]/a').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
-        # -> Fill the login form with example@gmail.com / password123 and submit (perform second login attempt). After the login submit, wait for the app to stabilize before continuing to /booking.
-        frame = context.pages[-1]
-        # Input text
-        elem = frame.locator('xpath=/html/body/div/div/div/div/div/form/div/div/input').nth(0)
-        await asyncio.sleep(3); await elem.fill('example@gmail.com')
-        
-        frame = context.pages[-1]
-        # Input text
-        elem = frame.locator('xpath=/html/body/div/div/div/div/div/form/div[2]/div/input').nth(0)
-        await asyncio.sleep(3); await elem.fill('password123')
-        
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div/div/div/div/div/form/button').nth(0)
+        elem = frame.locator('xpath=/html/body/div/div/div/div/div/div[2]/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
         # --> Assertions to verify final state

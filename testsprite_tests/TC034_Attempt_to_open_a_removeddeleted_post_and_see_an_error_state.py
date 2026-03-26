@@ -33,19 +33,16 @@ async def run_test():
         # -> Navigate to http://localhost:4173
         await page.goto("http://localhost:4173")
         
-        # -> Navigate to /blog (use explicit navigate to /blog as the test step requests).
+        # -> Navigate to /blog (use the explicit navigate action to http://localhost:4173/blog as required by the test step)
         await page.goto("http://localhost:4173/blog")
         
-        # -> Click the cookie consent 'Tümünü Kabul Et' (Accept All) button to dismiss the modal so blog content and interactive elements become accessible.
+        # --> Assertions to verify final state
         frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div/div/div/div/div/div[2]/button').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
-        # --> Test passed — verified by AI agent
-        frame = context.pages[-1]
+        assert await frame.locator("xpath=//*[contains(., 'Post')]").nth(0).is_visible(), "Expected 'Post' to be visible"
+        assert await frame.locator("xpath=//*[contains(., 'Article not found')]").nth(0).is_visible(), "Expected 'Article not found' to be visible"
+        assert await frame.locator("xpath=//*[contains(., 'Back')]").nth(0).is_visible(), "Expected 'Back' to be visible"
         current_url = await frame.evaluate("() => window.location.href")
-        assert current_url is not None, "Test completed successfully"
+        assert '/blog' in current_url
         await asyncio.sleep(5)
 
     finally:

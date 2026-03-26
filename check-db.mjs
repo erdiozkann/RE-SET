@@ -23,6 +23,7 @@ const checks = [
   { table: 'users', mode: 'head' },
   { table: 'clients', mode: 'head' },
   { table: 'reviews', mode: 'head' },
+  { table: 'blog_posts', mode: 'head' },
 ];
 
 async function checkTable({ table }) {
@@ -42,6 +43,18 @@ async function checkTable({ table }) {
 async function run() {
   console.log('Supabase backend diagnostics started');
   console.log(`URL: ${supabaseUrl}`);
+
+  // Try to sign in as admin first
+  const { data: auth, error: authError } = await supabase.auth.signInWithPassword({
+    email: process.env.VITE_DEMO_EMAIL,
+    password: process.env.VITE_DEMO_PASSWORD
+  });
+
+  if (authError) {
+    console.log('⚠️ Authentication failed, checking as public/anon...');
+  } else {
+    console.log(`🔑 Authenticated as ${process.env.VITE_DEMO_EMAIL}`);
+  }
 
   const results = await Promise.all(checks.map(checkTable));
   const failures = results.filter((ok) => !ok).length;

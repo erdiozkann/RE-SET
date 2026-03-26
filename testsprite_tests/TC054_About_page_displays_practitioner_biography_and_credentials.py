@@ -33,7 +33,7 @@ async def run_test():
         # -> Navigate to http://localhost:4173
         await page.goto("http://localhost:4173")
         
-        # -> Navigate to /about (http://localhost:4173/about) and then verify the URL contains '/about', the page title contains 'About', and that the texts 'Hakkında' and 'Uzman' are visible.
+        # -> Navigate to /about (http://localhost:4173/about) and then verify URL, title, and presence of 'Hakkında' and 'Uzman'.
         await page.goto("http://localhost:4173/about")
         
         # --> Test passed — verified by AI agent

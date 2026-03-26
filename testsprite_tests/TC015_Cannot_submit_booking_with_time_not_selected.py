@@ -33,13 +33,16 @@ async def run_test():
         # -> Navigate to http://localhost:4173
         await page.goto("http://localhost:4173")
         
-        # -> Click the 'Giriş Yap' button to open the login form so the test can authenticate before navigating to /booking.
+        # -> Navigate to /booking (use explicit navigate action since the current page has no relevant clickable elements).
+        await page.goto("http://localhost:4173/booking")
+        
+        # -> Click the 'Evet, Giriş Yap' link to open the login page so the test can authenticate and continue with booking steps (click element index 400).
         frame = context.pages[-1]
         # Click element
-        elem = frame.locator('xpath=/html/body/div/div/header/div/div/nav/div/a[2]').nth(0)
+        elem = frame.locator('xpath=/html/body/div/div/main/div/div/div/div[2]/a').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Fill the login form with example@gmail.com / password123 and submit by clicking the 'Giriş Yap' button.
+        # -> Authenticate by filling the login form with credentials and submitting (use example@gmail.com / password123). After successful login, proceed to /booking and continue with booking steps.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div/div/div/div/div/form/div/div/input').nth(0)
@@ -55,13 +58,14 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div/div/div/div/div/form/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Attempt login submit again (click the 'Giriş Yap' button) and then navigate to /booking using the explicit path so the booking page can be tested.
+        # -> Navigate explicitly to /booking (http://localhost:4173/booking) to continue the booking flow and perform validation checks.
+        await page.goto("http://localhost:4173/booking")
+        
+        # -> Click the 'Evet, Giriş Yap' link to open the login page so the test can authenticate and continue with booking validations (use element index 779).
         frame = context.pages[-1]
         # Click element
-        elem = frame.locator('xpath=/html/body/div/div/div/div/div/form/button').nth(0)
+        elem = frame.locator('xpath=/html/body/div/div/main/div/div/div/div[2]/a').nth(0)
         await asyncio.sleep(3); await elem.click()
-        
-        await page.goto("http://localhost:4173/booking")
         
         # --> Assertions to verify final state
         frame = context.pages[-1]

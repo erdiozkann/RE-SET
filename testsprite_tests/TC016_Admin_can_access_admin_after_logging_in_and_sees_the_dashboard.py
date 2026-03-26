@@ -33,38 +33,8 @@ async def run_test():
         # -> Navigate to http://localhost:4173
         await page.goto("http://localhost:4173")
         
-        # -> Click the cookie 'Tümünü Kabul Et' button to clear the modal, then click the 'Giriş Yap' link to navigate to the login page.
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div/div/div/div/div/div[2]/button').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div/div/header/div/div/nav/div/a[2]').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
-        # -> Type example@gmail.com into the email field (index 421), type password123 into the password field (index 428), then click the 'Giriş Yap' submit button (index 437).
-        frame = context.pages[-1]
-        # Input text
-        elem = frame.locator('xpath=/html/body/div/div/div/div/div/form/div/div/input').nth(0)
-        await asyncio.sleep(3); await elem.fill('example@gmail.com')
-        
-        frame = context.pages[-1]
-        # Input text
-        elem = frame.locator('xpath=/html/body/div/div/div/div/div/form/div[2]/div/input').nth(0)
-        await asyncio.sleep(3); await elem.fill('password123')
-        
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div/div/div/div/div/form/button').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
-        # -> Click the 'Giriş Yap' submit button (index 437) to retry login, wait for the app to respond, then check if URL contains '/admin' and that 'Admin' text is visible.
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div/div/div/div/div/form/button').nth(0)
-        await asyncio.sleep(3); await elem.click()
+        # -> Navigate to /login (explicit navigation per test step).
+        await page.goto("http://localhost:4173/login")
         
         # --> Assertions to verify final state
         frame = context.pages[-1]

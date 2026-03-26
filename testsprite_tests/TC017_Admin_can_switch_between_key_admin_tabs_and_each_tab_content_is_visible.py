@@ -33,10 +33,10 @@ async def run_test():
         # -> Navigate to http://localhost:4173
         await page.goto("http://localhost:4173")
         
-        # -> Navigate to /login
+        # -> Navigate to /login (explicit navigation requested by test). Use navigate action to http://localhost:4173/login
         await page.goto("http://localhost:4173/login")
         
-        # -> Type example@gmail.com into the email field (index 481).
+        # -> Enter credentials into the email and password fields and click the 'Giriş Yap' (Login) button to sign in to the admin panel.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div/div/div/div/div/form/div/div/input').nth(0)
@@ -52,7 +52,7 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div/div/div/div/div/form/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the 'Giriş Yap' (Login) button to submit credentials and sign in (use index 497).
+        # -> Click the 'Giriş Yap' (Login) button (index 505) to attempt signing in again and trigger navigation to the admin dashboard.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div/div/div/div/div/form/button').nth(0)

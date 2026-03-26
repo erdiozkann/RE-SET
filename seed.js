@@ -91,17 +91,18 @@ async function run() {
     }
 
     // 5. BLOG İÇERİĞİ SEED (Content API / TC028 Testi)
+    await supabase.from('blog_posts').delete().neq('id', '00000000-0000-0000-0000-000000000000');
     let { data: blogs } = await supabase.from('blog_posts').select('*').eq('title', "E2E Test Blogu");
     if (!blogs || blogs.length === 0) {
-        await supabase.from('blog_posts').insert({
+        const { error: blogE } = await supabase.from('blog_posts').insert({
             title: "E2E Test Blogu",
             excerpt: "Bu blog E2E testleri tarafından görülmesi için eklendi.",
             content: "<p>Tam içerik detayları buradadır.</p>",
-            featured_image: "https://via.placeholder.com/600",
-            status: "published",
+            image: "https://via.placeholder.com/600",
             date: new Date().toISOString().split('T')[0]
         });
-        console.log("📝 Blog Post seeded.");
+        if (blogE) console.error("❌ Blog Insert Error:", blogE);
+        else console.log("📝 Blog Post seeded.");
     } else {
         console.log("📝 Blog Post already exists.");
     }

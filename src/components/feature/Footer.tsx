@@ -2,9 +2,11 @@ import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { contentApi } from '../../lib/api';
 import type { ContactInfo } from '../../types';
+import { useTranslation } from 'react-i18next';
 
 export default function Footer() {
   const [contactInfo, setContactInfo] = useState<ContactInfo | null>(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const loadContactInfo = async () => {
@@ -42,7 +44,7 @@ export default function Footer() {
             )}
 
             <p className="text-gray-400 mb-4">
-              Demartini Metodu ile değerlerinizi keşfedin, yaşamınızı dengeleyin.
+              {t('footer.description')}
             </p>
             <div className="flex items-center space-x-4">
               {contactInfo?.instagram && (
@@ -60,7 +62,7 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-lg font-semibold mb-4">Hızlı Bağlantılar</h4>
+            <h4 className="text-lg font-semibold mb-4">{t('footer.links_title')}</h4>
             <ul className="space-y-2">
               <li>
                 <Link to="/about" className="text-gray-400 hover:text-[#D4AF37] transition-colors cursor-pointer">
@@ -87,7 +89,7 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <h4 className="text-lg font-semibold mb-4">İletişim</h4>
+            <h4 className="text-lg font-semibold mb-4">{t('footer.contact_title')}</h4>
             <ul className="space-y-2 text-gray-400">
               {contactInfo?.email && (
                 <li className="flex items-start">
@@ -114,23 +116,23 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row items-center justify-between">
           <p className="text-gray-400 text-sm mb-4 md:mb-0">
-            © {new Date().getFullYear()} Reset. Tüm hakları saklıdır.
+            {t('footer.copyright', { year: new Date().getFullYear() })}
           </p>
           <div className="flex items-center space-x-6 text-sm">
             <Link to="/kvkk" className="text-gray-400 hover:text-[#D4AF37] transition-colors cursor-pointer">
-              KVKK
+              {t('footer.kvkk')}
             </Link>
             <Link to="/privacy" className="text-gray-400 hover:text-[#D4AF37] transition-colors cursor-pointer">
-              Gizlilik Politikası
+              {t('footer.privacy')}
             </Link>
             <Link to="/cookies" className="text-gray-400 hover:text-[#D4AF37] transition-colors cursor-pointer">
-              Çerez Politikası
+              {t('footer.cookies')}
             </Link>
             <button onClick={handleCookieSettings} className="text-gray-400 hover:text-[#D4AF37] transition-colors cursor-pointer">
-              Çerez Ayarları
+              {t('footer.cookie_settings')}
             </button>
             <Link to="/copyright" className="text-gray-400 hover:text-[#D4AF37] transition-colors cursor-pointer">
-              Telif Hakkı
+              {t('footer.copyright_link')}
             </Link>
 
           </div>

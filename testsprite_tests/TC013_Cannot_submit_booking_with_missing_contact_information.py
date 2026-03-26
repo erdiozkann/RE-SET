@@ -33,29 +33,7 @@ async def run_test():
         # -> Navigate to http://localhost:4173
         await page.goto("http://localhost:4173")
         
-        # -> Click the 'Giriş Yap' link to open the login page so the test can authenticate before accessing /booking. ASSERTION: 'Giriş Yap' link is visible on the page.
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div/div/header/div/div/nav/div/a[2]').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
-        # -> Fill the login form with test credentials and submit to authenticate so the booking page can be accessed. Immediate action: input email, input password, click 'Giriş Yap'.
-        frame = context.pages[-1]
-        # Input text
-        elem = frame.locator('xpath=/html/body/div/div/div/div/div/form/div/div/input').nth(0)
-        await asyncio.sleep(3); await elem.fill('example@gmail.com')
-        
-        frame = context.pages[-1]
-        # Input text
-        elem = frame.locator('xpath=/html/body/div/div/div/div/div/form/div[2]/div/input').nth(0)
-        await asyncio.sleep(3); await elem.fill('password123')
-        
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div/div/div/div/div/form/button').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
-        # -> Navigate to /booking (explicit navigate to /booking per test step) to reach the booking page and then continue with selecting date/time and submitting the booking request.
+        # -> Navigate to /booking (http://localhost:4173/booking) using the explicit navigate action
         await page.goto("http://localhost:4173/booking")
         
         # --> Assertions to verify final state

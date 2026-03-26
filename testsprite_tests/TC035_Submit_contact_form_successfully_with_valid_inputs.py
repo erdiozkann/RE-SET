@@ -33,8 +33,58 @@ async def run_test():
         # -> Navigate to http://localhost:4173
         await page.goto("http://localhost:4173")
         
-        # -> Navigate to /contact (http://localhost:4173/contact) as the test step explicitly requires
+        # -> Navigate to /contact (use navigate action to http://localhost:4173/contact) to load the contact page as the next immediate action.
         await page.goto("http://localhost:4173/contact")
+        
+        # -> Click the cookie consent 'Tümünü Kabul Et' (Accept All) button to dismiss the banner so the contact form becomes accessible.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div/div/div/div/div/div[2]/button').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Click the language toggle (index=503) to switch the site to English so the page title can be verified for the word 'Contact', then re-check the heading.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div/div/header/div/div/nav/div/button').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Click the language toggle (index=503) to switch the site to English, wait for the page to render, then fill and submit the contact form.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div/div/header/div/div/nav/div/button').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        frame = context.pages[-1]
+        # Input text
+        elem = frame.locator('xpath=/html/body/div/div/main/div/div/section[2]/div/div/div/form/div/div/input').nth(0)
+        await asyncio.sleep(3); await elem.fill('Test')
+        
+        # -> Fill last name with 'User', fill email with 'test.user@example.com', fill message with the provided text, accept privacy checkbox, submit the form, then wait for the response.
+        frame = context.pages[-1]
+        # Input text
+        elem = frame.locator('xpath=/html/body/div/div/main/div/div/section[2]/div/div/div/form/div/div[2]/input').nth(0)
+        await asyncio.sleep(3); await elem.fill('User')
+        
+        frame = context.pages[-1]
+        # Input text
+        elem = frame.locator('xpath=/html/body/div/div/main/div/div/section[2]/div/div/div/form/div[2]/input').nth(0)
+        await asyncio.sleep(3); await elem.fill('test.user@example.com')
+        
+        frame = context.pages[-1]
+        # Input text
+        elem = frame.locator('xpath=/html/body/div/div/main/div/div/section[2]/div/div/div/form/div[5]/textarea').nth(0)
+        await asyncio.sleep(3); await elem.fill('Hello, I would like more information about your services.')
+        
+        # -> Click the privacy checkbox to accept the privacy policy, then click the 'Mesaj Gönder' (Submit) button to send the form. After submitting, verify the success confirmation text is visible.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div/div/main/div/div/section[2]/div/div/div/form/div[6]/input').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div/div/main/div/div/section[2]/div/div/div/form/button').nth(0)
+        await asyncio.sleep(3); await elem.click()
         
         # --> Assertions to verify final state
         frame = context.pages[-1]
