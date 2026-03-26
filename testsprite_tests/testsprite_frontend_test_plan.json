@@ -1,0 +1,2193 @@
+[
+  {
+    "id": "TC001",
+    "title": "Login with valid credentials redirects to Client Panel",
+    "description": "Verifies that a user can log in with email/password and is taken to the client panel after successful authentication.",
+    "category": "User Authentication",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Login\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click \"Login\" button to submit"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/client-panel\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Client Panel\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC002",
+    "title": "Login with invalid credentials shows an error",
+    "description": "Verifies that the login form displays an invalid-credentials message when the password is wrong.",
+    "category": "User Authentication",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Login\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Type \"fake.user@example.com\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"WrongPassword123!\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click \"Login\" button to submit"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Invalid credentials\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC003",
+    "title": "Navigate from Login to Register page",
+    "description": "Verifies that a user can reach the registration page from the login page using the register link.",
+    "category": "User Authentication",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Login\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click \"Register\" link to navigate to registration"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/register\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Register\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC004",
+    "title": "Registration with weak password shows validation error",
+    "description": "Verifies that the registration form blocks weak passwords and shows a visible validation message.",
+    "category": "User Authentication",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /register"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Register\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Fill registration form fields with a new email and a weak password"
+      },
+      {
+        "type": "action",
+        "description": "Click \"Register\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Password too weak\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC005",
+    "title": "Navigate from Homepage header navigation to Booking page and see booking form",
+    "description": "Verifies a user can reach the Booking page from the Homepage using a navigation link and the booking form is visible.",
+    "category": "Homepage",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/\""
+      },
+      {
+        "type": "action",
+        "description": "Scroll to the services overview section"
+      },
+      {
+        "type": "action",
+        "description": "Scroll to the reviews section"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Reviews\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Booking\" navigation link in the header"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/booking\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Booking form\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC006",
+    "title": "Homepage booking CTA button navigates to Booking page and booking form loads (happy path)",
+    "description": "Verifies the primary booking call-to-action on the Homepage takes the user to the Booking page and the form is visible.",
+    "category": "Homepage",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Hero section\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click on the booking CTA button in the hero section"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/booking\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Booking form\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC007",
+    "title": "Scroll through Homepage sections and confirm key sections render",
+    "description": "Verifies the Homepage can be scrolled end-to-end and key sections (services, reviews, footer) are visible.",
+    "category": "Homepage",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Hero section\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Scroll to the services overview section"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Services\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Scroll to the reviews section"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Reviews\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Scroll to the footer"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Footer\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC008",
+    "title": "Interact with reviews slider controls and confirm review content changes",
+    "description": "Verifies the reviews slider is usable and navigating the slider changes the visible review content.",
+    "category": "Homepage",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Scroll to the reviews section"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Reviews slider\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Active review\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click on the reviews slider \"Next\" control"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Active review\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click on the reviews slider \"Previous\" control"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Active review\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC009",
+    "title": "Footer legal links include KVKK and navigate correctly",
+    "description": "Verifies that the Homepage footer contains a KVKK legal link and it opens the correct legal page.",
+    "category": "Homepage",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Scroll to the footer"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Footer\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"KVKK\" link in the footer"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/kvkk\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify page title contains \"KVKK\""
+      }
+    ]
+  },
+  {
+    "id": "TC010",
+    "title": "Footer legal links include Privacy Policy and navigate correctly",
+    "description": "Verifies that the Homepage footer contains a Privacy link and it opens the privacy policy page.",
+    "category": "Homepage",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Scroll to the footer"
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Privacy\" link in the footer"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/privacy\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify page title contains \"Privacy\""
+      }
+    ]
+  },
+  {
+    "id": "TC011",
+    "title": "Submit a booking request successfully and see confirmation",
+    "description": "Verifies a user can complete the booking form with a valid date/time and contact info and sees a confirmation message.",
+    "category": "Appointment Booking",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /booking"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/booking\""
+      },
+      {
+        "type": "action",
+        "description": "Select appointment date"
+      },
+      {
+        "type": "action",
+        "description": "Select appointment time"
+      },
+      {
+        "type": "action",
+        "description": "Fill contact information"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Submit booking request\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"booking confirmation\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC012",
+    "title": "Booking page loads and allows selecting a date",
+    "description": "Verifies the booking page renders and the user can interact with the appointment date control.",
+    "category": "Appointment Booking",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /booking"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"appointment date\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Select appointment date"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"appointment time\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC013",
+    "title": "Cannot submit booking with missing contact information",
+    "description": "Verifies the form blocks submission and shows validation messaging when contact information is not provided.",
+    "category": "Appointment Booking",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /booking"
+      },
+      {
+        "type": "action",
+        "description": "Select appointment date"
+      },
+      {
+        "type": "action",
+        "description": "Select appointment time"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Submit booking request\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"contact\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"required\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC014",
+    "title": "Cannot submit booking with date not selected",
+    "description": "Verifies the form blocks submission and shows validation messaging when an appointment date is not selected.",
+    "category": "Appointment Booking",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /booking"
+      },
+      {
+        "type": "action",
+        "description": "Select appointment time"
+      },
+      {
+        "type": "action",
+        "description": "Fill contact information"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Submit booking request\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"date\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"required\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC015",
+    "title": "Cannot submit booking with time not selected",
+    "description": "Verifies the form blocks submission and shows validation messaging when an appointment time is not selected.",
+    "category": "Appointment Booking",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /booking"
+      },
+      {
+        "type": "action",
+        "description": "Select appointment date"
+      },
+      {
+        "type": "action",
+        "description": "Fill contact information"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Submit booking request\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"time\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"required\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC016",
+    "title": "Admin can access /admin after logging in and sees the dashboard",
+    "description": "Verifies that a user can log in with valid credentials and land on the Admin Dashboard.",
+    "category": "Admin Dashboard",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Login\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/admin\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Admin\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC017",
+    "title": "Admin can switch between key admin tabs and each tab content is visible",
+    "description": "Verifies that tab switching works across multiple areas of the admin panel.",
+    "category": "Admin Dashboard",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Login\" button"
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Appointments\" tab"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Appointments\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Users\" tab"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Users\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC018",
+    "title": "Admin creates a new blog post and sees it listed in Blog tab",
+    "description": "Verifies end-to-end blog post creation from the admin Blog tab and confirms it appears in the list.",
+    "category": "Admin Dashboard",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Login\" button"
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Blog\" tab"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Create New Blog Post\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Save\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Type \"E2E Test Post\" into the Title field"
+      }
+    ]
+  },
+  {
+    "id": "TC019",
+    "title": "Admin saves a newly created blog post and verifies it appears in the Blog list",
+    "description": "Verifies saving a blog post results in a visible entry in the Blog tab list.",
+    "category": "Admin Dashboard",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Login\" button"
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Blog\" tab"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Create New Blog Post\" button"
+      },
+      {
+        "type": "action",
+        "description": "Type \"E2E Test Post - Save\" into the Title field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Save\" button"
+      }
+    ]
+  },
+  {
+    "id": "TC020",
+    "title": "Invalid login prevents access to admin dashboard",
+    "description": "Verifies that incorrect credentials do not grant access to the Admin Dashboard.",
+    "category": "Admin Dashboard",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Type \"fake.user@example.com\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"WrongPassword123!\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Login\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/login\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Invalid\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC021",
+    "title": "Admin can open and view Accounting tab content",
+    "description": "Verifies that the Accounting section is reachable and renders visible content.",
+    "category": "Admin Dashboard",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Login\" button"
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Accounting\" tab"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Accounting\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Reports\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC022",
+    "title": "Admin can open and view Site Configuration tab content",
+    "description": "Verifies that the site configuration area is accessible from the admin dashboard and shows config UI.",
+    "category": "Admin Dashboard",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Login\" button"
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Config\" tab"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Configuration\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Save\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC023",
+    "title": "View upcoming appointments in Client Panel (authenticated)",
+    "description": "Verifies an authenticated user can access the Client Panel and see upcoming appointments.",
+    "category": "Client Panel",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Log in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/client-panel\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Upcoming Appointments\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify an element \"Upcoming appointments list\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC024",
+    "title": "Edit profile and save changes successfully (authenticated)",
+    "description": "Verifies an authenticated user can edit profile fields and sees a success confirmation after saving.",
+    "category": "Client Panel",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Log in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/client-panel\""
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Edit profile\" button"
+      },
+      {
+        "type": "action",
+        "description": "Fill \"Updated Test Name\" into the \"Full name\" field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Save\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Profile updated\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC025",
+    "title": "Cancel out of profile editing without saving (authenticated)",
+    "description": "Verifies a user can enter edit mode and exit without seeing a save confirmation.",
+    "category": "Client Panel",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Log in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/client-panel\""
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Edit profile\" button"
+      },
+      {
+        "type": "action",
+        "description": "Press \"Escape\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Profile updated\" is not visible"
+      }
+    ]
+  },
+  {
+    "id": "TC026",
+    "title": "Profile information is visible on Client Panel (authenticated)",
+    "description": "Verifies the Client Panel shows the user's profile information section when logged in.",
+    "category": "Client Panel",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Log in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/client-panel\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Profile\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify an element \"Profile information\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC027",
+    "title": "Client Panel access from homepage via client panel link (authenticated)",
+    "description": "Verifies a logged-in user can reach the Client Panel using an in-app navigation link rather than direct URL navigation.",
+    "category": "Client Panel",
+    "priority": "Low",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Log in\" button"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Home\" link"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/\""
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Client Panel\" link"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/client-panel\""
+      }
+    ]
+  },
+  {
+    "id": "TC028",
+    "title": "Client Panel remains inaccessible with invalid login credentials",
+    "description": "Verifies invalid credentials prevent login and do not grant access to the Client Panel.",
+    "category": "Client Panel",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Type \"not-a-user@example.com\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"WrongPassword123!\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Log in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Invalid\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/login"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /client-panel"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/login\""
+      }
+    ]
+  },
+  {
+    "id": "TC029",
+    "title": "Upcoming appointments section handles empty state (authenticated)",
+    "description": "Verifies the Client Panel shows a clear empty-state message when there are no upcoming appointments.",
+    "category": "Client Panel",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Log in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/client-panel\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Upcoming Appointments\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"No upcoming appointments\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC030",
+    "title": "Open Blog listing and see posts are displayed",
+    "description": "Verifies the blog listing page loads and shows a list of blog posts visitors can browse.",
+    "category": "Blog",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /blog"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/blog\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Blog\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify at least one blog post item (a visible post title) is visible"
+      },
+      {
+        "type": "action",
+        "description": "Scroll to the bottom of the blog listing page"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify at least one blog post item (a visible post title) is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC031",
+    "title": "Open a blog post from the listing and see full article content",
+    "description": "Verifies a visitor can open a blog post and view the full article content.",
+    "category": "Blog",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /blog"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify at least one blog post item (a visible post title) is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click on the first visible blog post title"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the opened page shows a visible article title"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the opened page shows visible article body content (a paragraph of text)"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the opened page shows a visible publish date or author section"
+      }
+    ]
+  },
+  {
+    "id": "TC032",
+    "title": "Navigate back to the Blog listing from an opened article",
+    "description": "Verifies a visitor can return to the blog listing after opening an article using an in-page navigation element.",
+    "category": "Blog",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /blog"
+      },
+      {
+        "type": "action",
+        "description": "Click on the first visible blog post title"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the opened page shows a visible article title"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Blog\" or \"Back to Blog\" (whichever navigation link is present on the page)"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/blog\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify at least one blog post item (a visible post title) is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC033",
+    "title": "Blog listing remains usable when content is still loading (no broken UI)",
+    "description": "Verifies the blog page shows a usable loading/empty state instead of broken content while posts are being fetched.",
+    "category": "Blog",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /blog"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Blog\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a visible loading indicator or placeholder content is visible if posts are not yet displayed"
+      },
+      {
+        "type": "action",
+        "description": "Wait for blog posts to appear"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify at least one blog post item (a visible post title) is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC034",
+    "title": "Attempt to open a removed/deleted post and see an error state",
+    "description": "Verifies the app shows an 'Article not found' or equivalent error state when a removed post is opened.",
+    "category": "Blog",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /blog"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify at least one blog post item (a visible post title) is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click on a blog post item labeled as removed/unavailable if such an item is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Article not found\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a visible link or button to return to the Blog listing is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click on the visible \"Back\" or \"Blog\" return link"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/blog\""
+      }
+    ]
+  },
+  {
+    "id": "TC035",
+    "title": "Submit contact form successfully with valid inputs",
+    "description": "Verifies a visitor can submit the contact form with name, email, and message and sees a visible success confirmation.",
+    "category": "Contact Form",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /contact"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify page title contains \"Contact\""
+      },
+      {
+        "type": "action",
+        "description": "Type \"Test User\" into the name field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"test.user@example.com\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"Hello, I would like more information about your services.\" into the message textarea"
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Submit\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Thank you\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"message\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC036",
+    "title": "Email required validation when submitting without email",
+    "description": "Verifies the contact form blocks submission and shows a visible validation error when email is missing.",
+    "category": "Contact Form",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /contact"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify page title contains \"Contact\""
+      },
+      {
+        "type": "action",
+        "description": "Type \"Test User\" into the name field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"I am sending a message but leaving email empty to test validation.\" into the message textarea"
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Submit\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Email\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"required\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC037",
+    "title": "Name required validation when submitting without name",
+    "description": "Verifies the contact form blocks submission and shows a visible validation error when name is missing.",
+    "category": "Contact Form",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /contact"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify page title contains \"Contact\""
+      },
+      {
+        "type": "action",
+        "description": "Type \"test.user@example.com\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"Testing submission with missing name.\" into the message textarea"
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Submit\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Name\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"required\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC038",
+    "title": "Message required validation when submitting without message",
+    "description": "Verifies the contact form blocks submission and shows a visible validation error when message is missing.",
+    "category": "Contact Form",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /contact"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify page title contains \"Contact\""
+      },
+      {
+        "type": "action",
+        "description": "Type \"Test User\" into the name field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"test.user@example.com\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Submit\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Message\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"required\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC039",
+    "title": "Invalid email format validation on contact form",
+    "description": "Verifies the contact form shows a visible error when an invalid email format is entered.",
+    "category": "Contact Form",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /contact"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify page title contains \"Contact\""
+      },
+      {
+        "type": "action",
+        "description": "Type \"Test User\" into the name field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"not-an-email\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"Testing invalid email validation.\" into the message textarea"
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Submit\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"email\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"valid\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC040",
+    "title": "Successful submission after correcting missing email",
+    "description": "Verifies a user can trigger an email-required error, then fix it and submit successfully without leaving the page.",
+    "category": "Contact Form",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /contact"
+      },
+      {
+        "type": "action",
+        "description": "Type \"Test User\" into the name field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"Testing fix-after-validation scenario.\" into the message textarea"
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Submit\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Email\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Type \"test.user@example.com\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Submit\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Thank you\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC041",
+    "title": "No duplicate confirmation on repeated submit click after success",
+    "description": "Verifies that after a successful contact submission, repeated clicking submit does not create multiple visible success confirmations.",
+    "category": "Contact Form",
+    "priority": "Low",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /contact"
+      },
+      {
+        "type": "action",
+        "description": "Type \"Test User\" into the name field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"test.user@example.com\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"Testing repeated submit behavior after success.\" into the message textarea"
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Submit\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Thank you\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Submit\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Thank you\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC042",
+    "title": "Contact page renders form fields and submit control",
+    "description": "Verifies the contact page shows the expected visible inputs before any interaction.",
+    "category": "Contact Form",
+    "priority": "Low",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /contact"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"name field\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"email field\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"message textarea\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Submit\" button is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC043",
+    "title": "Accept cookies dismisses the banner and keeps it dismissed during the session",
+    "description": "Verifies the cookie consent banner appears on first visit and is dismissed after accepting cookies.",
+    "category": "Cookie Consent Banner",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Accept\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Reject\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Accept\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Accept\" is not visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Reject\" is not visible"
+      }
+    ]
+  },
+  {
+    "id": "TC044",
+    "title": "Reject cookies dismisses the banner",
+    "description": "Verifies the cookie consent banner can be rejected and is dismissed afterward.",
+    "category": "Cookie Consent Banner",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Reject\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Reject\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Reject\" is not visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Accept\" is not visible"
+      }
+    ]
+  },
+  {
+    "id": "TC045",
+    "title": "Cookie policy link opens the Cookies policy page from the banner",
+    "description": "Verifies the banner provides navigation to the cookie policy page.",
+    "category": "Cookie Consent Banner",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Cookies\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Cookies\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/cookies\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify page title contains \"Cookie\""
+      }
+    ]
+  },
+  {
+    "id": "TC046",
+    "title": "Closing the banner via Reject still allows navigation to Cookies page from footer/header",
+    "description": "Verifies users can still reach the cookie policy page even after dismissing the banner.",
+    "category": "Cookie Consent Banner",
+    "priority": "Low",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Reject\""
+      },
+      {
+        "type": "action",
+        "description": "Scroll to the bottom of the page"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Cookies\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/cookies\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Cookie\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC047",
+    "title": "Switch language on the homepage updates visible UI strings",
+    "description": "Verifies that selecting a different language updates visible homepage text to that language.",
+    "category": "Internationalization (i18n)",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Language\" (or a globe/language selector control) is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click on the language selector control"
+      },
+      {
+        "type": "action",
+        "description": "Click on a different language option than the current one (for example, \"English\" if currently Turkish)"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text on the homepage changes to the newly selected language (for example, a main heading or call-to-action text appears in the selected language)"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Services\" (or the equivalent section label) is visible in the selected language"
+      }
+    ]
+  },
+  {
+    "id": "TC048",
+    "title": "Language selection persists when navigating to another public page",
+    "description": "Verifies that after switching languages, the selection remains active on another route reached via UI navigation.",
+    "category": "Internationalization (i18n)",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click on the language selector control"
+      },
+      {
+        "type": "action",
+        "description": "Click on a different language option than the current one"
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"About\" navigation link/menu item"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/about\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a prominent About-page heading or introductory text is visible in the selected language"
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Home\" navigation link/menu item"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text on the homepage is still visible in the selected language"
+      }
+    ]
+  },
+  {
+    "id": "TC049",
+    "title": "Language switching works on the booking page",
+    "description": "Verifies that language switching updates visible labels on the appointment booking page.",
+    "category": "Internationalization (i18n)",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /booking"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Booking\" or a booking page heading is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click on the language selector control"
+      },
+      {
+        "type": "action",
+        "description": "Click on a different language option than the current one"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the booking page heading (or primary call-to-action) is visible in the selected language"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify at least one booking form label or instruction text is visible in the selected language"
+      }
+    ]
+  },
+  {
+    "id": "TC050",
+    "title": "Language switching works on the contact page and updates form text",
+    "description": "Verifies that switching language on the contact page updates visible contact form labels/instructions.",
+    "category": "Internationalization (i18n)",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /contact"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Contact\" or a contact page heading is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click on the language selector control"
+      },
+      {
+        "type": "action",
+        "description": "Click on a different language option than the current one"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the contact page heading is visible in the selected language"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify at least one contact form label (for example \"Name\", \"Email\", or \"Message\") is visible in the selected language"
+      }
+    ]
+  },
+  {
+    "id": "TC051",
+    "title": "Missing translations fall back to default language or fallback text",
+    "description": "Verifies that when a translation key is missing in the selected language, the UI shows default-language text or a defined fallback rather than breaking.",
+    "category": "Internationalization (i18n)",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click on the language selector control"
+      },
+      {
+        "type": "action",
+        "description": "Click on a language option that is most likely to have incomplete coverage (for example, a non-primary language if multiple are offered)"
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Cookies\" navigation link/menu item"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/cookies\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the page shows readable policy content text (not blank)"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify no obvious missing-translation placeholder text is visible (for example, raw translation keys like \"common.\" or \"translation:\")"
+      }
+    ]
+  },
+  {
+    "id": "TC052",
+    "title": "Browser language detection sets an initial language on first load (observable via UI text)",
+    "description": "Verifies the app loads with a consistent initial language that matches the browser language when available, observable via visible UI strings.",
+    "category": "Internationalization (i18n)",
+    "priority": "Low",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a prominent homepage heading is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the same heading is consistently shown in one language (not mixed) across the hero and navigation labels"
+      },
+      {
+        "type": "action",
+        "description": "Click on the language selector control"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the currently active language option is indicated (for example, marked as selected or highlighted)"
+      },
+      {
+        "type": "action",
+        "description": "Click on the active language option to close the language selector (if it remains open)"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the homepage still shows text in the same initial language"
+      }
+    ]
+  },
+  {
+    "id": "TC053",
+    "title": "Language switch does not require authentication and works on the login page",
+    "description": "Verifies language switching is available and updates visible strings on the /login page without requiring a signed-in session.",
+    "category": "Internationalization (i18n)",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Login\" (or a login page heading) is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click on the language selector control"
+      },
+      {
+        "type": "action",
+        "description": "Click on a different language option than the current one"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the login page heading is visible in the selected language"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify at least one login form label (for example \"Email\" or \"Password\") is visible in the selected language"
+      }
+    ]
+  },
+  {
+    "id": "TC054",
+    "title": "About page displays practitioner biography and credentials",
+    "description": "Verifies the About page is reachable and shows core practitioner bio/credential content.",
+    "category": "Legal & Static Pages",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /about"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/about\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify page title contains \"About\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Hakkında\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Uzman\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC055",
+    "title": "Methods page displays therapy methods list",
+    "description": "Verifies the Methods page is reachable and shows a visible list/section of therapy methods.",
+    "category": "Legal & Static Pages",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /methods"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/methods\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify page title contains \"Methods\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Yöntem\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Therapy methods list\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Scroll to the \"Therapy methods\" section"
+      }
+    ]
+  },
+  {
+    "id": "TC056",
+    "title": "Open a therapy method item to view details",
+    "description": "Verifies that selecting a method on the Methods page reveals method details on the page.",
+    "category": "Legal & Static Pages",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /methods"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Therapy methods list\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click on the first therapy method item"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Selected method details\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Method description\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC057",
+    "title": "KVKK page is accessible and shows KVKK disclosure content",
+    "description": "Verifies the KVKK legal disclosure page loads and presents disclosure text.",
+    "category": "Legal & Static Pages",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /kvkk"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/kvkk\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify page title contains \"KVKK\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"KVKK\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"KVKK disclosure content\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC058",
+    "title": "Navigate from KVKK to Privacy policy using footer link",
+    "description": "Verifies the footer link from KVKK to Privacy works and the Privacy policy content is visible.",
+    "category": "Legal & Static Pages",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /kvkk"
+      },
+      {
+        "type": "action",
+        "description": "Scroll to the footer"
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Privacy\" link in the footer"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/privacy\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Privacy\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Privacy policy content\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC059",
+    "title": "Privacy policy page is accessible directly",
+    "description": "Verifies the Privacy policy page loads and shows policy text.",
+    "category": "Legal & Static Pages",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /privacy"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/privacy\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify page title contains \"Privacy\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Privacy\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Privacy policy content\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC060",
+    "title": "Cookies policy page is accessible and shows cookie policy content",
+    "description": "Verifies the Cookies policy page loads and presents cookie policy information.",
+    "category": "Legal & Static Pages",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /cookies"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/cookies\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify page title contains \"Cookies\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Cookies\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Cookie policy content\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC061",
+    "title": "Copyright page is accessible and shows copyright information",
+    "description": "Verifies the Copyright page loads and shows copyright notice/information.",
+    "category": "Legal & Static Pages",
+    "priority": "Low",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /copyright"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/copyright\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify page title contains \"Copyright\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Copyright\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Copyright information content\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC062",
+    "title": "Podcast page is accessible and shows episodes section",
+    "description": "Verifies the Podcast page loads and displays podcast episodes content.",
+    "category": "Legal & Static Pages",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /podcast"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/podcast\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify page title contains \"Podcast\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Podcast\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Podcast episodes list\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Scroll to the \"Episodes\" section"
+      }
+    ]
+  },
+  {
+    "id": "TC063",
+    "title": "YouTube page is accessible and shows YouTube content section",
+    "description": "Verifies the YouTube content page loads and displays a visible list/section of YouTube content.",
+    "category": "Legal & Static Pages",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /youtube"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/youtube\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify page title contains \"YouTube\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"YouTube\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"YouTube content list\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Scroll to the \"Videos\" section"
+      }
+    ]
+  }
+]

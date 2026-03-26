@@ -1,0 +1,52 @@
+[
+  {
+    "id": "TC001",
+    "title": "test_user_authentication_login_success",
+    "description": "Verify that a user can successfully log in with valid email and password credentials using the supabase.auth.signInWithPassword API endpoint and is redirected to the client panel."
+  },
+  {
+    "id": "TC002",
+    "title": "test_user_authentication_login_failure",
+    "description": "Verify that attempting to log in with invalid credentials using the supabase.auth.signInWithPassword API endpoint results in an 'Invalid credentials' error message."
+  },
+  {
+    "id": "TC003",
+    "title": "test_user_registration_success",
+    "description": "Verify that a new user can register successfully with valid information using the supabase.auth.signUp API endpoint and receives an email verification confirmation."
+  },
+  {
+    "id": "TC004",
+    "title": "test_user_registration_password_strength_validation",
+    "description": "Verify that registration fails with a 'Password too weak' validation error when a weak password is submitted to the supabase.auth.signUp API endpoint."
+  },
+  {
+    "id": "TC005",
+    "title": "test_password_reset_success",
+    "description": "Verify that a password reset link is sent successfully when a registered email is submitted to the supabase.auth.resetPasswordForEmail API endpoint."
+  },
+  {
+    "id": "TC006",
+    "title": "test_password_reset_unregistered_email",
+    "description": "Verify that submitting an unregistered email to the supabase.auth.resetPasswordForEmail API endpoint results in an 'Email not found' error message."
+  },
+  {
+    "id": "TC007",
+    "title": "test_appointment_booking_success",
+    "description": "Verify that a user can successfully book an appointment by submitting date, time, and contact information which inserts a new record into the appointments table via supabase.from('appointments').insert API endpoint."
+  },
+  {
+    "id": "TC008",
+    "title": "test_appointment_booking_time_slot_unavailable",
+    "description": "Verify that attempting to book an appointment for a time slot that is already booked results in a 'time slot unavailable' error message and no new record is inserted into the appointments table."
+  },
+  {
+    "id": "TC009",
+    "title": "test_admin_dashboard_blog_post_creation",
+    "description": "Verify that an authenticated admin user can create a new blog post using the supabase.from('blog_posts').insert API endpoint and the new post appears in the BlogTab."
+  },
+  {
+    "id": "TC010",
+    "title": "test_client_panel_appointment_view",
+    "description": "Verify that an authenticated client can view their upcoming appointments fetched from the appointments table using supabase.from('appointments').select API endpoint in the client panel."
+  }
+]

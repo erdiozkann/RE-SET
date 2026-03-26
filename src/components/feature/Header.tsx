@@ -2,11 +2,18 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { contentApi } from '../../lib/api';
 import type { ContactInfo } from '../../types';
+import { useTranslation } from 'react-i18next';
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [contactInfo, setContactInfo] = useState<ContactInfo | null>(null);
   const location = useLocation();
+  const { t, i18n } = useTranslation();
+
+  const toggleLanguage = () => {
+    const newLang = i18n.language === 'tr' ? 'en' : 'tr';
+    i18n.changeLanguage(newLang);
+  };
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -23,13 +30,13 @@ export default function Header() {
   }, []);
 
   const navLinks = [
-    { path: '/', label: 'Ana Sayfa' },
-    { path: '/about', label: 'Hakkımda' },
-    { path: '/methods', label: 'Yöntemler' },
-    { path: '/blog', label: 'Blog' },
-    { path: '/podcast', label: 'Podcast' },
-    { path: '/booking', label: 'Randevu' },
-    { path: '/contact', label: 'İletişim' },
+    { path: '/', label: t('nav.home', 'Ana Sayfa') },
+    { path: '/about', label: t('nav.about', 'Hakkımda') },
+    { path: '/methods', label: t('nav.methods', 'Yöntemler') },
+    { path: '/blog', label: t('nav.blog', 'Blog') },
+    { path: '/podcast', label: t('nav.podcast', 'Podcast') },
+    { path: '/booking', label: t('nav.booking', 'Randevu') },
+    { path: '/contact', label: t('nav.contact', 'İletişim') },
   ];
 
   return (
@@ -63,6 +70,16 @@ export default function Header() {
             ))}
 
             <div className="flex items-center space-x-4 ml-4">
+              {/* Language Switcher */}
+              <button
+                onClick={toggleLanguage}
+                className="flex items-center space-x-1 text-sm font-medium text-gray-600 hover:text-[#D4AF37] transition-colors p-2 rounded-full hover:bg-gray-50 cursor-pointer"
+                title={i18n.language === 'tr' ? 'Switch to English' : 'Türkçe\'ye Geç'}
+              >
+                <i className="ri-global-line text-lg"></i>
+                <span>{i18n.language === 'tr' ? 'EN' : 'TR'}</span>
+              </button>
+
               <Link
                 to="/youtube"
                 className="flex items-center space-x-2 bg-red-600 text-white px-5 py-2 rounded-full hover:bg-red-700 transition-colors duration-200 font-medium items-center"
@@ -75,7 +92,7 @@ export default function Header() {
                 to="/login"
                 className="bg-[#D4AF37] text-[#1A1A1A] px-6 py-2 font-medium whitespace-nowrap cursor-pointer transition-all duration-200 hover:bg-[#C19B2E] hover-lift rounded-lg"
               >
-                Giriş Yap
+                {t('auth.login', 'Giriş Yap')}
               </Link>
             </div>
           </nav>

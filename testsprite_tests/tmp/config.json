@@ -1,0 +1,18 @@
+{
+  "status": "commited",
+  "type": "frontend",
+  "scope": "codebase",
+  "localEndpoint": "http://localhost:4173",
+  "executionArgs": {
+    "projectName": "RE-SET-FINAL-FIXED",
+    "projectPath": "/Users/merterdiozkan/Desktop/IT ISLER/Web Siteleri/RE-SET",
+    "testIds": [],
+    "additionalInstruction": "1. The production app crash is FIXED (import.meta.env dynamic access replaced). \n2. Language switcher ADDED (globe icon in header). \n3. Explicit error messages ADDED to Login page.\n4. DEMO ACCOUNT: Use 'info@re-set.com.tr' and '123456' for ALL login actions unless the test specifically creates a new user first. \n5. The /booking page REQUIRES authentication. Login before booking.\n6. The blog might be empty if no posts exist in Supabase (this is OK).\nWait for the page to fully load. \nIf a white screen appears, wait 2 seconds. \nInteract with the elements. All Turkish strings have common translation fallbacks.",
+    "serverMode": "production",
+    "envs": {
+      "API_KEY": "sk-user-huVtHp38uw5c9WjTKWDsWJ9W_h1K6aDm3Wbsft2aTtnf-tlTq5yEGM8D3-Ymx7LMcFG8_QEtO78jIRXpGDUDJPcALXfHEzgW9KgOMT079s1wHg3ztXeCu4F8eJCfk-eoVik"
+    }
+  },
+  "serverPort": 62602,
+  "proxy": "http://02d44a26-bfdb-4e49-ab44-1a417e1cc6be:LgZnadzcPU1C24XNekIFVKWBB76PmbRm@tun.testsprite.com:8080"
+}

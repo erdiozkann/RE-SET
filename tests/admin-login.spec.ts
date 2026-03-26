@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test('Admin Login ve Danışan Paneli Erişimi', async ({ page }) => {
   // 1. Login sayfasına git
-  await page.goto('http://localhost:3000/login', { waitUntil: 'networkidle' });
+  await page.goto('/login', { waitUntil: 'networkidle' });
   
   // 2. Login bilgilerini doldur
   await page.fill('input[type="email"]', 'info@re-set.com.tr');

@@ -1,0 +1,245 @@
+version: "2"
+type: frontend
+tech_stack:
+  - TypeScript
+  - React 19
+  - Vite 7
+  - Tailwind CSS 3
+  - Supabase
+  - React Router DOM 7
+  - Framer Motion
+  - i18next
+  - Recharts
+  - Firebase
+  - Stripe
+routes:
+  - path: /
+    file: src/pages/home/page.tsx
+    auth_required: false
+    description: Homepage with hero section, services overview and reviews
+  - path: /about
+    file: src/pages/about/page.tsx
+    auth_required: false
+    description: About page with practitioner information
+  - path: /methods
+    file: src/pages/methods/page.tsx
+    auth_required: false
+    description: Therapy methods and approaches page
+  - path: /blog
+    file: src/pages/blog/page.tsx
+    auth_required: false
+    description: Blog listing page
+  - path: /podcast
+    file: src/pages/podcast/page.tsx
+    auth_required: false
+    description: Podcast episodes page
+  - path: /youtube
+    file: src/pages/youtube/page.tsx
+    auth_required: false
+    description: YouTube content page
+  - path: /booking
+    file: src/pages/booking/page.tsx
+    auth_required: true
+    description: Appointment booking page (requires authentication)
+  - path: /contact
+    file: src/pages/contact/page.tsx
+    auth_required: false
+    description: Contact form and information page
+  - path: /kvkk
+    file: src/pages/kvkk/page.tsx
+    auth_required: false
+    description: KVKK (Turkish data protection law) disclosure page
+  - path: /privacy
+    file: src/pages/privacy/page.tsx
+    auth_required: false
+    description: Privacy policy page
+  - path: /copyright
+    file: src/pages/copyright/page.tsx
+    auth_required: false
+    description: Copyright information page
+  - path: /cookies
+    file: src/pages/cookies/page.tsx
+    auth_required: false
+    description: Cookie policy page
+  - path: /login
+    file: src/pages/login/page.tsx
+    auth_required: false
+    description: User login page with email/password authentication
+  - path: /register
+    file: src/pages/register/page.tsx
+    auth_required: false
+    description: User registration page
+  - path: /reset-password
+    file: src/pages/reset-password/page.tsx
+    auth_required: false
+    description: Password reset page
+  - path: /admin
+    file: src/pages/admin/page.tsx
+    auth_required: true
+    description: Admin dashboard with tabs for managing content, users, appointments, blog, podcast, accounting
+  - path: /client-panel
+    file: src/pages/client-panel/page.tsx
+    auth_required: true
+    description: Client panel for registered users to view their appointments and profile
+features:
+  - name: User Authentication
+    description: Login, register, and password reset with email/password via Supabase Auth
+    files:
+      - src/pages/login/page.tsx
+      - src/pages/register/page.tsx
+      - src/pages/reset-password/page.tsx
+      - src/contexts/AuthContext.tsx
+      - src/lib/supabase.ts
+    entry_route: /login
+    user_interactions:
+      - Fill email input field
+      - Fill password input field
+      - Click Login button to submit
+      - Click Register link to navigate to registration
+      - Fill registration form fields
+      - Click Reset Password link
+    api_calls:
+      - method: POST
+        endpoint: supabase.auth.signInWithPassword
+      - method: POST
+        endpoint: supabase.auth.signUp
+      - method: POST
+        endpoint: supabase.auth.resetPasswordForEmail
+    auth_required: false
+  - name: Homepage
+    description: Landing page with hero section, services overview, and client reviews slider
+    files:
+      - src/pages/home/page.tsx
+      - src/components/feature/ReviewsSlider.tsx
+      - src/components/feature/Header.tsx
+      - src/components/feature/Footer.tsx
+    entry_route: /
+    user_interactions:
+      - Scroll through homepage sections
+      - View reviews slider
+      - Click navigation links
+      - Click booking CTA button
+    api_calls: []
+    auth_required: false
+  - name: Appointment Booking
+    description: Online appointment booking system
+    files:
+      - src/pages/booking/page.tsx
+    entry_route: /booking
+    user_interactions:
+      - Select appointment date
+      - Select appointment time
+      - Fill contact information
+      - Submit booking request
+    api_calls:
+      - method: POST
+        endpoint: supabase.from('appointments').insert
+    auth_required: false
+  - name: Admin Dashboard
+    description: Comprehensive admin panel with tabs for managing all site content
+    files:
+      - src/pages/admin/page.tsx
+      - src/pages/admin/components/AccountSettingsTab.tsx
+      - src/pages/admin/components/AccountingTab.tsx
+      - src/pages/admin/components/AccountsTab.tsx
+      - src/pages/admin/components/AdsTab.tsx
+      - src/pages/admin/components/AppointmentsTab.tsx
+      - src/pages/admin/components/BlogTab.tsx
+      - src/pages/admin/components/ClientsTab.tsx
+      - src/pages/admin/components/ConfigTab.tsx
+      - src/pages/admin/components/ContentTab.tsx
+      - src/pages/admin/components/MessagesTab.tsx
+      - src/pages/admin/components/MethodsTab.tsx
+      - src/pages/admin/components/PendingUsersTab.tsx
+      - src/pages/admin/components/PodcastTab.tsx
+      - src/pages/admin/components/ServicesTab.tsx
+      - src/lib/api/users.ts
+      - src/lib/api/clients.ts
+      - src/lib/api/services.ts
+      - src/lib/api/content.ts
+      - src/lib/api/ads.ts
+      - src/lib/api/config.ts
+    entry_route: /admin
+    user_interactions:
+      - Switch between admin tabs
+      - View and manage appointments
+      - Create and edit blog posts
+      - Manage podcast episodes
+      - View user accounts and pending registrations
+      - Manage services and methods
+      - View financial accounting reports
+      - Update site configuration
+      - Review client messages
+    api_calls:
+      - method: GET
+        endpoint: supabase.from('users').select
+      - method: GET
+        endpoint: supabase.from('appointments').select
+      - method: POST
+        endpoint: supabase.from('blog_posts').insert
+      - method: PATCH
+        endpoint: supabase.from('blog_posts').update
+      - method: DELETE
+        endpoint: supabase.from('blog_posts').delete
+    auth_required: true
+  - name: Client Panel
+    description: Authenticated client area for viewing appointments and profile
+    files:
+      - src/pages/client-panel/page.tsx
+    entry_route: /client-panel
+    user_interactions:
+      - View upcoming appointments
+      - View profile information
+      - Edit profile settings
+    api_calls:
+      - method: GET
+        endpoint: supabase.from('appointments').select
+    auth_required: true
+  - name: Blog
+    description: Blog listing and article viewing
+    files:
+      - src/pages/blog/page.tsx
+    entry_route: /blog
+    user_interactions:
+      - Browse blog posts
+      - Click to read full article
+    api_calls:
+      - method: GET
+        endpoint: supabase.from('blog_posts').select
+    auth_required: false
+  - name: Contact Form
+    description: Contact form for inquiries
+    files:
+      - src/pages/contact/page.tsx
+    entry_route: /contact
+    user_interactions:
+      - Fill name field
+      - Fill email field
+      - Fill message textarea
+      - Submit contact form
+    api_calls:
+      - method: POST
+        endpoint: supabase.from('messages').insert
+    auth_required: false
+  - name: Cookie Consent Banner
+    description: GDPR/KVKK compliant cookie consent banner
+    files:
+      - src/components/feature/CookieBanner.tsx
+    entry_route: /
+    user_interactions:
+      - View cookie banner on first visit
+      - Accept or reject cookies
+      - Navigate to cookie policy page
+    api_calls: []
+    auth_required: false
+  - name: Internationalization
+    description: Multi-language support with i18next
+    files:
+      - src/i18n/index.ts
+      - src/i18n/local/index.ts
+    entry_route: /
+    user_interactions:
+      - Switch language
+    api_calls: []
+    auth_required: false
+known_limitations: []
