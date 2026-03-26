@@ -8,7 +8,7 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [contactInfo, setContactInfo] = useState<ContactInfo | null>(null);
   const location = useLocation();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
 
 
@@ -67,27 +67,7 @@ export default function Header() {
             ))}
 
             <div className="flex items-center space-x-4 ml-4">
-              {/* Language Switcher */}
-              <div className="flex items-center bg-gray-50 rounded-full p-1 border border-gray-100">
-                <button
-                  onClick={() => i18n.changeLanguage('tr')}
-                  className={`px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer ${i18n.language && i18n.language.startsWith('tr')
-                    ? 'bg-[#D4AF37] text-white shadow-sm'
-                    : 'text-gray-400 hover:text-gray-600'
-                    }`}
-                >
-                  TR
-                </button>
-                <button
-                  onClick={() => i18n.changeLanguage('en')}
-                  className={`px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer ${i18n.language && i18n.language.startsWith('en')
-                    ? 'bg-[#D4AF37] text-white shadow-sm'
-                    : 'text-gray-400 hover:text-gray-600'
-                    }`}
-                >
-                  EN
-                </button>
-              </div>
+              {/* YouTube and Login */}
 
               <Link
                 to="/youtube"
