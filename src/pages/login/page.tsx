@@ -14,6 +14,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Şifremi Unuttum Modal State
   const [showResetModal, setShowResetModal] = useState(false);
@@ -42,6 +43,7 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setError(null);
 
     try {
       console.log('Login attempt started:', { email });
@@ -70,6 +72,7 @@ export default function LoginPage() {
     } catch (error) {
       console.error('Login error caught in page:', error);
       const message = getUserFriendlyErrorMessage(error);
+      setError(message);
       toast.error(message);
       setLoading(false);
     }
@@ -124,6 +127,15 @@ export default function LoginPage() {
             </div>
 
             {/* Giriş Formu */}
+            {error && (
+              <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg animate-shake">
+                <div className="flex items-start gap-3">
+                  <i className="ri-error-warning-line text-red-600 text-xl mt-0.5"></i>
+                  <p className="text-sm text-red-800 font-medium">{error}</p>
+                </div>
+              </div>
+            )}
+
             <form onSubmit={handleSubmit} className="space-y-5">
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">

@@ -38,6 +38,7 @@
   "private": true,
   "scripts": {
     "build": "vite build",
+    "check:backend": "node check-db.mjs",
     "dev": "vite",
     "lint": "eslint .",
     "preview": "vite preview"
