@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import SEO from '../../components/SEO';
 import { methodsApi } from '../../lib/api';
 import type { Method } from '../../types';
 
 export default function MethodsPage() {
+  const { t } = useTranslation();
   const [methods, setMethods] = useState<Method[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -38,8 +40,8 @@ export default function MethodsPage() {
     {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
-      name: 'Demartini Metodu ve Danışmanlık Yöntemleri',
-      description: 'Demartini Metodu, Breakthrough Experience, değer belirleme ve diğer kanıta dayalı yaşam dönüşümü yöntemleri hakkında bilgi edinin.',
+      name: t('methods_page.seo.title'),
+      description: t('methods_page.seo.description'),
       url: `${siteUrl}/methods`,
       mainEntity: {
         '@type': 'ItemList',
@@ -68,8 +70,8 @@ export default function MethodsPage() {
     {
       '@context': 'https://schema.org',
       '@type': 'Service',
-      name: 'Demartini Metodu Danışmanlığı',
-      description: 'İstanbul\'da profesyonel Demartini Metodu uygulayıcısı ile birebir danışmanlık seansları',
+      name: t('methods_page.seo.title'),
+      description: t('methods_page.seo.description'),
       provider: {
         '@type': 'Person',
         name: 'Şafak Özkan',
@@ -86,9 +88,9 @@ export default function MethodsPage() {
   return (
     <>
       <SEO
-        title="Demartini Metodu ve Danışmanlık Yöntemleri | Reset - Şafak Özkan"
-        description="Demartini Metodu, Breakthrough Experience, değer belirleme ve kanıta dayalı yaşam dönüşümü yöntemleri. İstanbul'da sertifikalı Demartini Metodu uygulayıcısı."
-        keywords="demartini metodu, demartini metodu istanbul, demartini metodu nedir, breakthrough experience, değer belirleme, yaşam dengeleme, demartini metodu türkiye"
+        title={t('methods_page.seo.title')}
+        description={t('methods_page.seo.description')}
+        keywords={t('methods_page.seo.keywords')}
         schema={schema}
       />
 
@@ -96,10 +98,10 @@ export default function MethodsPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
             <h1 className="text-3xl md:text-4xl font-serif text-gray-900 mb-4">
-              Kullandığım Yöntemler
+              {t('methods_page.title') || 'Kullandığım Yöntemler'}
             </h1>
             <p className="text-base md:text-lg text-gray-600 max-w-3xl mx-auto">
-              Kanıta dayalı, etkili terapi yöntemleri ile size özel danışmanlık hizmeti sunuyorum
+              {t('methods_page.subtitle')}
             </p>
           </div>
 
@@ -126,7 +128,7 @@ export default function MethodsPage() {
             ) : (
               <div className="col-span-full text-center py-12">
                 <i className="ri-file-list-3-line text-6xl text-gray-300 mb-4"></i>
-                <p className="text-gray-500">Henüz yöntem eklenmemiş.</p>
+                <p className="text-gray-500">{t('methods_page.empty_state') || 'Henüz yöntem eklenmemiş.'}</p>
               </div>
             )}
           </div>
@@ -134,17 +136,16 @@ export default function MethodsPage() {
           <div className="mt-12 text-center">
             <div className="bg-white rounded-2xl p-6 md:p-8 shadow-lg max-w-3xl mx-auto">
               <h2 className="text-xl md:text-2xl font-serif text-gray-900 mb-3">
-                Size Özel Bir Yaklaşım
+                {t('about.approach_title') || 'Size Özel Bir Yaklaşım'}
               </h2>
               <p className="text-gray-600 mb-5 text-sm md:text-base">
-                Her bireyin ihtiyaçları farklıdır. Bu nedenle, yukarıdaki yöntemleri sizin özel
-                durumunuza göre birleştirerek kişiselleştirilmiş bir terapi planı oluşturuyorum.
+                {t('about.approaches.custom_desc')}
               </p>
               <a
                 href="/booking"
                 className="inline-block px-6 py-3 bg-gradient-to-r from-teal-500 to-teal-600 text-white rounded-full font-semibold hover:from-teal-600 hover:to-teal-700 transition-all shadow-lg text-sm md:text-base"
               >
-                Randevu Alın
+                {t('about.appointment_button') || 'Randevu Alın'}
               </a>
             </div>
           </div>

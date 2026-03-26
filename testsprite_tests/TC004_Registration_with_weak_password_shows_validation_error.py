@@ -33,10 +33,10 @@ async def run_test():
         # -> Navigate to http://localhost:4173
         await page.goto("http://localhost:4173")
         
-        # -> Navigate to /register (use explicit navigate to /register as test step requires) and wait for the page to load so the registration form elements become available.
+        # -> Navigate to http://localhost:4173/register and check that the Register page/form is present (verify text 'Register' visible). Then fill the form with a new @testsprite.com email and a weak password, submit, and assert that a visible 'Password too weak' validation message appears.
         await page.goto("http://localhost:4173/register")
         
-        # -> Fill the registration form with a new email and a weak password, then click the 'Kayıt Ol' (Register) button to trigger validation.
+        # -> Fill the registration form with name, email test-client-1@testsprite.com, weak password 'weakpass', confirm the password, then click the 'Kayıt Ol' (Register) button to trigger validation.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div/input').nth(0)
@@ -45,14 +45,14 @@ async def run_test():
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div[2]/input').nth(0)
-        await asyncio.sleep(3); await elem.fill('test+weak@example.com')
+        await asyncio.sleep(3); await elem.fill('test-client-1@testsprite.com')
         
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div[4]/input').nth(0)
         await asyncio.sleep(3); await elem.fill('weakpass')
         
-        # -> Fill the 'Şifre Tekrar' (confirm password) field with the same weak password and click the 'Kayıt Ol' (Register) button to trigger validation, then verify the visible weak-password validation message.
+        # -> Fill the Confirm Password field with the weak password and click the 'Kayıt Ol' (Register) button to submit the form and verify that a visible password-weak validation message appears.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div[5]/input').nth(0)

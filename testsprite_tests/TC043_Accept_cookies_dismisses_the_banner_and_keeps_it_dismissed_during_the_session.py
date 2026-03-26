@@ -33,7 +33,7 @@ async def run_test():
         # -> Navigate to http://localhost:4173
         await page.goto("http://localhost:4173")
         
-        # -> Click the 'Tümünü Kabul Et' (Accept all) button to accept cookies, then verify the cookie banner is dismissed (both Accept and Reject are not visible).
+        # -> Click the 'Tümünü Kabul Et' (Accept) button (interactive element index 197) to accept cookies so the banner should be dismissed.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div/div/div/div/div/div[2]/button').nth(0)

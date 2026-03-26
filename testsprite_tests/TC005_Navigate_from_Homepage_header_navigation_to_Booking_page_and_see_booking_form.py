@@ -33,47 +33,13 @@ async def run_test():
         # -> Navigate to http://localhost:4173
         await page.goto("http://localhost:4173")
         
-        # -> Click the cookie consent 'Tümünü Kabul Et' button to dismiss the modal so the page can be interacted with.
+        # -> Accept the cookie banner (if present) and search the page for the text 'Reviews' (scrolling to it if found).
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div/div/div/div/div/div[2]/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the 'Giriş Yap' (Login) link in the header to open the login form (index 142).
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div/div/header/div/div/nav/div/a[2]').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
-        # -> Fill the login form with credentials and submit to authenticate (input email into index 426, password into index 433, then click submit index 442).
-        frame = context.pages[-1]
-        # Input text
-        elem = frame.locator('xpath=/html/body/div/div/div/div/div/form/div/div/input').nth(0)
-        await asyncio.sleep(3); await elem.fill('example@gmail.com')
-        
-        frame = context.pages[-1]
-        # Input text
-        elem = frame.locator('xpath=/html/body/div/div/div/div/div/form/div[2]/div/input').nth(0)
-        await asyncio.sleep(3); await elem.fill('password123')
-        
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div/div/div/div/div/form/button').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
-        # -> Attempt to submit the login form again by clicking the Login button (index 442) and wait briefly for the app to redirect. After redirect, locate and click the 'Randevu' (Booking) navigation link from the header.
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div/div/div/div/div/form/button').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
-        # -> Click the 'Ana Sayfaya Dön' link (index 447) to return to the homepage so the booking navigation link can be located and used.
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div/div/div/div/div/div[3]/a').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
-        # -> Click the header 'Randevu' (Booking) navigation link (index 541) on the homepage to attempt to reach the booking page. After clicking, evaluate whether the app navigates to /booking or redirects to /login (authentication required).
+        # -> Click the 'Booking' navigation link in the header (element index 10) to navigate to the Booking page.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div/div/header/div/div/nav/a[6]').nth(0)

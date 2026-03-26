@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import SEO from '../../components/SEO';
 import { blogApi } from '../../lib/api';
 import type { BlogPost } from '../../types';
 
 export default function Blog() {
+  const { t } = useTranslation();
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedCategory, setSelectedCategory] = useState('Tümü');
+  const [selectedCategory, setSelectedCategory] = useState(t('blog_page.categories_all') || 'Tümü');
 
   useEffect(() => {
     const loadBlogPosts = async () => {
@@ -22,10 +24,11 @@ export default function Blog() {
 
     loadBlogPosts();
   }, []);
-
-  const categories = ['Tümü', ...Array.from(new Set(blogPosts.map(post => post.category).filter(Boolean)))];
-
-  const filteredPosts = selectedCategory === 'Tümü'
+ 
+  const allCategory = t('blog_page.categories_all') || 'Tümü';
+  const categories = [allCategory, ...Array.from(new Set(blogPosts.map(post => post.category).filter(Boolean)))];
+ 
+  const filteredPosts = selectedCategory === allCategory
     ? blogPosts
     : blogPosts.filter(post => post.category === selectedCategory);
 
@@ -33,8 +36,7 @@ export default function Blog() {
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    const months = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
-    return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
+    return date.toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' });
   };
 
   const BlogSkeleton = () => (
@@ -53,8 +55,8 @@ export default function Blog() {
     {
       '@context': 'https://schema.org',
       '@type': 'Blog',
-      name: 'Reset Blog',
-      description: 'Demartini Metodu, değer belirleme, Breakthrough Experience ve yaşam dönüşümü üzerine yazılar',
+      name: t('blog_page.seo.title'),
+      description: t('blog_page.seo.description'),
       url: `${siteUrl}/blog`,
       author: {
         '@type': 'Person',
@@ -66,17 +68,19 @@ export default function Blog() {
   return (
     <>
       <SEO
-        title="Blog | Demartini Metodu ve Yaşam Dönüşümü Yazıları"
-        description="Demartini Metodu, değer belirleme ve Breakthrough Experience üzerine düşünceler."
-        keywords="demartini metodu blog, değer belirleme yazıları, breakthrough experience türkiye, demartini metodu türkiye"
+        title={t('blog_page.seo.title')}
+        description={t('blog_page.seo.description')}
+        keywords={t('blog_page.seo.keywords')}
         schema={schema}
       />
       <section className="py-10 md:py-14 bg-gradient-to-br from-[#F5F5F5] to-white">
         <div className="max-w-7xl mx-auto px-4 md:px-8">
           <div className="text-center">
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-serif text-[#1A1A1A] mb-4">Blog</h1>
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-serif text-[#1A1A1A] mb-4">
+              {t('blog_page.title')}
+            </h1>
             <p className="text-base md:text-lg text-gray-600 max-w-2xl mx-auto">
-              Demartini Metodu, değer belirleme ve Breakthrough Experience üzerine düşünceler.
+              {t('blog_page.subtitle')}
             </p>
           </div>
         </div>
@@ -106,14 +110,16 @@ export default function Blog() {
       {!isLoading && featuredPosts.length > 0 && (
         <section className="py-10 md:py-14 bg-white">
           <div className="max-w-7xl mx-auto px-4 md:px-8">
-            <h2 className="text-xl md:text-2xl font-serif text-[#1A1A1A] mb-6">Öne Çıkan Yazılar</h2>
+            <h2 className="text-xl md:text-2xl font-serif text-[#1A1A1A] mb-6">
+              {t('blog_page.featured_title')}
+            </h2>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {featuredPosts.map((post) => (
                 <article key={post.id} className="group cursor-pointer">
                   <div className="aspect-video rounded-xl overflow-hidden mb-4 bg-gray-100 flex items-center justify-center">
-                    {post.image ? (
+                    {(post as any).featured_image || post.image ? (
                       <img
-                        src={post.image}
+                        src={(post as any).featured_image || post.image}
                         alt={post.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       />
@@ -136,7 +142,7 @@ export default function Blog() {
       <section className="py-10 md:py-14 bg-white">
         <div className="max-w-7xl mx-auto px-4 md:px-8">
           <h2 className="text-xl md:text-2xl font-serif text-[#1A1A1A] mb-6">
-            {featuredPosts.length > 0 ? 'Tüm Yazılar' : 'Blog Yazıları'}
+            {featuredPosts.length > 0 ? t('blog_page.all_posts') : t('blog_page.title')}
           </h2>
 
           {isLoading ? (
@@ -150,9 +156,9 @@ export default function Blog() {
               {filteredPosts.map((post) => (
                 <article key={post.id} className="group cursor-pointer">
                   <div className="aspect-video rounded-xl overflow-hidden mb-4 bg-gray-100 flex items-center justify-center">
-                    {post.image ? (
+                    {(post as any).featured_image || post.image ? (
                       <img
-                        src={post.image}
+                        src={(post as any).featured_image || post.image}
                         alt={post.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       />
@@ -171,7 +177,7 @@ export default function Blog() {
           ) : (
             <div className="text-center py-12">
               <i className="ri-article-line text-6xl text-gray-300 mb-4 block"></i>
-              <p className="text-gray-500">Henüz blog yazısı eklenmemiş.</p>
+              <p className="text-gray-500">{t('blog_page.empty_state')}</p>
             </div>
           )}
         </div>
@@ -183,21 +189,25 @@ export default function Blog() {
             <div className="w-14 h-14 flex items-center justify-center bg-[#D4AF37] rounded-full mx-auto mb-4">
               <i className="ri-mail-line text-2xl text-white"></i>
             </div>
-            <h3 className="text-xl md:text-2xl font-serif text-[#1A1A1A] mb-3">Blog Güncellemelerini Kaçırmayın</h3>
-            <p className="text-gray-600 mb-6 text-sm">Yeni yazılarımdan haberdar olmak için e-posta listemize katılın.</p>
+            <h3 className="text-xl md:text-2xl font-serif text-[#1A1A1A] mb-3">
+              {t('blog_page.newsletter.title')}
+            </h3>
+            <p className="text-gray-600 mb-6 text-sm">
+              {t('blog_page.newsletter.subtitle')}
+            </p>
             <form className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
               <input
                 type="email"
                 name="email"
                 required
-                placeholder="E-posta adresiniz"
+                placeholder={t('blog_page.newsletter.placeholder') || 'E-posta adresiniz'}
                 className="flex-1 px-4 py-3 border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
               />
               <button
                 type="submit"
                 className="px-6 py-3 bg-[#D4AF37] text-[#1A1A1A] font-medium cursor-pointer hover:bg-[#C19B2E]"
               >
-                Abone Ol
+                {t('blog_page.newsletter.button')}
               </button>
             </form>
           </div>

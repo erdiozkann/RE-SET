@@ -10,10 +10,7 @@ export default function Header() {
   const location = useLocation();
   const { t, i18n } = useTranslation();
 
-  const toggleLanguage = () => {
-    const newLang = i18n.language === 'tr' ? 'en' : 'tr';
-    i18n.changeLanguage(newLang);
-  };
+
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -71,14 +68,26 @@ export default function Header() {
 
             <div className="flex items-center space-x-4 ml-4">
               {/* Language Switcher */}
-              <button
-                onClick={toggleLanguage}
-                className="flex items-center space-x-1 text-sm font-medium text-gray-600 hover:text-[#D4AF37] transition-colors p-2 rounded-full hover:bg-gray-50 cursor-pointer"
-                title={i18n.language === 'tr' ? 'Switch to English' : 'Türkçe\'ye Geç'}
-              >
-                <i className="ri-global-line text-lg"></i>
-                <span>{i18n.language === 'tr' ? 'EN' : 'TR'}</span>
-              </button>
+              <div className="flex items-center bg-gray-50 rounded-full p-1 border border-gray-100">
+                <button
+                  onClick={() => i18n.changeLanguage('tr')}
+                  className={`px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer ${i18n.language && i18n.language.startsWith('tr')
+                    ? 'bg-[#D4AF37] text-white shadow-sm'
+                    : 'text-gray-400 hover:text-gray-600'
+                    }`}
+                >
+                  TR
+                </button>
+                <button
+                  onClick={() => i18n.changeLanguage('en')}
+                  className={`px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer ${i18n.language && i18n.language.startsWith('en')
+                    ? 'bg-[#D4AF37] text-white shadow-sm'
+                    : 'text-gray-400 hover:text-gray-600'
+                    }`}
+                >
+                  EN
+                </button>
+              </div>
 
               <Link
                 to="/youtube"
@@ -140,7 +149,7 @@ export default function Header() {
                 onClick={() => setMobileMenuOpen(false)}
                 className="flex-1 bg-[#D4AF37] text-[#1A1A1A] px-6 py-3 font-medium text-center cursor-pointer rounded-lg"
               >
-                Giriş Yap
+                {t('auth.login', 'Giriş Yap')}
               </Link>
             </div>
           </nav>

@@ -43,6 +43,13 @@ hostinger-deploy
 # Testing
 coverage
 *.lcov
+testsprite_tests/
+test-results/
+
+# Diagnostic Scripts
+list-columns.mjs
+check-db.mjs
+fix_blog_posts_final.sql
 
 # Misc
 .turbo

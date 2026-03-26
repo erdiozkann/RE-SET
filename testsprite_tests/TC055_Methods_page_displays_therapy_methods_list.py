@@ -33,15 +33,13 @@ async def run_test():
         # -> Navigate to http://localhost:4173
         await page.goto("http://localhost:4173")
         
-        # -> Click 'Tümünü Kabul Et' cookie accept button (index 192) to dismiss cookie modal, then click the 'Yöntemler' navigation link (index 101) to open the Methods page.
+        # -> Navigate to /methods (http://localhost:4173/methods) as the test step requires.
+        await page.goto("http://localhost:4173/methods")
+        
+        # -> Click the cookie banner 'Tümünü Kabul Et' button to remove the banner (if it blocks view), then scroll down to ensure the 'Kullandığım Yöntemler' / Therapy methods cards are fully visible. After that, finish the task and report results.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div/div/div/div/div/div[2]/button').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div/div/header/div/div/nav/a[3]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
         # --> Test passed — verified by AI agent

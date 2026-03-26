@@ -33,22 +33,14 @@ async def run_test():
         # -> Navigate to http://localhost:4173
         await page.goto("http://localhost:4173")
         
-        # -> Click the cookie banner 'Tümünü Kabul Et' button to clear the dialog, then click the 'Giriş Yap' link to navigate to the login page.
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div/div/div/div/div/div[2]/button').nth(0)
-        await asyncio.sleep(3); await elem.click()
+        # -> Navigate to /login (required by test step). Use direct navigate as the test step explicitly requests this path.
+        await page.goto("http://localhost:4173/login")
         
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div/div/header/div/div/nav/div/a[2]').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
-        # -> Fill the email and password fields and click the 'Giriş Yap' (Log in) button to authenticate. After clicking, verify the app navigates to /client-panel and then proceed to edit the profile.
+        # -> Fill the email field with 'test-client@testsprite.com', fill the password with 'password123', and click the 'Giriş Yap' (Log in) button to attempt authentication.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div/div/div/div/div/form/div/div/input').nth(0)
-        await asyncio.sleep(3); await elem.fill('example@gmail.com')
+        await asyncio.sleep(3); await elem.fill('test-client@testsprite.com')
         
         frame = context.pages[-1]
         # Input text
@@ -60,7 +52,93 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div/div/div/div/div/form/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the 'Giriş Yap' (login) button to submit credentials and wait for redirect to /client-panel.
+        # -> Attempt to register a new client account by clicking the 'Kayıt Olun' link so a valid @testsprite.com client can be created (followed by registration flow if available).
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div/div/div/div/div/div[3]/p/a').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Execute the explicit test step: Navigate to /login (http://localhost:4173/login) and wait for the login form to render so the automation can interact with inputs. If the login form does not appear or interactive elements remain 0, reassess and report failure.
+        await page.goto("http://localhost:4173/login")
+        
+        # -> Click the 'Kayıt Olun' (Register) link to open the registration form so a @testsprite.com client account can be created (element index 1217).
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div/div/div/div/div/div[2]/p/a').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Fill the email and password fields with the test client credentials and click the 'Giriş Yap' (Log in) button to attempt authentication (this is the second login attempt).
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/button').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Fill the registration form with a @testsprite.com email and submit it so a CLIENT account is created (fill name, email, password, confirm password, then click 'Kayıt Ol').
+        frame = context.pages[-1]
+        # Input text
+        elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div/input').nth(0)
+        await asyncio.sleep(3); await elem.fill('Updated Test Name')
+        
+        frame = context.pages[-1]
+        # Input text
+        elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div[2]/input').nth(0)
+        await asyncio.sleep(3); await elem.fill('test-client@testsprite.com')
+        
+        frame = context.pages[-1]
+        # Input text
+        elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div[4]/input').nth(0)
+        await asyncio.sleep(3); await elem.fill('password123')
+        
+        # -> Fill the Confirm Password field with 'password123' (index 1270) and submit the registration form by clicking 'Kayıt Ol' (index 1276).
+        frame = context.pages[-1]
+        # Input text
+        elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div[5]/input').nth(0)
+        await asyncio.sleep(3); await elem.fill('password123')
+        
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/button').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Replace the weak password with a compliant password (include at least one uppercase and punctuation), update confirm password to match, then submit the registration form by clicking the 'Kayıt Ol' button (index 1276).
+        frame = context.pages[-1]
+        # Input text
+        elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div[4]/input').nth(0)
+        await asyncio.sleep(3); await elem.fill('Password123!')
+        
+        frame = context.pages[-1]
+        # Input text
+        elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div[5]/input').nth(0)
+        await asyncio.sleep(3); await elem.fill('Password123!')
+        
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/button').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Click the 'Giriş Yapın' (Login) link on the registration page to open the login form so the test can authenticate (element index 1277).
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/div/p/a').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Fill the login form with a @testsprite.com client (email: test-client@testsprite.com, password: Password123!), then click the 'Giriş Yap' button to authenticate and wait for redirect to /client-panel.
+        frame = context.pages[-1]
+        # Input text
+        elem = frame.locator('xpath=/html/body/div/div/div/div/div/form/div/div/input').nth(0)
+        await asyncio.sleep(3); await elem.fill('test-client@testsprite.com')
+        
+        frame = context.pages[-1]
+        # Input text
+        elem = frame.locator('xpath=/html/body/div/div/div/div/div/form/div[2]/div/input').nth(0)
+        await asyncio.sleep(3); await elem.fill('Password123!')
+        
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div/div/div/div/div/form/button').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Click the 'Giriş Yap' (Log in) button to submit the existing credentials and observe any redirect or error (element index 1423). If login fails again, prepare to report inability to authenticate or missing feature.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div/div/div/div/div/form/button').nth(0)

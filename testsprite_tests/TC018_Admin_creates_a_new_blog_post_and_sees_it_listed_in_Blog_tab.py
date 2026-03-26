@@ -33,18 +33,10 @@ async def run_test():
         # -> Navigate to http://localhost:4173
         await page.goto("http://localhost:4173")
         
-        # -> Accept cookies and click the 'Giriş Yap' (Login) link to open the login page.
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div/div/div/div/div/div[2]/button').nth(0)
-        await asyncio.sleep(3); await elem.click()
+        # -> Navigate to /login (explicit test step) by using the navigate action to http://localhost:4173/login.
+        await page.goto("http://localhost:4173/login")
         
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div/div/header/div/div/nav/div/a[2]').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
-        # -> Type the test credentials into the email and password fields and click the 'Giriş Yap' (Login) button.
+        # -> Type 'example@gmail.com' into the email field (index 537), then type 'password123' into the password field (index 544), then click the Login button (index 553).
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div/div/div/div/div/form/div/div/input').nth(0)
@@ -55,12 +47,6 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div/div/div/div/div/form/div[2]/div/input').nth(0)
         await asyncio.sleep(3); await elem.fill('password123')
         
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div/div/div/div/div/form/button').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
-        # -> Click the 'Giriş Yap' (Login) button to complete authentication and wait for the app to redirect, then find and click the 'Blog' tab.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div/div/div/div/div/form/button').nth(0)

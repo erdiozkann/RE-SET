@@ -33,13 +33,13 @@ async def run_test():
         # -> Navigate to http://localhost:4173
         await page.goto("http://localhost:4173")
         
-        # -> Navigate to /blog (http://localhost:4173/blog) to find the blog list page and continue the verification steps.
+        # -> Navigate to /blog (http://localhost:4173/blog) to find blog listing and continue the verification steps.
         await page.goto("http://localhost:4173/blog")
         
         # --> Assertions to verify final state
         frame = context.pages[-1]
         assert await frame.locator("xpath=//*[contains(., 'Blog')]").nth(0).is_visible(), "Expected 'Blog' to be visible"
-        assert await frame.locator("xpath=//*[contains(., 'Hello World')]").nth(0).is_visible(), "Expected 'Hello World' to be visible"
+        assert await frame.locator("xpath=//*[contains(., 'Article')]").nth(0).is_visible(), "Expected 'Article' to be visible"
         assert await frame.locator("xpath=//*[contains(., 'Lorem ipsum')]").nth(0).is_visible(), "Expected 'Lorem ipsum' to be visible"
         assert await frame.locator("xpath=//*[contains(., 'By')]").nth(0).is_visible(), "Expected 'By' to be visible"
         await asyncio.sleep(5)

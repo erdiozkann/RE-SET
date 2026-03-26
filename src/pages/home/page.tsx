@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import SEO from '../../components/SEO';
 import ReviewsSlider from '../../components/feature/ReviewsSlider';
 import { servicesApi, contentApi, methodsApi } from '../../lib/api';
@@ -8,6 +9,7 @@ import type { ServiceType, HeroContent, AboutContent, ContactInfo, Method } from
 
 
 export default function HomePage() {
+  const { t } = useTranslation();
   /* Supabase Only Data Flow */
   const [services, setServices] = useState<ServiceType[]>([]);
   const [methods, setMethods] = useState<Method[]>([]);
@@ -202,16 +204,16 @@ export default function HomePage() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10 pt-24 md:pt-32">
             <div className="max-w-xl">
               <h1
-                className="text-3xl md:text-5xl font-serif mb-4 leading-tight drop-shadow-sm"
+                className="text-4xl md:text-7xl font-bold mb-6 leading-tight"
                 style={{ color: heroContent.text_color || '#1A1A1A' }}
               >
-                {heroContent.title}
+                {t('home.hero.title', { defaultValue: heroContent.title })}
               </h1>
               <p
                 className="text-base md:text-lg mb-0 drop-shadow-sm"
                 style={{ color: heroContent.text_color || '#4B5563' }}
               >
-                {heroContent.description}
+                {t('home.hero.subtitle', { defaultValue: heroContent.description })}
               </p>
 
               {/* Butonlar - Bir tık aşağı çekildi */}
@@ -220,14 +222,14 @@ export default function HomePage() {
                   to="/booking"
                   className="px-8 py-4 bg-[#D4AF37] text-[#1A1A1A] rounded-full font-semibold hover:bg-[#C19B2E] transition-all shadow-lg hover:shadow-xl text-lg"
                 >
-                  Randevu Al
+                  {t('home.hero.cta_booking')}
                 </Link>
                 <button
                   onClick={handleWhatsAppClick}
                   className="px-8 py-4 bg-[#D4AF37] text-[#1A1A1A] rounded-full font-semibold hover:bg-[#C19B2E] transition-all shadow-lg hover:shadow-xl flex items-center gap-2 text-lg"
                 >
                   <i className="ri-whatsapp-line text-xl"></i>
-                  WhatsApp ile İletişim
+                  {t('home.hero.cta_whatsapp')}
                 </button>
               </div>
             </div>
@@ -284,7 +286,7 @@ export default function HomePage() {
       {services.length > 0 && (
         <section className="py-12 md:py-16 bg-gradient-to-br from-gray-50 to-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-3xl md:text-4xl font-serif text-center text-gray-900 mb-8">Hizmetlerimiz</h2>
+            <h2 className="text-3xl md:text-4xl font-serif text-center text-gray-900 mb-8">{t('home.services.title')}</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {services.map((service) => (
                 <div key={service.id} className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow">
@@ -298,7 +300,7 @@ export default function HomePage() {
                     to="/booking"
                     className="block w-full text-center px-4 py-2.5 bg-[#D4AF37] text-[#1A1A1A] rounded-full font-semibold hover:bg-[#C19B2E] transition-colors text-sm"
                   >
-                    Randevu Al
+                    {t('home.hero.cta_booking')}
                   </Link>
                 </div>
               ))}
@@ -312,7 +314,7 @@ export default function HomePage() {
         <section className="py-12 md:py-16 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-8">
-              <h2 className="text-3xl md:text-4xl font-serif text-gray-900 mb-3">Kullandığımız Yöntemler</h2>
+              <h2 className="text-3xl md:text-4xl font-serif text-gray-900 mb-3">{t('home.methods.title')}</h2>
               <p className="text-base md:text-lg text-gray-600 max-w-2xl mx-auto">
                 Danışmanlık sürecimizde bilimsel temelli ve etkili yöntemler kullanıyoruz
               </p>
@@ -338,7 +340,7 @@ export default function HomePage() {
                 to="/methods"
                 className="inline-block px-6 py-3 bg-[#D4AF37] text-[#1A1A1A] rounded-full font-semibold hover:bg-[#C19B2E] transition-colors shadow-lg"
               >
-                Tüm Yöntemlerimiz
+                {t('home.methods.view_all', { defaultValue: 'Tüm Yöntemlerimiz' })}
               </Link>
             </div>
           </div>
@@ -351,13 +353,13 @@ export default function HomePage() {
       {/* CTA Section */}
       <section className="py-12 md:py-16 bg-[#1A1A1A]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
-          <h2 className="text-3xl md:text-4xl font-serif mb-4">Hayalinizdeki Yaşama İlk Adımı Atın</h2>
-          <p className="text-lg md:text-xl mb-6">Profesyonel destek ile potansiyelinizi keşfedin</p>
+          <h2 className="text-3xl md:text-4xl font-serif mb-4">{t('home.cta.title')}</h2>
+          <p className="text-lg md:text-xl mb-6">{t('home.cta.subtitle')}</p>
           <Link
             to="/booking"
             className="inline-block px-6 py-3 bg-[#D4AF37] text-[#1A1A1A] rounded-full font-semibold hover:bg-[#C19B2E] transition-colors shadow-lg"
           >
-            Hemen Başlayın
+            {t('home.cta.button')}
           </Link>
         </div>
       </section>

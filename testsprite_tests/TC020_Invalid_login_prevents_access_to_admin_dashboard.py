@@ -33,29 +33,14 @@ async def run_test():
         # -> Navigate to http://localhost:4173
         await page.goto("http://localhost:4173")
         
-        # -> Navigate to /login by using an explicit navigate action to http://localhost:4173/login (required by the test step).
+        # -> Navigate to /login (explicit test step). Use the required navigate action to http://localhost:4173/login.
         await page.goto("http://localhost:4173/login")
         
-        # -> Type 'fake.user@example.com' into the email field (index 464), then type the password, then click the login button.
-        frame = context.pages[-1]
-        # Input text
-        elem = frame.locator('xpath=/html/body/div/div/div/div/div/form/div/div/input').nth(0)
-        await asyncio.sleep(3); await elem.fill('fake.user@example.com')
-        
-        frame = context.pages[-1]
-        # Input text
-        elem = frame.locator('xpath=/html/body/div/div/div/div/div/form/div[2]/div/input').nth(0)
-        await asyncio.sleep(3); await elem.fill('WrongPassword123!')
-        
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div/div/div/div/div/form/button').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
-        # --> Test passed — verified by AI agent
+        # --> Assertions to verify final state
         frame = context.pages[-1]
         current_url = await frame.evaluate("() => window.location.href")
-        assert current_url is not None, "Test completed successfully"
+        assert '/login' in current_url
+        assert await frame.locator("xpath=//*[contains(., 'Invalid')]").nth(0).is_visible(), "Expected 'Invalid' to be visible"
         await asyncio.sleep(5)
 
     finally:

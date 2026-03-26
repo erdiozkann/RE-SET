@@ -33,16 +33,40 @@ async def run_test():
         # -> Navigate to http://localhost:4173
         await page.goto("http://localhost:4173")
         
-        # -> Click the 'Giriş Yap' link (index 150) to open the login page and load the login form.
+        # -> Click the 'Login' link (interactive element index 153) to open the login page.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div/div/header/div/div/nav/div/a[2]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # --> Test passed — verified by AI agent
+        # -> Input 'example@gmail.com' into the email field (index 417), then input 'password123' into the password field (index 424), then click the 'Giriş Yap' submit button (index 433).
         frame = context.pages[-1]
+        # Input text
+        elem = frame.locator('xpath=/html/body/div/div/div/div/div/form/div/div/input').nth(0)
+        await asyncio.sleep(3); await elem.fill('example@gmail.com')
+        
+        frame = context.pages[-1]
+        # Input text
+        elem = frame.locator('xpath=/html/body/div/div/div/div/div/form/div[2]/div/input').nth(0)
+        await asyncio.sleep(3); await elem.fill('password123')
+        
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div/div/div/div/div/form/button').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Open the registration page ('Kayıt Olun') so a new @testsprite.com client account can be created for a valid login attempt.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div/div/div/div/div/div[3]/p/a').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # --> Assertions to verify final state
+        frame = context.pages[-1]
+        assert await frame.locator("xpath=//*[contains(., 'Login')]").nth(0).is_visible(), "Expected 'Login' to be visible"
         current_url = await frame.evaluate("() => window.location.href")
-        assert current_url is not None, "Test completed successfully"
+        assert '/client-panel' in current_url
+        assert await frame.locator("xpath=//*[contains(., 'Client Panel')]").nth(0).is_visible(), "Expected 'Client Panel' to be visible"
         await asyncio.sleep(5)
 
     finally:

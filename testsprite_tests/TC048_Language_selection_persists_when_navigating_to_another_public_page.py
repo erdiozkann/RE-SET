@@ -33,12 +33,40 @@ async def run_test():
         # -> Navigate to http://localhost:4173
         await page.goto("http://localhost:4173")
         
+        # -> Click the cookie banner 'Tümünü Kabul Et' button to dismiss the overlay, then open the language selector (click the 'TR' language button).
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div/div/div/div/div/div[2]/button').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div/div/header/div/div/nav/div/button').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Click the 'EN' language button (index 99) to switch the site to English, then click the 'About' navigation link (index 103) to navigate to the About page.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div/div/header/div/div/nav/div/button').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div/div/header/div/div/nav/a[2]').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Extract the About page's main heading and top paragraph to verify language; then click the Home link (header) and after navigation extract the homepage heading/intro to verify whether the English selection persisted.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div/div/header/div/div/nav/a').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
         # --> Assertions to verify final state
         frame = context.pages[-1]
         current_url = await frame.evaluate("() => window.location.href")
         assert '/about' in current_url
         assert await frame.locator("xpath=//*[contains(., 'About')]").nth(0).is_visible(), "Expected 'About' to be visible"
-        assert await frame.locator("xpath=//*[contains(., 'Welcome')]").nth(0).is_visible(), "Expected 'Welcome' to be visible"
+        assert await frame.locator("xpath=//*[contains(., 'START WITH YOURSELF')]").nth(0).is_visible(), "Expected 'START WITH YOURSELF' to be visible"
         await asyncio.sleep(5)
 
     finally:

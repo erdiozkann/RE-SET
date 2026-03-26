@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import type { ClarityCommand } from '../../lib/clarity';
 
 interface CookiePreferences {
@@ -42,6 +43,7 @@ const deserializePreferences = (rawValue: string | null): CookiePreferences | nu
 };
 
 export default function CookieBanner() {
+  const { t } = useTranslation();
   const [showBanner, setShowBanner] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [preferences, setPreferences] = useState<CookiePreferences>(DEFAULT_PREFERENCES);
@@ -152,16 +154,16 @@ export default function CookieBanner() {
                   <i className="ri-cookie-line text-2xl text-[#D4AF37]"></i>
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900">Çerez Kullanımı</h3>
+                  <h3 className="text-lg font-semibold text-gray-900">{t('cookie.title')}</h3>
                   <p className="text-sm text-gray-600 mt-1">
-                    Web sitemizde deneyiminizi iyileştirmek için çerezler kullanıyoruz.
+                    {t('cookie.description')}
                   </p>
                 </div>
               </div>
             </div>
 
             <p className="text-sm text-gray-600 mb-4">
-              Sitemizi kullanarak, <Link to="/cookies" className="text-[#D4AF37] hover:underline cursor-pointer">Çerez Politikamızı</Link> kabul etmiş olursunuz. Çerezler, site performansını analiz etmek ve size daha iyi hizmet sunmak için kullanılır.
+              {t('cookie.policy')}
             </p>
 
             <div className="flex flex-wrap gap-3">
@@ -169,19 +171,19 @@ export default function CookieBanner() {
                 onClick={handleAcceptAll}
                 className="px-6 py-2.5 bg-[#D4AF37] text-white rounded-lg hover:bg-[#C4A137] transition-colors font-medium whitespace-nowrap cursor-pointer"
               >
-                Tümünü Kabul Et
+                {t('cookie.accept_all')}
               </button>
               <button
                 onClick={handleRejectAll}
                 className="px-6 py-2.5 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium whitespace-nowrap cursor-pointer"
               >
-                Reddet
+                {t('cookie.reject')}
               </button>
               <button
                 onClick={() => setShowSettings(true)}
                 className="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium whitespace-nowrap cursor-pointer"
               >
-                Ayarlar
+                {t('cookie.settings')}
               </button>
             </div>
           </div>

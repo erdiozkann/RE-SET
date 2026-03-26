@@ -33,10 +33,10 @@ async def run_test():
         # -> Navigate to http://localhost:4173
         await page.goto("http://localhost:4173")
         
-        # -> Navigate to /login (http://localhost:4173/login) and wait for the page to load so the login form becomes available.
+        # -> Navigate to /login (explicit test step) using the navigate action to reach the login page as specified in the test plan.
         await page.goto("http://localhost:4173/login")
         
-        # -> Type the login credentials into the email and password fields and submit the form (fill email, fill password, click 'Giriş Yap').
+        # -> Type the test credentials into the email and password fields, then click the 'Giriş Yap' (Log in) button.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div/div/div/div/div/form/div/div/input').nth(0)
@@ -52,10 +52,16 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div/div/div/div/div/form/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the 'Giriş Yap' submit button (index 510) to attempt login again, wait for the app to process and redirect, then check for '/client-panel' and the 'Upcoming Appointments' content.
+        # -> Retry login by clicking the 'Giriş Yap' button again, then wait up to 5 seconds for the SPA to navigate to /client-panel and check for the 'Upcoming Appointments' content.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div/div/div/div/div/form/button').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Click the 'Kayıt Olun' (Register) link to open the registration page and create a @testsprite.com test client account.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div/div/div/div/div/div[3]/p/a').nth(0)
         await asyncio.sleep(3); await elem.click()
         
         # --> Assertions to verify final state
