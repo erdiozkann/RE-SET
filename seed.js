@@ -75,39 +75,71 @@ async function run() {
         }
     }
 
-    // 4. ONAY BEKLEYEN KULLANICI SEED (TC020, TC021 Onay Bekleyenler sekmesi testi)
-    let { data: usrs } = await supabase.from('users').select('*').eq('email', 'pending_test@example.com');
-    if (!usrs || usrs.length === 0) {
-        await supabase.from('users').insert({
-            id: crypto.randomUUID(), // Rastgele UUID
-            email: "pending_test@example.com",
-            name: "Pending TestUser",
-            role: "CLIENT",
-            approved: false
+    // 4. TEST KULLANICI SEED (TC009, TC019, TC026-029 Testleri İçin)
+    const testUserEmail = 'example@gmail.com';
+    const testUserPass = 'password123';
+    
+    // Auth'da kullanıcı yoksa oluştur (Supabase Auth API kullanarak)
+    // Not: signUp admin yetkisi gerektirebilir veya hCaptcha/Verification takılabilir. 
+    // Bu yüzden 'users' tablosuna manuel ekleme ve Auth tarafında varlığını varsayma stratejisi izliyoruz.
+    // Ancak en doğrusu Auth service ile oluşturmaktır.
+    
+    let { data: testUsrs } = await supabase.from('users').select('*').eq('email', testUserEmail);
+    if (!testUsrs || testUsrs.length === 0) {
+        let userId = crypto.randomUUID();
+        
+        // 1. Auth SignUp
+        const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+            email: testUserEmail,
+            password: testUserPass,
+            options: { data: { name: "Test Playwright" } }
         });
-        console.log("⏳ Pending Registration User (Onay Bekleyenler) seeded.");
+
+        if (signUpError) {
+            console.warn(`⚠️ Auth SignUp failed (${testUserEmail}): ${signUpError.message}`);
+        }
+
+        if (signUpData.user) {
+            userId = signUpData.user.id;
+        } else if (signUpError && signUpError.message.includes('already registered')) {
+            // Already registered? Fine.
+        }
+
+        // 2. Insert into users table
+        await supabase.from('users').insert({
+            id: userId,
+            email: testUserEmail,
+            name: "Test Playwright",
+            role: "CLIENT",
+            approved: true
+        });
+        console.log("👤 Test User (example@gmail.com) seeded.");
     } else {
-        console.log("⏳ Pending Registration User already exists.");
+        console.log("👤 Test User already exists.");
     }
 
-    // 5. BLOG İÇERİĞİ SEED (Content API / TC028 Testi)
+    // 5. BLOG İÇERİĞİ SEED (Existing columns only to prevent PGRST204)
+    // Önce temizle (Test stabilitesi için)
     await supabase.from('blog_posts').delete().neq('id', '00000000-0000-0000-0000-000000000000');
-    let { data: blogs } = await supabase.from('blog_posts').select('*').eq('title', "E2E Test Blogu");
-    if (!blogs || blogs.length === 0) {
-        const { error: blogE } = await supabase.from('blog_posts').insert({
-            title: "E2E Test Blogu",
-            excerpt: "Bu blog E2E testleri tarafından görülmesi için eklendi.",
-            content: "<p>Tam içerik detayları buradadır.</p>",
+    
+    const blogEntries = [];
+    for (let i = 1; i <= 10; i++) {
+        blogEntries.push({
+            title: i === 1 ? "E2E Test Blogu" : `Blog Yazısı ${i}`,
+            excerpt: `Bu blog yazısı ${i} E2E testleri için otomatik eklendi.`,
+            content: `<p>Blog yazısı ${i} detaylı içeriği burada yer almaktadır.</p>`,
             image: "https://via.placeholder.com/600",
+            // NOT: category, readTime, featured, status şu an DB şemasında bulunmadığı için kaldırıldı.
+            // Bu sütunlar eklendiğinde tekrar aktifleştirilebilir.
             date: new Date().toISOString().split('T')[0]
         });
-        if (blogE) console.error("❌ Blog Insert Error:", blogE);
-        else console.log("📝 Blog Post seeded.");
-    } else {
-        console.log("📝 Blog Post already exists.");
     }
 
-    console.log("✅ All test data seeded successfully. Testler artık tıklanabilir nesneler bulacak.");
+    const { error: blogE } = await supabase.from('blog_posts').insert(blogEntries);
+    if (blogE) console.error("❌ Blog Insert Error:", blogE);
+    else console.log(`📝 ${blogEntries.length} Blog Posts seeded (minimal schema).`);
+
+    console.log("✅ Seed complete. NOTE: Registration (signUp) might still fail due to server-side DB triggers or missing INSERT policies for users table.");
     process.exit(0);
 }
 
