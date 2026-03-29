@@ -112,10 +112,21 @@ export const clientsApi = {
         return data;
     },
 
-    async update(id: string, updates: Partial<Client>) {
+    async update(id: string, updates: any) {
+        const dbUpdates: any = {
+            name: updates.name,
+            full_name: updates.fullName,
+            email: updates.email,
+            phone: updates.phone,
+            notes: updates.notes,
+            is_active: updates.isActive
+        };
+
+        Object.keys(dbUpdates).forEach(k => dbUpdates[k] === undefined && delete dbUpdates[k]);
+
         const { data, error } = await supabase
             .from('clients')
-            .update(updates)
+            .update(dbUpdates)
             .eq('id', id)
             .select()
             .single();

@@ -2,13 +2,11 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { contentApi } from '../../lib/api';
 import type { ContactInfo } from '../../types';
-import { useTranslation } from 'react-i18next';
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [contactInfo, setContactInfo] = useState<ContactInfo | null>(null);
   const location = useLocation();
-  const { t } = useTranslation();
 
 
 
@@ -27,13 +25,13 @@ export default function Header() {
   }, []);
 
   const navLinks = [
-    { path: '/', label: t('nav.home', 'Ana Sayfa') },
-    { path: '/about', label: t('nav.about', 'Hakkımda') },
-    { path: '/methods', label: t('nav.methods', 'Yöntemler') },
-    { path: '/blog', label: t('nav.blog', 'Blog') },
-    { path: '/podcast', label: t('nav.podcast', 'Podcast') },
-    { path: '/booking', label: t('nav.booking', 'Randevu') },
-    { path: '/contact', label: t('nav.contact', 'İletişim') },
+    { path: '/', label: 'Ana Sayfa' },
+    { path: '/about', label: 'Hakkımda' },
+    { path: '/methods', label: 'Yöntemler' },
+    { path: '/blog', label: 'Blog' },
+    { path: '/podcast', label: 'Podcast' },
+    { path: '/booking', label: 'Randevu' },
+    { path: '/contact', label: 'İletişim' },
   ];
 
   return (
@@ -81,7 +79,7 @@ export default function Header() {
                 to="/login"
                 className="bg-[#D4AF37] text-[#1A1A1A] px-6 py-2 font-medium whitespace-nowrap cursor-pointer transition-all duration-200 hover:bg-[#C19B2E] hover-lift rounded-lg"
               >
-                {t('auth.login', 'Giriş Yap')}
+                Giriş Yap
               </Link>
             </div>
           </nav>
@@ -129,7 +127,7 @@ export default function Header() {
                 onClick={() => setMobileMenuOpen(false)}
                 className="flex-1 bg-[#D4AF37] text-[#1A1A1A] px-6 py-3 font-medium text-center cursor-pointer rounded-lg"
               >
-                {t('auth.login', 'Giriş Yap')}
+                Giriş Yap
               </Link>
             </div>
           </nav>

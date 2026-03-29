@@ -6,27 +6,31 @@ import { env } from './env';
 // ============================================
 // Auth işlemleri için: src/contexts/AuthContext.tsx kullanın (useAuth hook)
 
-// Singleton implementation to prevent Multiple GoTrueClient instances
-const createSupabaseClient = () => createClient(env.SUPABASE_URL, env.SUPABASE_KEY);
-
 declare global {
-    var supabaseInstance: ReturnType<typeof createSupabaseClient> | undefined;
+    var supabaseInstance: any;
+    var supabasePublicInstance: any;
 }
 
-export const supabase = globalThis.supabaseInstance ?? createSupabaseClient();
+// Singleton implementation to ensure only one instance exists across all modules
+const getSupabaseInstance = () => {
+    if (globalThis.supabaseInstance) return globalThis.supabaseInstance;
+    
+    const client = createClient(env.SUPABASE_URL, env.SUPABASE_KEY);
+    globalThis.supabaseInstance = client;
+    return client;
+};
 
-if (import.meta.env.DEV) {
-    globalThis.supabaseInstance = supabase;
-}
+export const supabase = getSupabaseInstance();
 
 // 🌍 PUBLIC CLIENT (RLS Bypass for Read-Only)
-// This client forces 'anon' role by disabling session persistence.
-// Use this for fetching public data (Hero, Content, Services) so Admins can see it 
-// even if RLS policies for 'authenticated' are broken.
-export const supabasePublic = createClient(env.SUPABASE_URL, env.SUPABASE_KEY, {
-    auth: {
-        persistSession: false,
-        autoRefreshToken: false,
-        detectSessionInUrl: false
-    }
-});
+const getSupabasePublicInstance = () => {
+    if (globalThis.supabasePublicInstance) return globalThis.supabasePublicInstance;
+    
+    const client = createClient(env.SUPABASE_URL, env.SUPABASE_KEY, {
+        auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false }
+    });
+    globalThis.supabasePublicInstance = client;
+    return client;
+};
+
+export const supabasePublic = getSupabasePublicInstance();

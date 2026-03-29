@@ -1,11 +1,9 @@
 import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import SEO from '../../components/SEO';
 import { methodsApi } from '../../lib/api';
 import type { Method } from '../../types';
 
 export default function MethodsPage() {
-  const { t } = useTranslation();
   const [methods, setMethods] = useState<Method[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -40,8 +38,8 @@ export default function MethodsPage() {
     {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
-      name: t('methods_page.seo.title'),
-      description: t('methods_page.seo.description'),
+      name: 'Yöntemlerim | Demartini Metodu',
+      description: 'Kullandığım yöntemler ve teknikler',
       url: `${siteUrl}/methods`,
       mainEntity: {
         '@type': 'ItemList',
@@ -70,8 +68,8 @@ export default function MethodsPage() {
     {
       '@context': 'https://schema.org',
       '@type': 'Service',
-      name: t('methods_page.seo.title'),
-      description: t('methods_page.seo.description'),
+      name: 'Yöntemlerim | Demartini Metodu',
+      description: 'Kullandığım yöntemler ve teknikler',
       provider: {
         '@type': 'Person',
         name: 'Şafak Özkan',
@@ -88,9 +86,9 @@ export default function MethodsPage() {
   return (
     <>
       <SEO
-        title={t('methods_page.seo.title')}
-        description={t('methods_page.seo.description')}
-        keywords={t('methods_page.seo.keywords')}
+        title="Yöntemlerim | Demartini Metodu"
+        description="Kullandığım yöntemler ve teknikler"
+        keywords="demartini metodu, yöntemler, teknikler"
         schema={schema}
       />
 
@@ -98,10 +96,10 @@ export default function MethodsPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
             <h1 className="text-3xl md:text-4xl font-serif text-gray-900 mb-4">
-              {t('methods_page.title') || 'Kullandığım Yöntemler'}
+              Yöntemlerimiz
             </h1>
             <p className="text-base md:text-lg text-gray-600 max-w-3xl mx-auto">
-              {t('methods_page.subtitle')}
+              Danışmanlık sürecimizde kullandığımız bilimsel temelli yöntemler
             </p>
           </div>
 
@@ -128,7 +126,7 @@ export default function MethodsPage() {
             ) : (
               <div className="col-span-full text-center py-12">
                 <i className="ri-file-list-3-line text-6xl text-gray-300 mb-4"></i>
-                <p className="text-gray-500">{t('methods_page.empty_state') || 'Henüz yöntem eklenmemiş.'}</p>
+                <p className="text-gray-500">Henüz yöntem eklenmemiş</p>
               </div>
             )}
           </div>
@@ -136,16 +134,16 @@ export default function MethodsPage() {
           <div className="mt-12 text-center">
             <div className="bg-white rounded-2xl p-6 md:p-8 shadow-lg max-w-3xl mx-auto">
               <h2 className="text-xl md:text-2xl font-serif text-gray-900 mb-3">
-                {t('about.approach_title') || 'Size Özel Bir Yaklaşım'}
+                Yaklaşımım
               </h2>
               <p className="text-gray-600 mb-5 text-sm md:text-base">
-                {t('about.approaches.custom_desc')}
+                Size özel çözümler üretiyoruz.
               </p>
               <a
                 href="/booking"
                 className="inline-block px-6 py-3 bg-gradient-to-r from-teal-500 to-teal-600 text-white rounded-full font-semibold hover:from-teal-600 hover:to-teal-700 transition-all shadow-lg text-sm md:text-base"
               >
-                {t('about.appointment_button') || 'Randevu Alın'}
+                Randevu Al
               </a>
             </div>
           </div>

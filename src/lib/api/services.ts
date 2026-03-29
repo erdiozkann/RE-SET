@@ -157,16 +157,32 @@ export const appointmentsApi = {
         return data?.[0];
     },
 
-    async update(id: string, updates: Partial<CreateAppointmentInput & { status: string }>) {
+    async update(id: string, updates: any) {
+        const dbUpdates: any = {
+            client_id: updates.clientId,
+            client_name: updates.clientName,
+            client_email: updates.clientEmail,
+            client_phone: updates.clientPhone,
+            date: updates.date,
+            time: updates.time,
+            service_type: updates.serviceType,
+            service_title: updates.serviceTitle,
+            notes: updates.notes,
+            status: updates.status
+        };
+
+        Object.keys(dbUpdates).forEach(k => dbUpdates[k] === undefined && delete dbUpdates[k]);
+
         const { data, error } = await supabase
             .from('appointments')
-            .update(updates)
+            .update(dbUpdates)
             .eq('id', id)
-            .select();
+            .select()
+            .single();
 
         if (error) throw error;
         appointmentsCache = null; // Invalidate cache
-        return data?.[0];
+        return data;
     },
 
     async delete(id: string) {
