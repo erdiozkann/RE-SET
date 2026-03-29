@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import SEO from '../../components/SEO';
 import ReviewsSlider from '../../components/feature/ReviewsSlider';
 import { servicesApi, contentApi, methodsApi } from '../../lib/api';
@@ -9,7 +8,6 @@ import type { ServiceType, HeroContent, AboutContent, ContactInfo, Method } from
 
 
 export default function HomePage() {
-  const { t } = useTranslation();
   /* Supabase Only Data Flow */
   const [services, setServices] = useState<ServiceType[]>([]);
   const [methods, setMethods] = useState<Method[]>([]);
@@ -203,34 +201,37 @@ export default function HomePage() {
           {/* Content Container - Sol üst köşeye hizalanmış */}
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10 pt-24 md:pt-32">
             <div className="max-w-xl">
-              <h1
-                className="text-4xl md:text-7xl font-bold mb-6 leading-tight"
-                style={{ color: heroContent.text_color || '#1A1A1A' }}
-              >
-                {t('home.hero.title', { defaultValue: heroContent.title })}
-              </h1>
-              <p
-                className="text-base md:text-lg mb-0 drop-shadow-sm"
-                style={{ color: heroContent.text_color || '#4B5563' }}
-              >
-                {t('home.hero.subtitle', { defaultValue: heroContent.description })}
-              </p>
+              {/* Glassmorphism Container */}
+              <div className="backdrop-blur-md bg-white/80 dark:bg-gray-900/80 rounded-3xl p-8 md:p-10 shadow-2xl border border-white/20">
+                <h1
+                  className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight"
+                  style={{ color: heroContent.text_color || '#1A1A1A' }}
+                >
+                  {heroContent.title}
+                </h1>
+                <p
+                  className="text-base md:text-lg lg:text-xl mb-8 leading-relaxed"
+                  style={{ color: heroContent.text_color || '#4B5563' }}
+                >
+                  {heroContent.description}
+                </p>
 
-              {/* Butonlar - Bir tık aşağı çekildi */}
-              <div className="flex flex-col sm:flex-row items-start gap-3 mt-8 md:mt-12">
-                <Link
-                  to="/booking"
-                  className="px-8 py-4 bg-[#D4AF37] text-[#1A1A1A] rounded-full font-semibold hover:bg-[#C19B2E] transition-all shadow-lg hover:shadow-xl text-lg"
-                >
-                  {t('home.hero.cta_booking')}
-                </Link>
-                <button
-                  onClick={handleWhatsAppClick}
-                  className="px-8 py-4 bg-[#D4AF37] text-[#1A1A1A] rounded-full font-semibold hover:bg-[#C19B2E] transition-all shadow-lg hover:shadow-xl flex items-center gap-2 text-lg"
-                >
-                  <i className="ri-whatsapp-line text-xl"></i>
-                  {t('home.hero.cta_whatsapp')}
-                </button>
+                {/* Butonlar */}
+                <div className="flex flex-col sm:flex-row items-start gap-3">
+                  <Link
+                    to="/booking"
+                    className="px-8 py-4 bg-[#D4AF37] text-[#1A1A1A] rounded-full font-semibold hover:bg-[#C19B2E] transition-all shadow-lg hover:shadow-xl text-lg hover:scale-105"
+                  >
+                    Randevu Al
+                  </Link>
+                  <button
+                    onClick={handleWhatsAppClick}
+                    className="px-8 py-4 bg-[#D4AF37] text-[#1A1A1A] rounded-full font-semibold hover:bg-[#C19B2E] transition-all shadow-lg hover:shadow-xl flex items-center gap-2 text-lg hover:scale-105"
+                  >
+                    <i className="ri-whatsapp-line text-xl"></i>
+                    WhatsApp ile İletişim
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -286,7 +287,7 @@ export default function HomePage() {
       {services.length > 0 && (
         <section className="py-12 md:py-16 bg-gradient-to-br from-gray-50 to-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-3xl md:text-4xl font-serif text-center text-gray-900 mb-8">{t('home.services.title')}</h2>
+            <h2 className="text-3xl md:text-4xl font-serif text-center text-gray-900 mb-8">Hizmetlerimiz</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {services.map((service) => (
                 <div key={service.id} className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow">
@@ -300,7 +301,7 @@ export default function HomePage() {
                     to="/booking"
                     className="block w-full text-center px-4 py-2.5 bg-[#D4AF37] text-[#1A1A1A] rounded-full font-semibold hover:bg-[#C19B2E] transition-colors text-sm"
                   >
-                    {t('home.hero.cta_booking')}
+                    Randevu Al
                   </Link>
                 </div>
               ))}
@@ -314,7 +315,7 @@ export default function HomePage() {
         <section className="py-12 md:py-16 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-8">
-              <h2 className="text-3xl md:text-4xl font-serif text-gray-900 mb-3">{t('home.methods.title')}</h2>
+              <h2 className="text-3xl md:text-4xl font-serif text-gray-900 mb-3">Yöntemlerimiz</h2>
               <p className="text-base md:text-lg text-gray-600 max-w-2xl mx-auto">
                 Danışmanlık sürecimizde bilimsel temelli ve etkili yöntemler kullanıyoruz
               </p>
@@ -340,7 +341,7 @@ export default function HomePage() {
                 to="/methods"
                 className="inline-block px-6 py-3 bg-[#D4AF37] text-[#1A1A1A] rounded-full font-semibold hover:bg-[#C19B2E] transition-colors shadow-lg"
               >
-                {t('home.methods.view_all', { defaultValue: 'Tüm Yöntemlerimiz' })}
+                Tüm Yöntemlerimiz
               </Link>
             </div>
           </div>
@@ -353,13 +354,13 @@ export default function HomePage() {
       {/* CTA Section */}
       <section className="py-12 md:py-16 bg-[#1A1A1A]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
-          <h2 className="text-3xl md:text-4xl font-serif mb-4">{t('home.cta.title')}</h2>
-          <p className="text-lg md:text-xl mb-6">{t('home.cta.subtitle')}</p>
+          <h2 className="text-3xl md:text-4xl font-serif mb-4">Hayatınızı Dönüştürmeye Hazır mısınız?</h2>
+          <p className="text-lg md:text-xl mb-6">İlk danışmanlık seansınızı hemen planlayın</p>
           <Link
             to="/booking"
             className="inline-block px-6 py-3 bg-[#D4AF37] text-[#1A1A1A] rounded-full font-semibold hover:bg-[#C19B2E] transition-colors shadow-lg"
           >
-            {t('home.cta.button')}
+            Randevu Al
           </Link>
         </div>
       </section>

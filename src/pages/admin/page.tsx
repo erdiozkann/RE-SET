@@ -1,6 +1,7 @@
 
-import { useState, lazy, Suspense } from 'react';
+import { useState, lazy, Suspense, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
+import { useSearchParams } from 'react-router-dom';
 import SEO from '../../components/SEO';
 import { ErrorBoundary } from '../../components/ErrorBoundary';
 import Sidebar from './layouts/Sidebar';
@@ -49,8 +50,27 @@ type TabType =
 
 export default function AdminPage() {
   const { user, loading } = useAuth();
+  const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState<TabType>('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  // Read tab from URL params on mount and when params change
+  useEffect(() => {
+    const tabParam = searchParams.get('tab');
+    if (tabParam && isValidTab(tabParam)) {
+      setActiveTab(tabParam as TabType);
+    }
+  }, [searchParams]);
+
+  const isValidTab = (tab: string): boolean => {
+    const validTabs: TabType[] = [
+      'dashboard', 'appointments', 'clients', 'services', 'config',
+      'pending', 'accounts', 'progress', 'reviews', 'messages',
+      'content', 'methods', 'blog', 'podcast', 'youtube',
+      'accounting', 'ads', 'account-settings'
+    ];
+    return validTabs.includes(tab as TabType);
+  };
 
   if (loading) {
     return (

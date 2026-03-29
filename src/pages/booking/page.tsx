@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { servicesApi, appointmentsApi } from '../../lib/api';
@@ -10,7 +9,6 @@ import type { ServiceType, WorkingConfig } from '../../types';
 import SEO from '../../components/SEO';
 
 const BookingPage = () => {
-  const { t } = useTranslation();
   const navigate = useNavigate();
   const toast = useToast();
   const [step, setStep] = useState(1);
@@ -241,26 +239,26 @@ const BookingPage = () => {
             <div className="w-20 h-20 bg-gradient-to-br from-[#D4AF37] to-[#F4D03F] rounded-2xl flex items-center justify-center mx-auto mb-8 shadow-lg transform -rotate-6">
               <i className="ri-calendar-check-line text-4xl text-white"></i>
             </div>
-            <h2 className="text-3xl font-serif text-[#1A1A1A] mb-4">{t('booking.account_check.title')}</h2>
+            <h2 className="text-3xl font-serif text-[#1A1A1A] mb-4">Randevu almak için giriş yapın</h2>
             <p className="text-gray-600 mb-8 leading-relaxed">
-              {t('booking.account_check.description')}
+              Randevu oluşturabilmek için hesabınıza giriş yapmalısınız.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
               <button
                 onClick={() => navigate('/login')}
                 className="px-6 py-4 bg-[#1A1A1A] text-white rounded-xl font-semibold hover:bg-black transition-all cursor-pointer shadow-md hover:shadow-lg"
               >
-                {t('booking.account_check.login_button')}
+                Giriş Yap
               </button>
               <button
                 onClick={() => navigate('/register')}
                 className="px-6 py-4 bg-[#D4AF37] text-[#1A1A1A] rounded-xl font-semibold hover:bg-[#C19B2E] transition-all cursor-pointer shadow-md hover:shadow-lg"
               >
-                {t('booking.account_check.register_button')}
+                Hesap Oluştur
               </button>
             </div>
             <p className="mt-8 text-sm text-gray-500">
-              {t('booking.account_check.footer')}
+              Zaten hesabınız var mı? Giriş yapın.
             </p>
           </div>
         </div>
@@ -279,9 +277,9 @@ const BookingPage = () => {
           <div className="w-20 h-20 bg-gradient-to-br from-[#D4AF37] to-[#F4D03F] rounded-full flex items-center justify-center mx-auto mb-6">
             <i className="ri-check-line text-4xl text-white"></i>
           </div>
-          <h2 className="text-3xl font-serif text-[#1A1A1A] mb-4">{t('booking.success.title')}</h2>
-          <p className="text-gray-600 mb-2">{t('booking.success.message')}</p>
-          <p className="text-sm text-gray-500">{t('booking.success.sub_message')}</p>
+          <h2 className="text-3xl font-serif text-[#1A1A1A] mb-4">Randevunuz Oluşturuldu!</h2>
+          <p className="text-gray-600 mb-2">Randevunuz başarıyla kaydedildi.</p>
+          <p className="text-sm text-gray-500">Size e-posta ile onay göndereceğiz.</p>
         </div>
       </div>
     );
@@ -297,15 +295,15 @@ const BookingPage = () => {
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center justify-between mb-8">
             <div className="text-center flex-1">
-              <h1 className="text-4xl md:text-5xl font-serif text-[#1A1A1A] mb-4">{t('booking.title')}</h1>
-              <p className="text-gray-600">{t('booking.welcome', { name: user.name })}</p>
+              <h1 className="text-4xl md:text-5xl font-serif text-[#1A1A1A] mb-4">Randevu Al</h1>
+              <p className="text-gray-600">{`Hoş Geldiniz, ${user.name}`}</p>
             </div>
             <button
               onClick={handleLogout}
               className="px-4 py-2 text-sm text-gray-600 hover:text-[#D4AF37] transition-colors flex items-center gap-2 whitespace-nowrap cursor-pointer"
             >
               <i className="ri-logout-box-line"></i>
-              {t('booking.logout')}
+              Çıkış Yap
             </button>
           </div>
 
@@ -331,7 +329,7 @@ const BookingPage = () => {
           <div className="bg-white rounded-3xl shadow-xl p-6 md:p-10">
             {step === 1 && (
               <div>
-                <h2 className="text-2xl font-serif text-[#1A1A1A] mb-6">{t('booking.service.title')}</h2>
+                <h2 className="text-2xl font-serif text-[#1A1A1A] mb-6">Hizmet Seçin</h2>
                 <div className="space-y-4">
                   {services.map((service) => (
                     <button
@@ -348,12 +346,12 @@ const BookingPage = () => {
                           <div className="flex items-center space-x-4 text-sm text-gray-500">
                             <span className="flex items-center">
                               <i className="ri-time-line mr-1"></i>
-                              {t('booking.service.duration', { minutes: service.duration })}
+                              {`${service.duration} dakika`}
                             </span>
                             {service.price && (
                               <span className="flex items-center font-semibold text-[#D4AF37]">
                                 <i className="ri-money-dollar-circle-line mr-1"></i>
-                                {t('booking.service.price', { amount: service.price })}
+                                {`${service.price} ₺`}
                               </span>
                             )}
                           </div>
@@ -378,11 +376,11 @@ const BookingPage = () => {
                   Geri
                 </button>
 
-                <h2 className="text-2xl font-serif text-[#1A1A1A] mb-2">{t('booking.date_time.title')}</h2>
+                <h2 className="text-2xl font-serif text-[#1A1A1A] mb-2">Tarih ve Saat Seçin</h2>
                 <p className="text-gray-600 mb-6">{selectedService?.title}</p>
 
                 <div className="mb-8">
-                  <h3 className="text-lg font-semibold text-[#1A1A1A] mb-4">{t('booking.date_time.date_label')}</h3>
+                  <h3 className="text-lg font-semibold text-[#1A1A1A] mb-4">Tarih</h3>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                     {availableDates.map((date) => (
                       <button
@@ -406,7 +404,7 @@ const BookingPage = () => {
 
                 {selectedDate && (
                   <div className="mb-8">
-                    <h3 className="text-lg font-semibold text-[#1A1A1A] mb-4">{t('booking.date_time.time_label')}</h3>
+                    <h3 className="text-lg font-semibold text-[#1A1A1A] mb-4">Saat</h3>
                     {timeSlots.length > 0 ? (
                       <div className="grid grid-cols-3 md:grid-cols-5 gap-3">
                         {timeSlots.map((time) => (
@@ -426,7 +424,7 @@ const BookingPage = () => {
                       <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-center">
                         <i className="ri-time-line text-2xl text-amber-500 mb-2"></i>
                         <p className="text-amber-700">
-                          {t('booking.date_time.no_slots')}
+                          Bu tarihte müsait saat yok
                         </p>
                       </div>
                     )}
@@ -438,7 +436,7 @@ const BookingPage = () => {
                     onClick={handleDateTimeSelect}
                     className="w-full bg-gradient-to-r from-[#D4AF37] to-[#F4D03F] text-white py-4 rounded-full font-semibold hover:shadow-xl transition-all whitespace-nowrap cursor-pointer"
                   >
-                    {t('booking.date_time.continue')}
+                    Devam Et
                   </button>
                 )}
               </div>
@@ -454,10 +452,10 @@ const BookingPage = () => {
                   Geri
                 </button>
 
-                <h2 className="text-2xl font-serif text-[#1A1A1A] mb-6">{t('booking.details.title')}</h2>
+                <h2 className="text-2xl font-serif text-[#1A1A1A] mb-6">Bilgilerinizi Girin</h2>
 
                 <div className="bg-gradient-to-br from-[#D4AF37]/10 to-[#F4D03F]/10 rounded-2xl p-6 mb-8">
-                  <h3 className="font-semibold text-[#1A1A1A] mb-3">{t('booking.details.summary_title')}</h3>
+                  <h3 className="font-semibold text-[#1A1A1A] mb-3">Özet</h3>
                   <div className="space-y-2 text-sm">
                     <div className="flex items-center text-gray-700">
                       <i className="ri-service-line mr-2 text-[#D4AF37]"></i>
@@ -477,7 +475,7 @@ const BookingPage = () => {
                 <form onSubmit={handleSubmit} className="space-y-5">
                   <div>
                     <label className="block text-sm font-semibold text-[#1A1A1A] mb-2">
-                      {t('booking.details.name_label')}
+                      Ad Soyad
                     </label>
                     <input
                       type="text"
@@ -491,7 +489,7 @@ const BookingPage = () => {
 
                   <div>
                     <label className="block text-sm font-semibold text-[#1A1A1A] mb-2">
-                      {t('booking.details.email_label')}
+                      E-posta
                     </label>
                     <input
                       type="email"
@@ -505,7 +503,7 @@ const BookingPage = () => {
 
                   <div>
                     <label className="block text-sm font-semibold text-[#1A1A1A] mb-2">
-                      {t('booking.details.phone_label')}
+                      Telefon
                     </label>
                     <input
                       type="tel"
@@ -518,7 +516,7 @@ const BookingPage = () => {
 
                   <div>
                     <label className="block text-sm font-semibold text-[#1A1A1A] mb-2">
-                      {t('booking.details.notes_label')}
+                      Notlar (İsteğe bağlı)
                     </label>
                     <textarea
                       value={formData.notes}
@@ -537,7 +535,7 @@ const BookingPage = () => {
                     type="submit"
                     className="w-full bg-gradient-to-r from-[#D4AF37] to-[#F4D03F] text-white py-4 rounded-full font-semibold hover:shadow-xl transition-all whitespace-nowrap cursor-pointer"
                   >
-                    {t('booking.details.submit')}
+                    Randevu Oluştur
                   </button>
                 </form>
               </div>

@@ -13,13 +13,11 @@ import type {
     YouTubeVideo
 } from '../../types';
 import type {
-    UpdateContentInput,
+    UpdateYouTubeVideoInput,
     CreateReviewInput,
     CreateContactMessageInput,
-    CreateBlogPostInput,
     CreatePodcastEpisodeInput,
-    CreateYouTubeVideoInput,
-    UpdateYouTubeVideoInput
+    CreateYouTubeVideoInput
 } from '../../types/api';
 
 // Content API coverage: Hero, About, Contact, ProfileImages, Legal, Methods, Certificates, Reviews, Messages, Blog, Podcast, YouTube
@@ -72,21 +70,55 @@ export const contentApi = {
             throw error;
         }
 
-        heroContentsCache = data || [];
+        const mappedData = (data || []).map(item => ({
+            id: item.id,
+            title: item.title,
+            description: item.description,
+            location: item.location,
+            titleSize: item.title_size,
+            descriptionSize: item.description_size,
+            image: item.image,
+            text_color: item.text_color
+        }));
+
+        heroContentsCache = mappedData;
         return heroContentsCache;
     },
 
-    async updateHeroContent(id: string, updates: UpdateContentInput): Promise<HeroContent> {
+    async updateHeroContent(id: string, updates: any): Promise<HeroContent> {
+        const dbUpdates: any = {
+            title: updates.title,
+            description: updates.description,
+            image: updates.image,
+            text_color: updates.text_color,
+            title_size: updates.titleSize,
+            description_size: updates.descriptionSize,
+            location: updates.location
+        };
+
+        // Remove undefined fields
+        Object.keys(dbUpdates).forEach(key => dbUpdates[key] === undefined && delete dbUpdates[key]);
+
         const { data, error } = await supabase
             .from('hero_contents')
-            .update(updates)
+            .update(dbUpdates)
             .eq('id', id)
             .select()
             .single();
 
         if (error) throw error;
         heroContentsCache = null; // Invalidate cache
-        return data;
+        
+        return {
+            id: data.id,
+            title: data.title,
+            description: data.description,
+            location: data.location,
+            titleSize: data.title_size,
+            descriptionSize: data.description_size,
+            image: data.image,
+            text_color: data.text_color
+        };
     },
 
     async getAboutContents(): Promise<AboutContent[]> {
@@ -100,11 +132,22 @@ export const contentApi = {
             throw error;
         }
 
-        aboutContentsCache = data || [];
+        const mappedData = (data || []).map(item => ({
+            id: item.id,
+            title: item.title,
+            paragraph1: item.paragraph1,
+            paragraph2: item.paragraph2,
+            location: item.location,
+            image: item.image,
+            story: item.story,
+            text_color: item.text_color
+        }));
+
+        aboutContentsCache = mappedData;
         return aboutContentsCache;
     },
 
-    async updateAboutContent(id: string, updates: UpdateContentInput): Promise<AboutContent> {
+    async updateAboutContent(id: string, updates: any): Promise<AboutContent> {
         const { data, error } = await supabase
             .from('about_contents')
             .update(updates)
@@ -114,7 +157,7 @@ export const contentApi = {
 
         if (error) throw error;
         aboutContentsCache = null; // Invalidate cache
-        return data;
+        return data; // Assume data matches interface or was filtered
     },
 
     async getContactInfo(): Promise<ContactInfo> {
@@ -140,36 +183,60 @@ export const contentApi = {
 
         if (error) {
             console.error('[ContentAPI] Contact Info error:', error);
-            // Return fallback on error to prevent crash
             return fallback;
         }
 
-        if (!data) {
-            return fallback;
-        }
+        if (!data) return fallback;
 
-        contactInfoCache = data as ContactInfo;
+        contactInfoCache = {
+            id: data.id,
+            email: data.email,
+            phone: data.phone,
+            address: data.address,
+            workingHours: data.working_hours, // Map from DB
+            instagram: data.instagram,
+            youtube: data.youtube,
+            logo_url: data.logo_url
+        };
         return contactInfoCache;
     },
 
-    async updateContactInfo(updates: UpdateContentInput): Promise<ContactInfo> {
-        // Önce mevcut kaydı al
+    async updateContactInfo(updates: any): Promise<ContactInfo> {
         const { data: existing } = await supabase.from('contact_info').select('id').limit(1).single();
 
         if (!existing?.id) {
             throw new ApiError('İletişim bilgisi bulunamadı', 'NOT_FOUND', 404);
         }
 
+        const dbUpdates = {
+            email: updates.email,
+            phone: updates.phone,
+            address: updates.address,
+            working_hours: updates.workingHours, // Map to DB
+            instagram: updates.instagram,
+            youtube: updates.youtube,
+            logo_url: updates.logo_url
+        };
+
         const { data, error } = await supabase
             .from('contact_info')
-            .update(updates)
+            .update(dbUpdates)
             .eq('id', existing.id)
             .select()
             .single();
 
         if (error) throw error;
         contactInfoCache = null; // Invalidate cache
-        return data;
+        return {
+            id: data.id,
+            email: data.email,
+            phone: data.phone,
+            address: data.address,
+            workingHours: data.working_hours,
+            instagram: data.instagram,
+            youtube: data.youtube,
+            logo_url: data.logo_url
+        };
     },
 
     async getProfileImages(): Promise<ProfileImage[]> {
@@ -512,44 +579,105 @@ export const messagesApi = {
 export const blogApi = {
     async getAll(): Promise<BlogPost[]> {
         if (blogPostsCache) return blogPostsCache;
-        const { data, error } = await withTimeout(() => supabase
+        const { data, error } = await withTimeout(() => supabasePublic
             .from('blog_posts')
             .select('*')
             .order('date', { ascending: false }), 8000);
 
         if (error) {
             console.error('Blog getAll error:', error);
-            // Don't throw, return empty array to avoid crashing UI
             return [];
         }
 
-        blogPostsCache = data || [];
+        const mappedData = (data || []).map(post => ({
+            id: post.id,
+            title: post.title,
+            excerpt: post.excerpt,
+            content: post.content,
+            category: post.category,
+            image: post.image,
+            date: post.date,
+            readTime: post.read_time, // Map from DB
+            featured: post.featured,
+            status: post.status
+        }));
+
+        blogPostsCache = mappedData;
         return blogPostsCache;
     },
 
-    async create(post: CreateBlogPostInput): Promise<BlogPost> {
+    async create(post: any): Promise<BlogPost> {
+        const dbPost = {
+            title: post.title,
+            excerpt: post.excerpt,
+            content: post.content,
+            category: post.category,
+            image: post.image,
+            date: post.date,
+            read_time: post.readTime, // Map to DB
+            featured: post.featured,
+            status: post.status
+        };
+
         const { data, error } = await supabase
             .from('blog_posts')
-            .insert([post])
+            .insert([dbPost])
             .select()
             .single();
 
         if (error) throw error;
         blogPostsCache = null; // Invalidate cache
-        return data;
+        return {
+            id: data.id,
+            title: data.title,
+            excerpt: data.excerpt,
+            content: data.content,
+            category: data.category,
+            image: data.image,
+            date: data.date,
+            readTime: data.read_time,
+            featured: data.featured,
+            status: data.status
+        };
     },
 
-    async update(id: string, updates: Partial<CreateBlogPostInput>): Promise<BlogPost> {
+    async update(id: string, updates: any): Promise<BlogPost> {
+        const dbUpdates: any = {
+            title: updates.title,
+            excerpt: updates.excerpt,
+            content: updates.content,
+            category: updates.category,
+            image: updates.image,
+            date: updates.date,
+            read_time: updates.readTime, // Map to DB
+            featured: updates.featured,
+            status: updates.status
+        };
+
+        // Suppress undefined
+        Object.keys(dbUpdates).forEach(k => dbUpdates[k] === undefined && delete dbUpdates[k]);
+
         const { data, error } = await supabase
             .from('blog_posts')
-            .update(updates)
+            .update(dbUpdates)
             .eq('id', id)
             .select()
             .single();
 
         if (error) throw error;
         blogPostsCache = null; // Invalidate cache
-        return data;
+        return {
+            id: data.id,
+            title: data.title,
+            excerpt: data.excerpt,
+            content: data.content,
+            category: data.category,
+            image: data.image,
+            date: data.date,
+            readTime: data.read_time,
+            featured: data.featured,
+            status: data.status
+        };
     },
 
     async delete(id: string): Promise<boolean> {
@@ -578,33 +706,91 @@ export const podcastApi = {
             return [];
         }
 
-        podcastEpisodesCache = data || [];
+        const mappedData = (data || []).map(item => ({
+            id: item.id,
+            title: item.title,
+            description: item.description,
+            audioUrl: item.audio_url,
+            duration: item.duration,
+            date: item.date,
+            episode: item.episode,
+            category: item.category,
+            image: item.image
+        }));
+
+        podcastEpisodesCache = mappedData;
         return podcastEpisodesCache;
     },
 
-    async create(episode: CreatePodcastEpisodeInput): Promise<PodcastEpisode> {
+    async create(episode: any): Promise<PodcastEpisode> {
+        const dbEpisode = {
+            title: episode.title,
+            description: episode.description,
+            audio_url: episode.audioUrl,
+            duration: episode.duration,
+            date: episode.date,
+            episode: episode.episode,
+            category: episode.category,
+            image: episode.image
+        };
+
         const { data, error } = await supabase
             .from('podcast_episodes')
-            .insert([episode])
+            .insert([dbEpisode])
             .select()
             .single();
 
         if (error) throw error;
-        podcastEpisodesCache = null; // Invalidate cache
-        return data;
+        podcastEpisodesCache = null;
+
+        return {
+            id: data.id,
+            title: data.title,
+            description: data.description,
+            audioUrl: data.audio_url,
+            duration: data.duration,
+            date: data.date,
+            episode: data.episode,
+            category: data.category,
+            image: data.image
+        };
     },
 
-    async update(id: string, updates: Partial<CreatePodcastEpisodeInput>): Promise<PodcastEpisode> {
+    async update(id: string, updates: any): Promise<PodcastEpisode> {
+        const dbUpdates: any = {
+            title: updates.title,
+            description: updates.description,
+            audio_url: updates.audioUrl,
+            duration: updates.duration,
+            date: updates.date,
+            episode: updates.episode,
+            category: updates.category,
+            image: updates.image
+        };
+
+        Object.keys(dbUpdates).forEach(k => dbUpdates[k] === undefined && delete dbUpdates[k]);
+
         const { data, error } = await supabase
             .from('podcast_episodes')
-            .update(updates)
+            .update(dbUpdates)
             .eq('id', id)
             .select()
             .single();
 
         if (error) throw error;
-        podcastEpisodesCache = null; // Invalidate cache
-        return data;
+        podcastEpisodesCache = null;
+
+        return {
+            id: data.id,
+            title: data.title,
+            description: data.description,
+            audioUrl: data.audio_url,
+            duration: data.duration,
+            date: data.date,
+            episode: data.episode,
+            category: data.category,
+            image: data.image
+        };
     },
 
     async delete(id: string): Promise<boolean> {

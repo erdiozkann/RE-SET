@@ -1,14 +1,12 @@
 import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import SEO from '../../components/SEO';
 import { blogApi } from '../../lib/api';
 import type { BlogPost } from '../../types';
 
 export default function Blog() {
-  const { t } = useTranslation();
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedCategory, setSelectedCategory] = useState(t('blog_page.categories_all') || 'Tümü');
+  const [selectedCategory, setSelectedCategory] = useState('Tüm Kategoriler');
 
   useEffect(() => {
     const loadBlogPosts = async () => {
@@ -24,8 +22,8 @@ export default function Blog() {
 
     loadBlogPosts();
   }, []);
- 
-  const allCategory = t('blog_page.categories_all') || 'Tümü';
+
+  const allCategory = 'Tüm Kategoriler';
   const categories = [allCategory, ...Array.from(new Set(blogPosts.map(post => post.category).filter(Boolean)))];
  
   const filteredPosts = selectedCategory === allCategory
@@ -55,8 +53,8 @@ export default function Blog() {
     {
       '@context': 'https://schema.org',
       '@type': 'Blog',
-      name: t('blog_page.seo.title'),
-      description: t('blog_page.seo.description'),
+      name: 'Blog | Reset',
+      description: 'Kişisel gelişim ve Demartini Metodu hakkında yazılar',
       url: `${siteUrl}/blog`,
       author: {
         '@type': 'Person',
@@ -68,19 +66,19 @@ export default function Blog() {
   return (
     <>
       <SEO
-        title={t('blog_page.seo.title')}
-        description={t('blog_page.seo.description')}
-        keywords={t('blog_page.seo.keywords')}
+        title="Blog | Reset"
+        description="Kişisel gelişim ve Demartini Metodu hakkında yazılar"
+        keywords="blog, demartini metodu, kişisel gelişim"
         schema={schema}
       />
       <section className="py-10 md:py-14 bg-gradient-to-br from-[#F5F5F5] to-white">
         <div className="max-w-7xl mx-auto px-4 md:px-8">
           <div className="text-center">
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-serif text-[#1A1A1A] mb-4">
-              {t('blog_page.title')}
+              Blog
             </h1>
             <p className="text-base md:text-lg text-gray-600 max-w-2xl mx-auto">
-              {t('blog_page.subtitle')}
+              Kişisel gelişim ve yaşam dönüşümü hakkında yazılar
             </p>
           </div>
         </div>
@@ -111,7 +109,7 @@ export default function Blog() {
         <section className="py-10 md:py-14 bg-white">
           <div className="max-w-7xl mx-auto px-4 md:px-8">
             <h2 className="text-xl md:text-2xl font-serif text-[#1A1A1A] mb-6">
-              {t('blog_page.featured_title')}
+              Öne Çıkan Yazılar
             </h2>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {featuredPosts.map((post) => (
@@ -142,7 +140,7 @@ export default function Blog() {
       <section className="py-10 md:py-14 bg-white">
         <div className="max-w-7xl mx-auto px-4 md:px-8">
           <h2 className="text-xl md:text-2xl font-serif text-[#1A1A1A] mb-6">
-            {featuredPosts.length > 0 ? t('blog_page.all_posts') : t('blog_page.title')}
+            {featuredPosts.length > 0 ? 'Tüm Yazılar' : 'Blog'}
           </h2>
 
           {isLoading ? (
@@ -177,7 +175,7 @@ export default function Blog() {
           ) : (
             <div className="text-center py-12">
               <i className="ri-article-line text-6xl text-gray-300 mb-4 block"></i>
-              <p className="text-gray-500">{t('blog_page.empty_state')}</p>
+              <p className="text-gray-500">Henüz blog yazısı yok</p>
             </div>
           )}
         </div>
@@ -190,24 +188,24 @@ export default function Blog() {
               <i className="ri-mail-line text-2xl text-white"></i>
             </div>
             <h3 className="text-xl md:text-2xl font-serif text-[#1A1A1A] mb-3">
-              {t('blog_page.newsletter.title')}
+              Bültenimize Katılın
             </h3>
             <p className="text-gray-600 mb-6 text-sm">
-              {t('blog_page.newsletter.subtitle')}
+              Yeni yazılardan haberdar olun
             </p>
             <form className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
               <input
                 type="email"
                 name="email"
                 required
-                placeholder={t('blog_page.newsletter.placeholder') || 'E-posta adresiniz'}
+                placeholder="E-posta adresiniz"
                 className="flex-1 px-4 py-3 border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
               />
               <button
                 type="submit"
                 className="px-6 py-3 bg-[#D4AF37] text-[#1A1A1A] font-medium cursor-pointer hover:bg-[#C19B2E]"
               >
-                {t('blog_page.newsletter.button')}
+                Abone Ol
               </button>
             </form>
           </div>

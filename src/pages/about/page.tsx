@@ -1,11 +1,9 @@
 import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import Button from '../../components/base/Button';
 import type { Certificate } from '../../types';
 import SEO from '../../components/SEO';
 import { certificatesApi, contentApi } from '../../lib/api';
 export default function About() {
-  const { t } = useTranslation();
   const [certificates, setCertificates] = useState<Certificate[]>([]);
   const [aboutContent, setAboutContent] = useState<any>(null);
   const [heroImage, setHeroImage] = useState<string>('');
@@ -96,7 +94,7 @@ export default function About() {
       <div className="py-16 flex items-center justify-center bg-gradient-to-br from-teal-50 via-white to-amber-50 h-screen">
         <div className="text-center">
           <i className="ri-loader-4-line text-4xl text-teal-600 animate-spin mb-4"></i>
-          <p className="text-gray-600">{t('common.loading') || 'Yükleniyor...'}</p>
+          <p className="text-gray-600">Yükleniyor...</p>
         </div>
       </div>
     );
@@ -105,9 +103,9 @@ export default function About() {
   return (
     <>
       <SEO
-        title={t('about.seo.title')}
-        description={t('about.seo.description')}
-        keywords={t('about.seo.keywords')}
+        title="Hakkımda - Şafak Özkan | Demartini Metodu"
+        description="Sertifikalı Demartini Metodu uygulayıcısı Şafak Özkan. 15 yılı aşkın deneyim."
+        keywords="şafak özkan, demartini metodu, hakkımda"
         schema={schema}
       />
 
@@ -125,13 +123,13 @@ export default function About() {
                     {aboutContent.title}
                   </h1>
                   <p className="text-lg md:text-xl text-[#D4AF37] mb-4 font-medium">
-                    {t('about.hero_subtitle')}
+                    Sertifikalı Demartini Metodu Uygulayıcısı
                   </p>
                   <p className="text-base text-gray-600 leading-relaxed mb-6">
                     {aboutContent.paragraph1}
                   </p>
                   <Button variant="primary" size="lg">
-                    {t('about.appointment_button')}
+                    Randevu Al
                   </Button>
                 </div>
                 <div className="relative flex justify-center">
@@ -156,7 +154,7 @@ export default function About() {
           <section className="py-12 md:py-16 bg-white">
             <div className="max-w-4xl mx-auto px-4 md:px-8">
               <h2 className="text-2xl md:text-3xl font-serif text-[#1A1A1A] mb-6 text-center">
-                {t('about.story_title')}
+                Hikayem
               </h2>
               <div className="prose prose-lg max-w-none text-gray-700">
                 {aboutContent.story && aboutContent.story.split('\n').map((paragraph: string, index: number) => (
@@ -181,7 +179,7 @@ export default function About() {
             <section className="py-12 md:py-16 bg-[#F5F5F5]">
               <div className="max-w-7xl mx-auto px-4 md:px-8">
                 <h2 className="text-2xl md:text-3xl font-serif text-[#1A1A1A] mb-8 text-center">
-                  {t('about.certificates_title')}
+                  Sertifikalar ve Eğitimler
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {certificates.map((cert) => (
@@ -206,29 +204,29 @@ export default function About() {
           <section className="py-12 md:py-16 bg-white">
             <div className="max-w-6xl mx-auto px-4 md:px-8">
               <h2 className="text-2xl md:text-3xl font-serif text-[#1A1A1A] mb-8 text-center">
-                {t('about.approach_title')}
+                Yaklaşımım
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {[
                   {
                     icon: "ri-heart-line",
-                    title: t('about.approaches.empathy_title'),
-                    description: t('about.approaches.empathy_desc')
+                    title: "Empati ve Anlayış",
+                    description: "Her danışanın benzersiz olduğuna inanıyorum."
                   },
                   {
                     icon: "ri-lightbulb-line",
-                    title: t('about.approaches.solution_title'),
-                    description: t('about.approaches.solution_desc')
+                    title: "Çözüm Odaklı",
+                    description: "Geçmişte değil, geleceğe odaklanıyoruz."
                   },
                   {
                     icon: "ri-compass-3-line",
-                    title: t('about.approaches.custom_title'),
-                    description: t('about.approaches.custom_desc')
+                    title: "Kişiselleştirilmiş Yaklaşım",
+                    description: "Size özel çözümler üretiyoruz."
                   },
                   {
                     icon: "ri-seedling-line",
-                    title: t('about.approaches.growth_title'),
-                    description: t('about.approaches.growth_desc')
+                    title: "Sürekli Gelişim",
+                    description: "Kendimi ve metodumu sürekli geliştiriyorum."
                   }
                 ].map((approach, index) => (
                   <div key={index} className="text-center">
@@ -251,13 +249,13 @@ export default function About() {
           <section className="py-12 md:py-16 bg-gradient-to-br from-[#1A1A1A] to-[#2A2A2A]">
             <div className="max-w-4xl mx-auto px-4 md:px-8 text-center">
               <h2 className="text-2xl md:text-3xl font-serif text-white mb-4">
-                {t('about.cta_title')}
+                Hayatınızı Dönüştürmeye Hazır mısınız?
               </h2>
               <p className="text-base text-white/80 mb-6 leading-relaxed">
-                {t('about.cta_desc')}
+                İlk danışmanlık seansınızı hemen planlayın.
               </p>
               <Button variant="primary" size="lg">
-                {t('about.cta_button')}
+                Randevu Al
               </Button>
             </div>
           </section>

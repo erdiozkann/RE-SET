@@ -287,6 +287,7 @@ export interface BlogPost {
   date: string;
   readTime: string;
   featured: boolean;
+  status: 'published' | 'draft' | 'archived';
 }
 
 export interface PodcastEpisode {
