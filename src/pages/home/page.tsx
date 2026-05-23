@@ -79,21 +79,45 @@ export default function HomePage() {
     {
       '@context': 'https://schema.org',
       '@type': 'ProfessionalService',
-      name: 'Reset - Şafak Özkan Demartini Metodu',
-      description: 'İstanbul\'da Demartini Metodu uygulayıcısı. Değer belirleme, yaşam dengeleme ve kişisel dönüşüm danışmanlığı.',
-      url: 'https://re-set.com.tr',
+      '@id': 'https://re-set.com.tr/#service',
+      name: 'RE-SET — Şafak Özkan Demartini Metodu',
+      alternateName: ['Reset Danışmanlık', 'Demartini Metodu İstanbul'],
+      description:
+        "İstanbul'da Dr. John Demartini'nin Demartini Metodu'nu uygulayan sertifikalı danışmanlık. Değer belirleme, ilişki dengeleme, Breakthrough Experience ve kişisel dönüşüm seansları.",
+      url: 'https://re-set.com.tr/',
+      image: 'https://re-set.com.tr/og-image.jpg',
       telephone: contactInfo?.phone || '',
       email: contactInfo?.email || '',
       address: {
         '@type': 'PostalAddress',
         addressLocality: 'İstanbul',
+        addressRegion: 'Nişantaşı',
         addressCountry: 'TR'
       },
+      geo: {
+        '@type': 'GeoCoordinates',
+        latitude: 41.0534,
+        longitude: 28.9943
+      },
+      areaServed: [
+        { '@type': 'City', name: 'İstanbul' },
+        { '@type': 'Country', name: 'Türkiye' }
+      ],
       priceRange: '₺₺',
-      openingHours: 'Mo-Fr 09:00-18:00',
+      openingHoursSpecification: [
+        {
+          '@type': 'OpeningHoursSpecification',
+          dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+          opens: '09:00',
+          closes: '18:00'
+        }
+      ],
+      provider: { '@id': 'https://re-set.com.tr/#safakozkan' },
+      founder: { '@id': 'https://re-set.com.tr/#safakozkan' },
       sameAs: [
         contactInfo?.instagram || '',
-        contactInfo?.youtube || ''
+        contactInfo?.youtube || '',
+        'https://drdemartini.com/tr/demartini-method'
       ].filter(Boolean),
       hasOfferCatalog: {
         '@type': 'OfferCatalog',
@@ -103,8 +127,10 @@ export default function HomePage() {
             '@type': 'Offer',
             itemOffered: {
               '@type': 'Service',
-              name: 'Demartini Metodu Danışmanlığı',
-              description: 'Dr. John Demartini tarafından geliştirilen değer belirleme ve yaşam dengeleme yöntemi'
+              name: 'Demartini Metodu Birebir Seans',
+              serviceType: 'Demartini Method Session',
+              description:
+                "Dr. John Demartini tarafından geliştirilen 13 sorulu Değer Belirleme Süreci ve Quantum Collapse Process ile birebir algı dengeleme seansı."
             }
           },
           {
@@ -112,7 +138,40 @@ export default function HomePage() {
             itemOffered: {
               '@type': 'Service',
               name: 'Breakthrough Experience',
-              description: 'Demartini Metodu ile 2 günlük yoğun yaşam dönüşümü programı'
+              serviceType: 'Breakthrough Experience Program',
+              description:
+                'Demartini Metodu ile 2 günlük yoğun yaşam dönüşümü programı (Türkiye uygulaması).'
+            }
+          },
+          {
+            '@type': 'Offer',
+            itemOffered: {
+              '@type': 'Service',
+              name: 'İlişki Dengeleme Seansı',
+              serviceType: 'Relationship Balancing',
+              description:
+                'Partner, aile ve iş ilişkilerinde Demartini Metodu ile algı dengeleme.'
+            }
+          },
+          {
+            '@type': 'Offer',
+            itemOffered: {
+              '@type': 'Service',
+              name: 'Online Demartini Seansı',
+              serviceType: 'Online Session',
+              description:
+                'Zoom/Google Meet üzerinden yüz yüze eşdeğer Demartini Metodu seansı.'
+            }
+          },
+          {
+            '@type': 'Offer',
+            price: '0',
+            priceCurrency: 'TRY',
+            itemOffered: {
+              '@type': 'Service',
+              name: 'Ücretsiz Keşif Görüşmesi (30 dk)',
+              description:
+                'Birlikte çalışıp çalışamayacağımızı değerlendirmek için 30 dakikalık ön görüşme.'
             }
           }
         ]
@@ -121,13 +180,103 @@ export default function HomePage() {
     {
       '@context': 'https://schema.org',
       '@type': 'Person',
+      '@id': 'https://re-set.com.tr/#safakozkan',
       name: 'Şafak Özkan',
-      jobTitle: 'Demartini Metodu Uygulayıcısı',
-      worksFor: {
-        '@type': 'Organization',
-        name: 'Reset Danışmanlık'
+      jobTitle: 'Sertifikalı Demartini Metodu Uygulayıcısı',
+      url: 'https://re-set.com.tr/about',
+      worksFor: { '@id': 'https://re-set.com.tr/#organization' },
+      hasOccupation: {
+        '@type': 'Occupation',
+        name: 'Demartini Method Facilitator',
+        occupationLocation: { '@type': 'City', name: 'İstanbul' }
       },
-      knowsAbout: ['Demartini Metodu', 'Değer Belirleme', 'Yaşam Dengeleme', 'Breakthrough Experience', 'Kişisel Dönüşüm']
+      knowsAbout: [
+        'Demartini Metodu',
+        'Değer Belirleme Süreci',
+        'Yaşam Dengeleme',
+        'Breakthrough Experience',
+        'Quantum Collapse Process',
+        'İlişki Dengeleme',
+        'Kişisel Dönüşüm'
+      ]
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: 'Demartini Metodu nedir?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text:
+              "Demartini Metodu, Dr. John Demartini tarafından geliştirilen, 13 sorulu Değer Belirleme Süreci ve Quantum Collapse Process'ten oluşan sistematik bir algı dengeleme yöntemidir. Kişinin gerçek değer hiyerarşisini ortaya çıkarmak, duygusal yükleri nötralize etmek ve ilham, sevgi, minnet alanına geçişi sağlamak için kullanılır."
+          }
+        },
+        {
+          '@type': 'Question',
+          name: 'Demartini Metodu kimler için uygundur?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text:
+              'Kaygı, depresyon, ilişki çatışmaları, travma, bağımlılık, kariyer kararsızlığı, öz değer ve hayat yönü arayışı yaşayan herkes için uygundur. Tıbbi tedavinin yerine geçmez; tamamlayıcı bir farkındalık aracıdır.'
+          }
+        },
+        {
+          '@type': 'Question',
+          name: 'Bir Demartini seansı ne kadar sürer?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text:
+              'Birebir seanslar genellikle 60–90 dakikadır. Konunun yoğunluğuna göre 2–6 seanslık bir süreç önerilebilir. Breakthrough Experience programı ise 2 tam günlük bir grup çalışmasıdır.'
+          }
+        },
+        {
+          '@type': 'Question',
+          name: 'Demartini Metodu NLP veya koçluktan farklı mıdır?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text:
+              'Evet. NLP davranış kalıplarını yeniden çerçevelerken, Demartini Metodu kişinin değer hiyerarşisini ve duygusal kutuplukları (kızgınlık/hayranlık, suçluluk/gurur) tek tek dengeleyerek nöroplastik bir farkındalık değişimi hedefler. 13 soruluk Değer Belirleme Süreci yöntemin temelidir.'
+          }
+        },
+        {
+          '@type': 'Question',
+          name: 'Online Demartini seansı yapıyor musunuz?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text:
+              'Evet. Zoom veya Google Meet üzerinden yüz yüze seansla eşdeğer Demartini Metodu seansları sunuyoruz. Türkiye dışındaki danışanlar da online seansa katılabilir.'
+          }
+        },
+        {
+          '@type': 'Question',
+          name: 'Şafak Özkan kimdir?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text:
+              "Şafak Özkan, İstanbul Nişantaşı merkezli, sertifikalı Demartini Method Facilitator'dır. 15 yılı aşkın uygulama deneyimiyle Türkiye'de binlerce danışana Demartini Metodu ile rehberlik etmiştir."
+          }
+        },
+        {
+          '@type': 'Question',
+          name: 'Ücretsiz keşif görüşmesi mümkün mü?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text:
+              '30 dakikalık ücretsiz keşif görüşmesi sunuyoruz. Bu görüşme; ihtiyacınızın yöntemle örtüşüp örtüşmediğini değerlendirmek ve doğru programı seçmek içindir. Randevu sayfasından planlayabilirsiniz.'
+          }
+        },
+        {
+          '@type': 'Question',
+          name: 'Demartini Metodu bilimsel midir?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text:
+              'Demartini Metodu; psikoloji, davranış bilimi, nöroplastisite ve felsefe alanlarındaki araştırmalardan beslenen bütüncül bir farkındalık ve algı dengeleme yöntemidir. Tıbbi/psikiyatrik tedavinin yerine geçmez ancak terapötik süreçlerle birlikte kullanılabilir.'
+          }
+        }
+      ]
     }
   ];
 
@@ -185,7 +334,7 @@ export default function HomePage() {
               <img
                 ref={heroImageRef}
                 src={heroContent.image}
-                alt="Hero Background"
+                alt="Şafak Özkan ile Demartini Metodu danışmanlığı — RE-SET İstanbul"
                 className={`w-full h-full object-cover object-top transition-opacity duration-700 ${heroImageLoaded ? 'opacity-100' : 'opacity-0'}`}
                 fetchPriority="high"
                 loading="eager"
@@ -348,8 +497,125 @@ export default function HomePage() {
         </section>
       )}
 
+      {/* Demartini Metodu — Entity tanım bloğu (GEO) */}
+      <section
+        aria-labelledby="what-is-demartini"
+        className="py-12 md:py-16 bg-white border-t border-gray-100"
+      >
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2
+            id="what-is-demartini"
+            className="text-3xl md:text-4xl font-serif text-[#1A1A1A] mb-6 text-center"
+          >
+            Demartini Metodu nedir?
+          </h2>
+          <p className="text-base md:text-lg text-gray-700 leading-relaxed mb-5">
+            <strong>Demartini Metodu</strong>, Dr. John Demartini tarafından geliştirilen, 13 sorulu
+            <strong> Değer Belirleme Süreci</strong> ve <strong>Quantum Collapse Process</strong>
+            'in birleşiminden oluşan sistematik bir algı dengeleme yöntemidir. Kişinin gerçek değer
+            hiyerarşisini ortaya çıkarmayı; kızgınlık–hayranlık, suçluluk–gurur gibi duygusal
+            kutuplukları nötralize ederek minnet, ilham ve sevgi alanına geçişi sağlamayı hedefler.
+          </p>
+          <p className="text-base text-gray-700 leading-relaxed mb-5">
+            Yöntem; psikoloji, davranış bilimi, nöroplastisite ve felsefe alanlarındaki
+            araştırmalardan beslenir. Tıbbi tedavinin yerine geçmez; danışanın kendi
+            farkındalığıyla algı yapısını dengelediği bütüncül bir araçtır.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
+            <div className="bg-gradient-to-br from-amber-50 to-white p-5 rounded-2xl border border-amber-100">
+              <h3 className="text-lg font-semibold text-[#1A1A1A] mb-2">Kim geliştirdi?</h3>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                İnsan davranışı uzmanı Dr. John Demartini, 50+ yıllık araştırması üzerine kurmuştur.
+              </p>
+            </div>
+            <div className="bg-gradient-to-br from-teal-50 to-white p-5 rounded-2xl border border-teal-100">
+              <h3 className="text-lg font-semibold text-[#1A1A1A] mb-2">Kimler için uygundur?</h3>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                Kaygı, ilişki çatışmaları, travma, kariyer kararsızlığı yaşayan 18+ herkes için.
+              </p>
+            </div>
+            <div className="bg-gradient-to-br from-gray-50 to-white p-5 rounded-2xl border border-gray-200">
+              <h3 className="text-lg font-semibold text-[#1A1A1A] mb-2">Nasıl uygulanır?</h3>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                Birebir 60–90 dk seanslar veya 2 günlük Breakthrough Experience programı.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Reviews */}
       <ReviewsSlider />
+
+      {/* Sıkça Sorulan Sorular — Görünür FAQ (GEO) */}
+      <section
+        aria-labelledby="faq-title"
+        className="py-12 md:py-16 bg-gradient-to-br from-[#F5F5F5] to-white"
+      >
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-8">
+            <h2 id="faq-title" className="text-3xl md:text-4xl font-serif text-[#1A1A1A] mb-3">
+              Sıkça Sorulan Sorular
+            </h2>
+            <p className="text-base text-gray-600">
+              Demartini Metodu ve seans süreci hakkında merak edilenler
+            </p>
+          </div>
+          <div className="space-y-3">
+            {[
+              {
+                q: 'Demartini Metodu nedir?',
+                a: "Demartini Metodu, Dr. John Demartini tarafından geliştirilen, 13 sorulu Değer Belirleme Süreci ve Quantum Collapse Process'ten oluşan sistematik bir algı dengeleme yöntemidir. Kişinin gerçek değer hiyerarşisini ortaya çıkarmak, duygusal yükleri nötralize etmek ve ilham, sevgi, minnet alanına geçişi sağlamak için kullanılır."
+              },
+              {
+                q: 'Demartini Metodu kimler için uygundur?',
+                a: 'Kaygı, depresyon, ilişki çatışmaları, travma, bağımlılık, kariyer kararsızlığı, öz değer ve hayat yönü arayışı yaşayan herkes için uygundur. Tıbbi tedavinin yerine geçmez; tamamlayıcı bir farkındalık aracıdır.'
+              },
+              {
+                q: 'Bir Demartini seansı ne kadar sürer?',
+                a: 'Birebir seanslar genellikle 60–90 dakikadır. Konunun yoğunluğuna göre 2–6 seanslık bir süreç önerilebilir. Breakthrough Experience programı ise 2 tam günlük bir grup çalışmasıdır.'
+              },
+              {
+                q: 'Demartini Metodu NLP veya koçluktan farklı mıdır?',
+                a: 'Evet. NLP davranış kalıplarını yeniden çerçevelerken, Demartini Metodu kişinin değer hiyerarşisini ve duygusal kutuplukları tek tek dengeleyerek nöroplastik bir farkındalık değişimi hedefler. 13 soruluk Değer Belirleme Süreci yöntemin temelidir.'
+              },
+              {
+                q: 'Online Demartini seansı yapıyor musunuz?',
+                a: 'Evet. Zoom veya Google Meet üzerinden yüz yüze seansla eşdeğer Demartini Metodu seansları sunuyoruz. Türkiye dışındaki danışanlar da online seansa katılabilir.'
+              },
+              {
+                q: 'Şafak Özkan kimdir?',
+                a: "Şafak Özkan, İstanbul Nişantaşı merkezli, sertifikalı Demartini Method Facilitator'dır. 15 yılı aşkın uygulama deneyimiyle Türkiye'de binlerce danışana Demartini Metodu ile rehberlik etmiştir."
+              },
+              {
+                q: 'Ücretsiz keşif görüşmesi mümkün mü?',
+                a: '30 dakikalık ücretsiz keşif görüşmesi sunuyoruz. Bu görüşme, ihtiyacınızın yöntemle örtüşüp örtüşmediğini değerlendirmek ve doğru programı seçmek içindir. Randevu sayfasından planlayabilirsiniz.'
+              },
+              {
+                q: 'Demartini Metodu bilimsel midir?',
+                a: 'Demartini Metodu; psikoloji, davranış bilimi, nöroplastisite ve felsefe alanlarındaki araştırmalardan beslenen bütüncül bir farkındalık ve algı dengeleme yöntemidir. Tıbbi/psikiyatrik tedavinin yerine geçmez ancak terapötik süreçlerle birlikte kullanılabilir.'
+              }
+            ].map((item, i) => (
+              <details
+                key={i}
+                className="group bg-white rounded-xl border border-gray-200 open:border-[#D4AF37]/40 open:shadow-md transition-shadow"
+              >
+                <summary className="cursor-pointer list-none px-5 py-4 flex items-center justify-between gap-4">
+                  <h3 className="text-base md:text-lg font-semibold text-[#1A1A1A]">
+                    {item.q}
+                  </h3>
+                  <i className="ri-add-line text-2xl text-[#D4AF37] flex-shrink-0 group-open:rotate-45 transition-transform"></i>
+                </summary>
+                <div className="px-5 pb-5 pt-1">
+                  <p className="text-sm md:text-base text-gray-700 leading-relaxed">
+                    {item.a}
+                  </p>
+                </div>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* CTA Section */}
       <section className="py-12 md:py-16 bg-[#1A1A1A]">

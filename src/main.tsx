@@ -1,12 +1,13 @@
 import { StrictMode } from 'react'
-import './i18n'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
 import { initClarity } from './lib/clarity'
+import { initGA } from './lib/analytics'
 import { ErrorBoundary } from './components/ErrorBoundary.tsx'
 
 initClarity()
+initGA()
 
 const BUILD_VERSION = 'v1.0.1'; // Bump this to force clear cache
 const CACHE_KEY = 'reset_app_version';

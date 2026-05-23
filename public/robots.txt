@@ -1,12 +1,9 @@
+# RE-SET — Şafak Özkan | Demartini Metodu Türkiye
+# https://re-set.com.tr
+
+# ---------- Genel kural ----------
 User-agent: *
 Allow: /
-
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
 Disallow: /login
 Disallow: /register
 Disallow: /reset-password
@@ -14,4 +11,127 @@ Disallow: /admin
 Disallow: /client-panel
 Disallow: /debug
 
+# ---------- Klasik arama motorları ----------
+User-agent: Googlebot
+Allow: /
+Disallow: /login
+Disallow: /register
+Disallow: /reset-password
+Disallow: /admin
+Disallow: /client-panel
+Disallow: /debug
+
+User-agent: Bingbot
+Allow: /
+Disallow: /login
+Disallow: /register
+Disallow: /reset-password
+Disallow: /admin
+Disallow: /client-panel
+Disallow: /debug
+
+User-agent: YandexBot
+Allow: /
+Disallow: /admin
+Disallow: /client-panel
+
+User-agent: DuckDuckBot
+Allow: /
+Disallow: /admin
+Disallow: /client-panel
+
+# ---------- AI / LLM crawler'ları (GEO) ----------
+# Sitenin Demartini Metodu içeriğinin LLM cevaplarında kaynak gösterilmesi için
+# aşağıdaki ajanlara genel erişim verilmiştir. Yalnızca gizli (auth) yollar engellidir.
+
+# OpenAI / ChatGPT
+User-agent: GPTBot
+Allow: /
+Disallow: /login
+Disallow: /register
+Disallow: /reset-password
+Disallow: /admin
+Disallow: /client-panel
+Disallow: /debug
+
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /admin
+Disallow: /client-panel
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /admin
+Disallow: /client-panel
+
+# Anthropic / Claude
+User-agent: ClaudeBot
+Allow: /
+Disallow: /admin
+Disallow: /client-panel
+
+User-agent: Claude-Web
+Allow: /
+Disallow: /admin
+Disallow: /client-panel
+
+User-agent: anthropic-ai
+Allow: /
+Disallow: /admin
+Disallow: /client-panel
+
+# Perplexity
+User-agent: PerplexityBot
+Allow: /
+Disallow: /admin
+Disallow: /client-panel
+
+# Google AI (Gemini, AI Overviews)
+User-agent: Google-Extended
+Allow: /
+Disallow: /admin
+Disallow: /client-panel
+
+# Apple Intelligence
+User-agent: Applebot-Extended
+Allow: /
+Disallow: /admin
+Disallow: /client-panel
+
+# Meta AI
+User-agent: Meta-ExternalAgent
+Allow: /
+Disallow: /admin
+Disallow: /client-panel
+
+User-agent: FacebookBot
+Allow: /
+Disallow: /admin
+Disallow: /client-panel
+
+# Cohere
+User-agent: cohere-ai
+Allow: /
+Disallow: /admin
+Disallow: /client-panel
+
+# Common Crawl (LLM eğitim verisi)
+User-agent: CCBot
+Allow: /
+Disallow: /admin
+Disallow: /client-panel
+
+# You.com
+User-agent: YouBot
+Allow: /
+Disallow: /admin
+Disallow: /client-panel
+
+# DiffBot (LLM agentic search)
+User-agent: DiffBot
+Allow: /
+Disallow: /admin
+Disallow: /client-panel
+
+# Sitemap
 Sitemap: https://re-set.com.tr/sitemap.xml

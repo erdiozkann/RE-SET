@@ -1,18 +1,6 @@
 {
-  "status": "commited",
-  "type": "frontend",
+  "status": "init",
   "scope": "codebase",
-  "localEndpoint": "http://localhost:3000",
-  "executionArgs": {
-    "projectName": "RE-SET",
-    "projectPath": "/Users/merterdiozkan/Desktop/IT ISLER/Web Siteleri/RE-SET/",
-    "testIds": [],
-    "additionalInstruction": "Double check Blog, About, and Methods pages. Seeding is fixed. Check language switching.",
-    "serverMode": "development",
-    "envs": {
-      "API_KEY": "REDACTED-SECRET"
-    }
-  },
-  "serverPort": 57832,
-  "proxy": "http://cc170927-d5dc-48c3-988f-2c38661a8ba7:el3MCZHuVCNU9boCM8GtvFXAkcnj3sp4@tun.testsprite.com:8080"
+  "type": "frontend",
+  "localEndpoint": "http://localhost:4173/"
 }

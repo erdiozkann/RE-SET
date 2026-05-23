@@ -109,7 +109,8 @@ export default function BlogTab() {
         date: formData.date,
         category: formData.category,
         readTime: formData.readTime,
-        featured: formData.featured
+        featured: formData.featured,
+        status: 'published' as const
       };
 
       if (editingPost) {

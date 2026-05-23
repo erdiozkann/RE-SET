@@ -56,5 +56,10 @@ fix_blog_posts_final.sql
 .vercel
 .netlify
 
+# Local tool metadata (not source)
+.agent/
+.claude/
+playwright-report/
+
 # OS
 Thumbs.db

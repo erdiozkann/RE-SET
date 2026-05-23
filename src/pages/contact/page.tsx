@@ -111,15 +111,52 @@ export default function ContactPage() {
     }
   ];
 
-  const siteUrl = import.meta.env.VITE_SITE_URL || 'https://example.com';
+  const siteUrl = (import.meta.env.VITE_SITE_URL || 'https://re-set.com.tr').replace(/\/$/, '');
 
   const schema = [
     {
       '@context': 'https://schema.org',
       '@type': 'ContactPage',
-      name: 'İletişim',
-      description: 'Reset - Şafak Özkan Danışmanlık iletişim bilgileri',
-      url: `${siteUrl}/contact`
+      '@id': `${siteUrl}/contact#contactpage`,
+      name: 'İletişim — RE-SET | Şafak Özkan',
+      description: 'Demartini Metodu danışmanlığı için iletişim bilgileri ve ücretsiz keşif görüşmesi.',
+      url: `${siteUrl}/contact`,
+      inLanguage: 'tr-TR',
+      isPartOf: { '@id': 'https://re-set.com.tr/#website' },
+      breadcrumb: {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Ana Sayfa', item: `${siteUrl}/` },
+          { '@type': 'ListItem', position: 2, name: 'İletişim', item: `${siteUrl}/contact` }
+        ]
+      },
+      mainEntity: {
+        '@type': 'Organization',
+        '@id': 'https://re-set.com.tr/#organization',
+        name: 'RE-SET — Reset Danışmanlık',
+        url: siteUrl,
+        email: contactInfo.email || undefined,
+        telephone: contactInfo.phone || undefined,
+        address: contactInfo.address
+          ? {
+              '@type': 'PostalAddress',
+              streetAddress: contactInfo.address,
+              addressLocality: 'İstanbul',
+              addressRegion: 'Nişantaşı',
+              addressCountry: 'TR'
+            }
+          : undefined,
+        contactPoint: [
+          {
+            '@type': 'ContactPoint',
+            contactType: 'customer service',
+            telephone: contactInfo.phone || undefined,
+            email: contactInfo.email || undefined,
+            availableLanguage: ['Turkish', 'English'],
+            areaServed: 'TR'
+          }
+        ]
+      }
     },
     {
       '@context': 'https://schema.org',
@@ -130,23 +167,31 @@ export default function ContactPage() {
           name: 'Randevu nasıl alabilirim?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Randevu almak için randevu sayfasından uygun tarih ve saati seçebilir veya bize telefon ya da e-posta ile ulaşabilirsiniz.'
+            text: 'Randevu için /booking sayfasından uygun tarih ve saati seçebilir; tercih ederseniz telefon veya e-posta ile de ulaşabilirsiniz. 30 dakikalık ücretsiz keşif görüşmesi de aynı kanaldan planlanır.'
           }
         },
         {
           '@type': 'Question',
-          name: 'Seans ücretleri nedir?',
+          name: 'Demartini Metodu seans ücretleri nedir?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Seans ücretleri hizmet türüne göre değişmektedir. Detaylı bilgi için lütfen bizimle iletişime geçin.'
+            text: 'Seans ücretleri hizmet türüne (birebir seans, Breakthrough Experience, online seans, ilişki dengeleme) göre değişir. Güncel ücretler için iletişime geçtiğinizde detaylı paylaşıyoruz.'
           }
         },
         {
           '@type': 'Question',
-          name: 'Online seans yapıyor musunuz?',
+          name: 'Online Demartini seansı yapıyor musunuz?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Evet, hem yüz yüze hem de online seans seçeneklerimiz mevcuttur.'
+            text: 'Evet. Zoom veya Google Meet üzerinden yüz yüze seansla eşdeğer kalitede online Demartini Metodu seansları sunuyoruz. Türkiye dışındaki danışanlar da katılabilir.'
+          }
+        },
+        {
+          '@type': 'Question',
+          name: 'Bir Demartini seansı kaç dakika sürer?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Standart birebir seans 60 dakikadır; ihtiyaca göre 45 veya 90 dakikalık seanslar da düzenlenir.'
           }
         }
       ]

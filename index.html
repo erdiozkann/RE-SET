@@ -1,52 +1,74 @@
+<!-- Designed & Developed by NodeWorks (https://nodeworks.at) -->
 <!doctype html>
-<html lang="tr">
+<html lang="tr-TR">
 
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
-  <!-- SEO Meta Tags -->
-  <title>RE-SET | Şafak Özkan - Demartini Metodu Türkiye | İstanbul</title>
-  <meta name="description"
-    content="Şafak Özkan ile İstanbul'da Demartini Metodu seansları. Dr. John Demartini'nin bilimsel yöntemiyle değer belirleme, ilişki dengeleme ve kişisel dönüşüm. Türkiye'nin önde gelen Demartini Metodu uzmanından profesyonel rehberlik alın." />
+  <!-- ============ SEO Meta ============ -->
+  <!-- title, description, canonical and og/twitter title+description+url are injected per-route by src/prerender.tsx -->
+  <title>RE-SET | Şafak Özkan — Demartini Metodu Türkiye | İstanbul</title>
   <meta name="keywords"
-    content="Demartini Metodu, değer belirleme, Şafak Özkan, kişisel dönüşüm, ilişki dengeleme, Dr. John Demartini, İstanbul" />
-  <link rel="canonical" href="https://re-set.com.tr/" />
-  <meta name="last-modified" content="2024-12-03" />
+    content="Demartini Metodu, Demartini yöntemi, Şafak Özkan, değer belirleme, Breakthrough Experience, ilişki dengeleme, Dr. John Demartini, kişisel dönüşüm, Demartini İstanbul, Demartini Nişantaşı, Quantum Collapse Process" />
+  <meta name="last-modified" content="2026-05-23" />
 
-  <!-- Author and Copyright -->
-  <meta name="author" content="Şafak Özkan - Reset Danışmanlık" />
-  <meta name="copyright" content="© 2024 Reset - Şafak Özkan. Tüm hakları saklıdır." />
-  <meta name="robots" content="index, follow" />
+  <!-- Dil & Bölge -->
+  <meta http-equiv="content-language" content="tr-TR" />
+  <link rel="alternate" hreflang="tr-TR" href="https://re-set.com.tr/" />
+  <link rel="alternate" hreflang="x-default" href="https://re-set.com.tr/" />
 
-  <!-- Geo Tags -->
+  <!-- Yazar / Telif -->
+  <meta name="author" content="Şafak Özkan — Reset Danışmanlık" />
+  <meta name="designer" content="NodeWorks.at" />
+  <meta name="web_author" content="NodeWorks (https://nodeworks.at)" />
+  <meta name="copyright" content="© 2026 Reset — Şafak Özkan. Tüm hakları saklıdır." />
+  <meta name="publisher" content="Reset Danışmanlık" />
+  <meta name="robots"
+    content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+  <meta name="googlebot"
+    content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+
+  <!-- Tema rengi / mobil UI -->
+  <meta name="theme-color" content="#D4AF37" />
+  <meta name="application-name" content="RE-SET" />
+  <meta name="apple-mobile-web-app-title" content="RE-SET" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="format-detection" content="telephone=yes" />
+
+  <!-- Geo Tags (Yerel SEO) -->
   <meta name="geo.region" content="TR-34" />
   <meta name="geo.placename" content="İstanbul, Nişantaşı" />
   <meta name="geo.position" content="41.0534;28.9943" />
   <meta name="ICBM" content="41.0534, 28.9943" />
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="RE-SET | Şafak Özkan - Demartini Metodu Türkiye" />
-  <meta property="og:description"
-    content="Dr. John Demartini'nin bilimsel yöntemiyle değer belirleme, ilişki dengeleme ve kişisel dönüşüm. Türkiye'nin önde gelen Demartini Metodu uzmanı." />
+  <!-- Open Graph (route-invariant only — title/description/url come from prerender) -->
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://re-set.com.tr/" />
   <meta property="og:locale" content="tr_TR" />
-  <meta property="og:site_name" content="RE-SET - Şafak Özkan" />
+  <meta property="og:site_name" content="RE-SET — Şafak Özkan" />
+  <meta property="og:image" content="https://re-set.com.tr/og-image.jpg" />
+  <meta property="og:image:secure_url" content="https://re-set.com.tr/og-image.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="RE-SET — Şafak Özkan, Demartini Metodu Türkiye" />
 
-  <!-- Twitter Card -->
+  <!-- Twitter Card (route-invariant only) -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="RE-SET | Şafak Özkan - Demartini Metodu Türkiye" />
-  <meta name="twitter:description"
-    content="Dr. John Demartini'nin bilimsel yöntemiyle değer belirleme, ilişki dengeleme ve kişisel dönüşüm." />
+  <meta name="twitter:image" content="https://re-set.com.tr/og-image.jpg" />
+  <meta name="twitter:image:alt" content="RE-SET — Şafak Özkan, Demartini Metodu Türkiye" />
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="/favicon.png" />
   <link rel="apple-touch-icon" href="/favicon.png" />
 
+  <!-- Sitemap & AI -->
+  <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+  <link rel="author" href="/humans.txt" type="text/plain" />
+
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com">
   <link
     href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
     rel="stylesheet">
@@ -55,22 +77,110 @@
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-  <!-- Google Analytics 4 - IMPORTANT: Replace G-XXXXXXXXXX with your actual GA4 ID -->
-  <!-- Uncomment below lines when you have a valid GA4 ID
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-    -->
+  <!-- ============ Schema.org Global (Organization + WebSite + Person) ============ -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://re-set.com.tr/#organization",
+        "name": "RE-SET — Reset Danışmanlık",
+        "alternateName": ["RE-SET", "Reset Danışmanlık"],
+        "url": "https://re-set.com.tr/",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://re-set.com.tr/favicon.png"
+        },
+        "founder": { "@id": "https://re-set.com.tr/#safakozkan" },
+        "sameAs": [
+          "https://drdemartini.com/tr/demartini-method"
+        ],
+        "areaServed": { "@type": "Country", "name": "Türkiye" }
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://re-set.com.tr/#website",
+        "url": "https://re-set.com.tr/",
+        "name": "RE-SET — Şafak Özkan | Demartini Metodu Türkiye",
+        "inLanguage": "tr-TR",
+        "publisher": { "@id": "https://re-set.com.tr/#organization" },
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://re-set.com.tr/blog?q={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      },
+      {
+        "@type": "Person",
+        "@id": "https://re-set.com.tr/#safakozkan",
+        "name": "Şafak Özkan",
+        "jobTitle": "Sertifikalı Demartini Metodu Uygulayıcısı",
+        "url": "https://re-set.com.tr/about",
+        "worksFor": { "@id": "https://re-set.com.tr/#organization" },
+        "knowsAbout": [
+          "Demartini Metodu",
+          "Değer Belirleme Süreci",
+          "Breakthrough Experience",
+          "Quantum Collapse Process",
+          "İlişki Dengeleme",
+          "Kişisel Dönüşüm"
+        ]
+      },
+      {
+        "@type": "ProfessionalService",
+        "@id": "https://re-set.com.tr/#localbusiness",
+        "name": "RE-SET — Şafak Özkan | Demartini Metodu Türkiye",
+        "image": "https://re-set.com.tr/og-image.jpg",
+        "email": "info@re-set.com.tr",
+        "url": "https://re-set.com.tr/",
+        "founder": { "@id": "https://re-set.com.tr/#safakozkan" },
+        "employee": { "@id": "https://re-set.com.tr/#safakozkan" },
+        "parentOrganization": { "@id": "https://re-set.com.tr/#organization" },
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Valikonağı Caddesi, Nişantaşı",
+          "addressLocality": "Şişli",
+          "addressRegion": "İstanbul",
+          "postalCode": "34371",
+          "addressCountry": "TR"
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": 41.0534,
+          "longitude": 28.9943
+        },
+        "priceRange": "$$$",
+        "openingHoursSpecification": {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday"
+          ],
+          "opens": "09:00",
+          "closes": "19:00"
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- ============ Analytics ============ -->
+  <!-- GA4: VITE_GA_ID set edildiğinde src/lib/analytics.ts üzerinden enjekte edilir -->
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }
-    // gtag('js', new Date()); // Uncomment when GA4 ID is set
-
-    // Default consent to denied
+    // Tüketici onayı gelmeden analytics_storage = denied
     gtag('consent', 'default', {
-      'analytics_storage': 'denied'
+      'analytics_storage': 'denied',
+      'ad_storage': 'denied',
+      'ad_user_data': 'denied',
+      'ad_personalization': 'denied'
     });
-
-    // Will be updated based on user consent
-    // gtag('config', 'G-XXXXXXXXXX'); // Uncomment and replace with your GA4 ID
   </script>
 
   <!-- Microsoft Clarity is initialized via src/lib/clarity.ts when an ID is provided -->
@@ -78,6 +188,7 @@
 
 <body>
   <div id="root"></div>
+  <script type="module" prerender src="/src/prerender.tsx"></script>
   <script type="module" src="/src/main.tsx"></script>
   <!-- Cloudflare Web Analytics (Uncomment for Production) -->
   <!-- <script defer src='https://static.cloudflareinsights.com/beacon.min.js'

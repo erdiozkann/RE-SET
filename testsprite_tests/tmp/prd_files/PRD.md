@@ -1,231 +1,170 @@
-# RE-SET Platform - Product Requirements Document
+# RE-SET Web Sitesi — Ürün Gereksinimleri Dokümanı (PRD)
 
-## 1. Product Overview
+## Genel Bakış
+RE-SET, Demartini Metodu uygulayıcısı Şafak Özkan'ın kişisel koçluk ve danışmanlık web sitesidir. Site, potansiyel danışanların bilgi edinmesini, randevu almasını ve mevcut danışanların kendi panellerine erişmesini sağlar.
 
-RE-SET is a professional psychology/therapy practice website and management platform built for a Turkish-based practitioner. It serves as both a public-facing website for potential clients and an internal management dashboard for the practice owner.
-
-### 1.1 Target Users
-- **Public Visitors**: Potential clients browsing therapy services, methods, blog, and podcast content
-- **Registered Clients**: Authenticated users who can book appointments and access their client panel
-- **Admin/Practitioner**: The practice owner who manages all content, appointments, users, and accounting
-
-### 1.2 Tech Stack
-- **Frontend**: React 19 + TypeScript + Vite 7
-- **Styling**: Tailwind CSS 3
-- **Backend/Database**: Supabase (Auth, Database, Storage)
-- **Animations**: Framer Motion
-- **i18n**: i18next (multi-language support)
-- **Charts**: Recharts (for accounting reports)
-- **Payments**: Stripe integration
-- **Analytics**: Firebase, Microsoft Clarity
+**URL:** https://re-set.com.tr
+**Teknoloji:** React 19, TypeScript, Vite, Tailwind CSS, Supabase
+**Dil:** Türkçe
 
 ---
 
-## 2. Core Features
+## Kullanıcı Rolleri
 
-### 2.1 Public Website
+### 1. Ziyaretçi (Giriş Yapmamış)
+- Tüm herkese açık sayfalara erişebilir
+- Randevu formu doldurabilir (onay bekler)
+- İletişim formu gönderebilir
+- Blog, podcast, YouTube içeriklerini görüntüleyebilir
 
-#### 2.1.1 Homepage (`/`)
-- Hero section with call-to-action for booking
-- Services overview section
-- Client reviews slider component
-- Navigation header with links to all public pages
-- Footer with contact info and legal links
+### 2. Danışan (Giriş Yapmış)
+- Client Panel'e erişebilir
+- Randevularını görebilir
+- Profil bilgilerini güncelleyebilir
 
-#### 2.1.2 About Page (`/about`)
-- Practitioner biography and credentials
-- Professional approach and philosophy
-
-#### 2.1.3 Methods Page (`/methods`)
-- List of therapy methods and approaches offered
-- Description of each methodology
-
-#### 2.1.4 Blog (`/blog`)
-- Blog post listing with pagination
-- Individual blog post reading view
-- Content fetched from Supabase
-
-#### 2.1.5 Podcast (`/podcast`)
-- Podcast episodes listing
-- Episode playback or links
-
-#### 2.1.6 YouTube (`/youtube`)
-- YouTube content integration and display
-
-#### 2.1.7 Booking (`/booking`)
-- Online appointment booking form
-- Date and time selection
-- Contact information collection
-- Booking submission to Supabase
-
-#### 2.1.8 Contact (`/contact`)
-- Contact form with name, email, message fields
-- Form submission stored in Supabase messages table
-
-#### 2.1.9 Legal Pages
-- **KVKK** (`/kvkk`): Turkish data protection law compliance
-- **Privacy Policy** (`/privacy`): Privacy policy disclosure
-- **Copyright** (`/copyright`): Copyright information
-- **Cookies** (`/cookies`): Cookie policy and preferences
-
-### 2.2 Authentication System
-
-#### 2.2.1 Login (`/login`)
-- Email and password authentication via Supabase Auth
-- Error handling for invalid credentials
-- Link to registration and password reset
-
-#### 2.2.2 Registration (`/register`)
-- User registration form
-- Password strength requirements (min 8 chars, 1 letter, 1 number)
-- Email verification flow
-
-#### 2.2.3 Password Reset (`/reset-password`)
-- Email-based password reset via Supabase Auth
-- Reset link sent to registered email
-
-### 2.3 Client Panel (`/client-panel`) - Auth Required
-- View upcoming appointments
-- View profile information
-- Edit profile settings
-- Protected route - requires authentication
-
-### 2.4 Admin Dashboard (`/admin`) - Admin Auth Required
-
-#### 2.4.1 Content Management (`ContentTab`)
-- Edit homepage content sections
-- Manage static page content
-
-#### 2.4.2 Appointments Management (`AppointmentsTab`)
-- View all booked appointments
-- Approve/reject/cancel appointments
-- Calendar view of schedule
-
-#### 2.4.3 Blog Management (`BlogTab`)
-- Create new blog posts
-- Edit existing posts
-- Delete posts
-- Rich text editing
-
-#### 2.4.4 Podcast Management (`PodcastTab`)
-- Add podcast episodes
-- Edit episode details
-- Manage podcast content
-
-#### 2.4.5 User Management (`AccountsTab`, `PendingUsersTab`)
-- View all registered users
-- Approve pending user registrations
-- Manage user roles and permissions
-
-#### 2.4.6 Client Management (`ClientsTab`)
-- View client list
-- Client details and history
-
-#### 2.4.7 Services Management (`ServicesTab`)
-- Add/edit/remove offered services
-- Service pricing and descriptions
-
-#### 2.4.8 Methods Management (`MethodsTab`)
-- Add/edit/remove therapy methods
-- Method descriptions and details
-
-#### 2.4.9 Messages (`MessagesTab`)
-- View contact form submissions
-- Reply to client inquiries
-
-#### 2.4.10 Ads Management (`AdsTab`)
-- Manage promotional content and advertisements
-
-#### 2.4.11 Accounting (`AccountingTab`)
-- Financial reporting with charts (Recharts)
-- Revenue tracking
-- Receipt and invoice management
-- Report generation and viewing
-
-#### 2.4.12 Configuration (`ConfigTab`)
-- Site-wide configuration settings
-- Feature toggles
-
-#### 2.4.13 Account Settings (`AccountSettingsTab`)
-- Admin profile management
-- Password change
-
-### 2.5 Cross-Cutting Features
-
-#### 2.5.1 Cookie Consent Banner
-- GDPR/KVKK compliant cookie consent
-- Accept/reject options
-- Link to cookie policy page
-
-#### 2.5.2 Internationalization (i18n)
-- Multi-language support via i18next
-- Language switching capability
-- Browser language detection
-
-#### 2.5.3 SEO
-- SEO component for meta tags
-- Proper heading structure
-- Semantic HTML
-
-#### 2.5.4 Error Handling
-- Error boundary component
-- Toast notification system
-- 404 Not Found page
-
-#### 2.5.5 Performance
-- Lazy loading for all page components
-- Optimized image component
-- Page transition animations
+### 3. Admin (Şafak Özkan)
+- Tüm site içeriklerini yönetebilir
+- Randevuları yönetebilir
+- Blog, podcast, YouTube içeriği oluşturabilir/düzenleyebilir/silebilir
+- Danışan hesaplarını yönetebilir
+- Muhasebe işlemlerini yürütebilir
 
 ---
 
-## 3. Non-Functional Requirements
+## Sayfalar ve Özellikler
 
-### 3.1 Security
-- Supabase Row Level Security (RLS) policies
-- Protected routes for authenticated areas
-- Admin-only route protection
-- XSS protection via DOMPurify
+### 1. Anasayfa (`/`)
+- Hero bölümü (başlık, açıklama, randevu CTA butonu)
+- Hizmetler özeti
+- Hakkında kısa tanıtım
+- Yorumlar/değerlendirmeler slider
+- Öne çıkan blog yazıları
 
-### 3.2 Performance
-- Code splitting with React.lazy
-- Optimized images
-- Smooth page transitions with Framer Motion
+### 2. Hakkında (`/about`)
+- Şafak Özkan'ın biyografisi ve sertifikaları
+- Profil görseli
 
-### 3.3 Accessibility
-- Semantic HTML structure
-- Keyboard navigation support
+### 3. Yöntemler (`/methods`)
+- Demartini Metodu ve diğer terapi yöntemleri listesi
+- Her yöntemin detay açıklaması
 
-### 3.4 Compliance
-- KVKK (Turkish GDPR) compliance
-- Cookie consent management
-- Privacy policy disclosure
+### 4. Blog (`/blog`)
+- Blog yazıları listeleme (başlık, özet, kategori, tarih, görsel)
+- Kategori filtresi
+- Öne çıkan yazılar bölümü
+- Her yazıya tıklandığında detay sayfası açılmalı (`/blog/:id`)
+- Detay sayfasında: başlık, görsel, içerik (HTML/Markdown), tarih, okuma süresi, kategori
+
+### 5. Podcast (`/podcast`)
+- Podcast bölümleri listesi (başlık, açıklama, tarih)
+- Bölüme tıklandığında alt player'da seçilir
+- Sticky audio player (sayfa altında sabit): oynat/durdur, ileri/geri 10sn, süre çubuğu
+- Bölümler supabase'den çekilir (podcast_episodes tablosu)
+
+### 6. YouTube (`/youtube`)
+- YouTube videoları galerisi
+- Her videonun thumbnail'i, başlık ve açıklaması
+- Tıklandığında YouTube'a yönlendirir veya modal açar
+
+### 7. Randevu (`/booking`)
+- Ad Soyad, E-posta, Telefon alanları
+- Hizmet seçimi (dropdown)
+- Tarih ve saat seçimi
+- Notlar alanı
+- Form gönderimi admin panele düşer
+
+### 8. İletişim (`/contact`)
+- Ad, e-posta, telefon, mesaj alanları
+- Form gönderimi admin panele düşer
+
+### 9. Giriş (`/login`)
+- E-posta ve şifre ile giriş
+- Şifre unutma linki
+
+### 10. Kayıt (`/register`)
+- Ad soyad, e-posta, şifre, şifre onayı
+- Kayıt sonrası admin onayı gerekir
+
+### 11. Şifre Sıfırlama (`/reset-password`)
+- E-posta ile şifre sıfırlama
+
+### 12. Danışan Paneli (`/client-panel`) — Korumalı
+- Yaklaşan randevular listesi
+- Profil bilgileri düzenleme (ad, telefon)
+- İlerleme grafiği
+
+### 13. Admin Paneli (`/admin`) — Admin Korumalı
+#### Sekmeler:
+- **Dashboard**: Özet istatistikler
+- **Randevular**: Randevu onaylama/reddetme/düzenleme
+- **Blog**: Blog yazısı oluşturma/düzenleme/silme
+- **Podcast**: Podcast bölümü yönetimi (ses dosyası + metadata)
+- **YouTube**: YouTube video yönetimi
+- **Danışanlar**: Danışan hesap yönetimi
+- **Mesajlar**: İletişim formu mesajları
+- **İçerik**: Hero, Hakkında, İletişim bilgileri düzenleme
+- **Yöntemler**: Terapi yöntemleri yönetimi
+- **Yorumlar**: Kullanıcı yorumları onaylama/silme
+- **Muhasebe**: Fatura, ödeme yönetimi
 
 ---
 
-## 4. API Endpoints (Supabase)
+## Teknik Gereksinimler
 
-### 4.1 Authentication
-- `supabase.auth.signInWithPassword` - User login
-- `supabase.auth.signUp` - User registration
-- `supabase.auth.resetPasswordForEmail` - Password reset
+### Kimlik Doğrulama
+- Supabase Auth kullanılır
+- Admin rolü: `app_metadata.role = 'ADMIN'` veya `user_metadata.role = 'ADMIN'`
+- Geçersiz giriş bilgileri ile admin paneline erişilemez
 
-### 4.2 Data Tables
-- `users` - User profiles and roles
-- `appointments` - Booking data
-- `blog_posts` - Blog content
-- `messages` - Contact form submissions
-- `services` - Therapy services
-- `methods` - Therapy methods
-- `config` - Site configuration
-- `ads` - Promotional content
-- `clients` - Client records
+### Veri
+- Supabase PostgreSQL veritabanı
+- RLS (Row Level Security) politikaları aktif
+- Herkese açık tablolar (public read): blog_posts, podcast_episodes, methods, hero_contents, about_contents, services, certificates, reviews (approved), contact_info, profile_images, youtube_videos (is_published=true)
+
+### Çerez Yönetimi
+- Çerez banner'ı gösterilir
+- "Kabul Et" tıklandığında banner kaybolur ve session boyunca görünmez
+- "Reddet" tıklandığında da banner kaybolur
+
+### SEO
+- Her sayfada uygun meta title ve description
+- Schema.org JSON-LD yapılandırılmış veri (Blog, Person, etc.)
+
+### Dil
+- Site tamamen Türkçe
+- Dil değiştirici yok (sadece Türkçe)
 
 ---
 
-## 5. Deployment
+## Kritik Kullanıcı Senaryoları (Test Edilmesi Gereken)
 
-- **Hosting**: Hostinger (static build deployment)
-- **Database**: Supabase Cloud
-- **Build**: `vite build` produces static assets
-- **Dev Server**: `vite` on port 3000
+### TC001: Geçerli bilgilerle giriş → Client Panel'e yönlendirilir
+### TC002: Geçersiz bilgilerle giriş → Hata mesajı gösterilir
+### TC003: Kayıt formu başarıyla gönderilir
+### TC004: Zayıf şifre ile kayıt → Doğrulama hatası
+### TC005: Anasayfa header navigasyonundan Randevu sayfasına gidiş → Randevu formu görünür
+### TC006: Anasayfa randevu CTA butonu → Randevu sayfasına gider
+### TC007: Randevu formu başarıyla gönderilir → Onay mesajı
+### TC008: Eksik iletişim bilgisi ile randevu → Hata mesajı
+### TC009: Tarih seçilmeden randevu → Hata mesajı
+### TC010: Saat seçilmeden randevu → Hata mesajı
+### TC011: Admin girişi → Dashboard görünür
+### TC012: Admin sekmeleri arasında geçiş → Her sekmenin içeriği görünür
+### TC013: Admin yeni blog yazısı oluşturur → Blog listesinde görünür
+### TC014: Admin oluşturduğu blog yazısını kaydeder → Listede görünür
+### TC015: Geçersiz giriş ile admin paneline erişim engellenir
+### TC016: Danışan paneli: yaklaşan randevular görünür (giriş yapılmış)
+### TC017: Profil düzenleme ve kaydetme (giriş yapılmış)
+### TC018: Geçersiz giriş ile danışan paneline erişim engellenir
+### TC019: Blog listesi açılır → Yazılar görünür
+### TC020: Blog yazısına tıklanır → Detay sayfası açılır (tam içerik görünür)
+### TC021: Silinmiş/olmayan blog yazısı URL'si → Hata/404 durumu
+### TC022: İletişim formu başarıyla gönderilir
+### TC023: E-posta alanı olmadan iletişim formu → Doğrulama hatası
+### TC024: Çerez banner kabul → Banner kaybolur, session boyunca görünmez
+### TC025: Çerez banner reddet → Banner kaybolur
+### TC026: Hakkında sayfası → Biyografi ve sertifikalar görünür
+### TC027: Yöntemler sayfası → Terapi yöntemleri listesi görünür
+### TC028: Bir yöntem öğesine tıklanır → Detaylar görünür
+### TC029: Podcast sayfası → Bölümler listelenir
+### TC030: Podcast bölümüne tıklanır → Audio player aktif olur, oynatılabilir

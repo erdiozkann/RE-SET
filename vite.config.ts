@@ -2,6 +2,11 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import { resolve } from "node:path";
 import AutoImport from "unplugin-auto-import/vite";
+import { vitePrerenderPlugin } from "vite-prerender-plugin";
+import dotenv from "dotenv";
+
+// Make .env values available to the prerender script (which runs in Node at build time)
+dotenv.config();
 
 // SPA routing için "/" kullanılmalı (Hostinger kök dizin ise)
 const base = process.env.BASE_PATH || "/";
@@ -58,18 +63,46 @@ export default defineConfig({
             "Outlet",
           ],
         },
-        // React i18n
-        {
-          "react-i18next": ["useTranslation", "Trans"],
-        },
       ],
       dts: true,
+    }),
+    vitePrerenderPlugin({
+      renderTarget: "#root",
+      additionalPrerenderRoutes: [
+        "/",
+        "/about",
+        "/methods",
+        "/blog",
+        "/podcast",
+        "/youtube",
+        "/booking",
+        "/contact",
+        "/privacy",
+        "/kvkk",
+        "/copyright",
+        "/cookies",
+      ],
     }),
   ],
   base,
   build: {
-    sourcemap: isPreview || process.env.NODE_ENV !== 'production', // Disable in production
+    sourcemap: isPreview || process.env.NODE_ENV !== "production",
     outDir: "HOSTINGER_UPLOAD",
+    cssCodeSplit: true,
+    chunkSizeWarningLimit: 600,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (!id.includes("node_modules")) return undefined;
+          if (id.includes("react-dom") || id.includes("/react/")) return "vendor-react";
+          if (id.includes("react-router")) return "vendor-router";
+          if (id.includes("@supabase")) return "vendor-supabase";
+          if (id.includes("framer-motion")) return "vendor-motion";
+          if (id.includes("dompurify")) return "vendor-sanitize";
+          return "vendor";
+        },
+      },
+    },
   },
   resolve: {
     alias: {

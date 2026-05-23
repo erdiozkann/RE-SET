@@ -1,69 +1,113 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Button from '../../components/base/Button';
 import type { Certificate } from '../../types';
 import SEO from '../../components/SEO';
+import { useToast } from '../../components/ToastContainer';
 import { certificatesApi, contentApi } from '../../lib/api';
 export default function About() {
   const [certificates, setCertificates] = useState<Certificate[]>([]);
   const [aboutContent, setAboutContent] = useState<any>(null);
   const [heroImage, setHeroImage] = useState<string>('');
-
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
+  const toast = useToast();
+
+  const fetchData = useCallback(async () => {
+    setIsLoading(true);
+    setLoadError(false);
+    try {
+      const [certsResult, aboutResult] = await Promise.allSettled([
+        certificatesApi.getAll(),
+        contentApi.getAboutContents(),
+      ]);
+
+      if (certsResult.status === 'fulfilled' && certsResult.value) {
+        setCertificates(certsResult.value);
+      }
+
+      if (aboutResult.status === 'fulfilled' && aboutResult.value?.length > 0) {
+        setAboutContent(aboutResult.value[0]);
+        if (aboutResult.value[0].image) {
+          setHeroImage(aboutResult.value[0].image);
+        }
+      }
+
+      // Both critical calls failed → surface a retryable error to the user.
+      if (certsResult.status === 'rejected' && aboutResult.status === 'rejected') {
+        setLoadError(true);
+        toast.error('Sayfa içeriği yüklenemedi. Tekrar denemek için aşağıdaki butonu kullanın.');
+        console.error('About load failures:', certsResult.reason, aboutResult.reason);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }, [toast]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Paralel API çağrıları (daha hızlı yükleme)
-        const [certsResult, aboutResult] = await Promise.allSettled([
-          certificatesApi.getAll(),
-          contentApi.getAboutContents()
-        ]);
-
-        if (certsResult.status === 'fulfilled' && certsResult.value) {
-          setCertificates(certsResult.value);
-        }
-
-        if (aboutResult.status === 'fulfilled' && aboutResult.value?.length > 0) {
-          setAboutContent(aboutResult.value[0]);
-          if (aboutResult.value[0].image) {
-            setHeroImage(aboutResult.value[0].image);
-          }
-        }
-      } catch (error) {
-        console.error('Veri yüklenemedi:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     fetchData();
-  }, []);
+  }, [fetchData]);
 
   const siteUrl = 'https://re-set.com.tr';
 
   const schema = [
     {
       "@context": "https://schema.org",
+      "@type": "ProfilePage",
+      "@id": `${siteUrl}/about#profile`,
+      "mainEntity": { "@id": "https://re-set.com.tr/#safakozkan" },
+      "url": `${siteUrl}/about`,
+      "inLanguage": "tr-TR",
+      "breadcrumb": {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Ana Sayfa", "item": `${siteUrl}/` },
+          { "@type": "ListItem", "position": 2, "name": "Hakkımda", "item": `${siteUrl}/about` }
+        ]
+      }
+    },
+    {
+      "@context": "https://schema.org",
       "@type": "Person",
+      "@id": "https://re-set.com.tr/#safakozkan",
       "name": "Şafak Özkan",
       "jobTitle": "Sertifikalı Demartini Metodu Uygulayıcısı",
-      "description": "İstanbul'da Demartini Metodu uygulayıcısı. 15 yılı aşkın deneyimle binlerce kişinin hayatına dokundum. Değer belirleme, yaşam dengeleme ve Breakthrough Experience alanlarında uzmanım.",
+      "description": "İstanbul Nişantaşı merkezli, sertifikalı Demartini Method Facilitator. 15+ yıllık uygulama deneyimi. Değer belirleme, ilişki dengeleme, Breakthrough Experience ve kişisel dönüşüm alanlarında uzman.",
       "url": `${siteUrl}/about`,
-      "image": heroImage,
-      "alumniOf": certificates.map(cert => ({
-        "@type": "EducationalOrganization",
-        "name": cert.organization
-      })),
-      "knowsAbout": ["Demartini Metodu", "Değer Belirleme", "Breakthrough Experience", "Yaşam Dengeleme", "Kişisel Dönüşüm", "Quantum Collapse Process"],
+      "image": heroImage || 'https://re-set.com.tr/og-image.jpg',
+      "worksFor": { "@id": "https://re-set.com.tr/#organization" },
+      "hasOccupation": {
+        "@type": "Occupation",
+        "name": "Demartini Method Facilitator",
+        "skills": "Demartini Metodu, Değer Belirleme, Quantum Collapse Process, İlişki Dengeleme",
+        "occupationLocation": { "@type": "City", "name": "İstanbul" }
+      },
+      "alumniOf": [
+        {
+          "@type": "EducationalOrganization",
+          "name": "The Demartini Institute",
+          "sameAs": "https://drdemartini.com/"
+        },
+        ...certificates.map(cert => ({
+          "@type": "EducationalOrganization",
+          "name": cert.organization
+        }))
+      ],
+      "knowsAbout": ["Demartini Metodu", "Değer Belirleme Süreci", "Breakthrough Experience", "Yaşam Dengeleme", "Kişisel Dönüşüm", "Quantum Collapse Process", "İlişki Dengeleme"],
       "hasCredential": certificates.map(cert => ({
         "@type": "EducationalOccupationalCredential",
         "name": cert.title,
         "credentialCategory": "certificate",
+        "dateCreated": cert.year ? String(cert.year) : undefined,
         "recognizedBy": {
           "@type": "Organization",
           "name": cert.organization
         }
-      }))
+      })),
+      "sameAs": [
+        "https://drdemartini.com/tr/demartini-method",
+        "https://www.youtube.com/@safakozkan",
+        "https://www.instagram.com/safakozkandemartini/"
+      ]
     },
     {
       "@context": "https://schema.org",
@@ -74,7 +118,7 @@ export default function About() {
           "name": "Demartini Metodu nedir?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Demartini Metodu, Dr. John Demartini tarafından geliştirilen, bireylerin değerlerini keşfetmelerine, yaşamlarını dengelemelerine ve potansiyellerini ortaya çıkarmalarına yardımcı olan dönüştürücü bir kişisel gelişim yöntemidir."
+            "text": "Demartini Metodu, Dr. John Demartini tarafından geliştirilen, 13 sorulu Değer Belirleme Süreci ve Quantum Collapse Process'ten oluşan sistematik bir algı dengeleme ve kişisel dönüşüm yöntemidir."
           }
         },
         {
@@ -82,7 +126,17 @@ export default function About() {
           "name": "Şafak Özkan kimdir?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Şafak Özkan, İstanbul'da faaliyet gösteren sertifikalı Demartini Metodu uygulayıcısıdır. 15 yılı aşkın deneyimiyle binlerce kişinin Demartini Metodu ile yaşam dönüşümüne rehberlik etmiştir."
+            "text": "Şafak Özkan, İstanbul Nişantaşı merkezli sertifikalı Demartini Method Facilitator'dır. 15 yılı aşkın uygulama deneyimiyle Türkiye'de binlerce danışana Demartini Metodu ile rehberlik etmiştir."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Şafak Özkan'ın sertifikaları nelerdir?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": certificates.length > 0
+              ? `Sayfada listelenen tüm sertifikalar: ${certificates.map(c => c.title).join(', ')}.`
+              : "Tüm Demartini Method ve ilgili eğitim sertifikaları Hakkımda sayfasındaki Sertifikalar bölümünde listelenmektedir."
           }
         }
       ]
@@ -95,6 +149,26 @@ export default function About() {
         <div className="text-center">
           <i className="ri-loader-4-line text-4xl text-teal-600 animate-spin mb-4"></i>
           <p className="text-gray-600">Yükleniyor...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <div className="py-16 flex items-center justify-center bg-gradient-to-br from-teal-50 via-white to-amber-50 h-screen px-4">
+        <div className="text-center max-w-md">
+          <i className="ri-wifi-off-line text-5xl text-gray-300 mb-4"></i>
+          <h2 className="text-xl font-serif text-gray-900 mb-2">Sayfa yüklenemedi</h2>
+          <p className="text-gray-600 mb-6 text-sm">
+            İnternet bağlantınızı kontrol edip tekrar deneyebilirsiniz.
+          </p>
+          <button
+            onClick={fetchData}
+            className="px-6 py-3 bg-teal-600 text-white font-medium rounded-lg hover:bg-teal-700 transition-colors focus:outline-none focus:ring-2 focus:ring-teal-600 focus:ring-offset-2"
+          >
+            Tekrar Dene
+          </button>
         </div>
       </div>
     );

@@ -1,27 +1,35 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import SEO from '../../components/SEO';
+import { useToast } from '../../components/ToastContainer';
 import { blogApi } from '../../lib/api';
 import type { BlogPost } from '../../types';
 
 export default function Blog() {
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('Tüm Kategoriler');
+  const toast = useToast();
+
+  const loadBlogPosts = useCallback(async () => {
+    setIsLoading(true);
+    setLoadError(false);
+    try {
+      const data = await blogApi.getAll();
+      setBlogPosts(data || []);
+    } catch (error) {
+      console.error('Blog yazıları yüklenirken hata:', error);
+      setLoadError(true);
+      toast.error('Blog yazıları yüklenemedi. İnternet bağlantınızı kontrol edip tekrar deneyin.');
+    } finally {
+      setIsLoading(false);
+    }
+  }, [toast]);
 
   useEffect(() => {
-    const loadBlogPosts = async () => {
-      try {
-        const data = await blogApi.getAll();
-        setBlogPosts(data || []);
-      } catch (error) {
-        console.error('Blog yazıları yüklenirken hata:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     loadBlogPosts();
-  }, []);
+  }, [loadBlogPosts]);
 
   const allCategory = 'Tüm Kategoriler';
   const categories = [allCategory, ...Array.from(new Set(blogPosts.map(post => post.category).filter(Boolean)))];
@@ -113,24 +121,26 @@ export default function Blog() {
             </h2>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {featuredPosts.map((post) => (
-                <article key={post.id} className="group cursor-pointer">
-                  <div className="aspect-video rounded-xl overflow-hidden mb-4 bg-gray-100 flex items-center justify-center">
-                    {(post as any).featured_image || post.image ? (
-                      <img
-                        src={(post as any).featured_image || post.image}
-                        alt={post.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                    ) : (
-                      <i className="ri-article-line text-4xl text-gray-300"></i>
-                    )}
-                  </div>
+                <Link key={post.id} to={`/blog/${post.id}`} className="group block">
+                  <article>
+                    <div className="aspect-video rounded-xl overflow-hidden mb-4 bg-gray-100 flex items-center justify-center">
+                      {(post as any).featured_image || post.image ? (
+                        <img
+                          src={(post as any).featured_image || post.image}
+                          alt={post.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                      ) : (
+                        <i className="ri-article-line text-4xl text-gray-300"></i>
+                      )}
+                    </div>
 
-                  <p className="text-sm text-[#D4AF37] font-medium mb-2">{post.category}</p>
-                  <h3 className="text-lg md:text-xl font-serif text-[#1A1A1A] mb-2 group-hover:text-[#D4AF37]">{post.title}</h3>
-                  <p className="text-gray-600 mb-3 text-sm">{post.excerpt}</p>
-                  <span className="text-xs text-gray-500">{formatDate(post.date)}</span>
-                </article>
+                    <p className="text-sm text-[#D4AF37] font-medium mb-2">{post.category}</p>
+                    <h3 className="text-lg md:text-xl font-serif text-[#1A1A1A] mb-2 group-hover:text-[#D4AF37]">{post.title}</h3>
+                    <p className="text-gray-600 mb-3 text-sm">{post.excerpt}</p>
+                    <span className="text-xs text-gray-500">{formatDate(post.date)}</span>
+                  </article>
+                </Link>
               ))}
             </div>
           </div>
@@ -149,27 +159,40 @@ export default function Blog() {
               <BlogSkeleton />
               <BlogSkeleton />
             </div>
+          ) : loadError ? (
+            <div className="text-center py-12">
+              <i className="ri-wifi-off-line text-6xl text-gray-300 mb-4 block"></i>
+              <p className="text-gray-600 mb-4">Blog yazıları yüklenemedi.</p>
+              <button
+                onClick={loadBlogPosts}
+                className="px-5 py-2.5 bg-[#D4AF37] text-[#1A1A1A] font-medium rounded-lg hover:bg-[#C19B2E] transition-colors focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:ring-offset-2"
+              >
+                Tekrar Dene
+              </button>
+            </div>
           ) : filteredPosts.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredPosts.map((post) => (
-                <article key={post.id} className="group cursor-pointer">
-                  <div className="aspect-video rounded-xl overflow-hidden mb-4 bg-gray-100 flex items-center justify-center">
-                    {(post as any).featured_image || post.image ? (
-                      <img
-                        src={(post as any).featured_image || post.image}
-                        alt={post.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                    ) : (
-                      <i className="ri-article-line text-4xl text-gray-300"></i>
-                    )}
-                  </div>
+                <Link key={post.id} to={`/blog/${post.id}`} className="group block">
+                  <article>
+                    <div className="aspect-video rounded-xl overflow-hidden mb-4 bg-gray-100 flex items-center justify-center">
+                      {(post as any).featured_image || post.image ? (
+                        <img
+                          src={(post as any).featured_image || post.image}
+                          alt={post.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                      ) : (
+                        <i className="ri-article-line text-4xl text-gray-300"></i>
+                      )}
+                    </div>
 
-                  <p className="text-xs text-[#D4AF37] font-medium mb-2">{post.category}</p>
-                  <h3 className="text-lg font-semibold text-[#1A1A1A] mb-2 group-hover:text-[#D4AF37] line-clamp-2">{post.title}</h3>
-                  <p className="text-sm text-gray-600 mb-3 line-clamp-2">{post.excerpt}</p>
-                  <span className="text-xs text-gray-500">{formatDate(post.date)}</span>
-                </article>
+                    <p className="text-xs text-[#D4AF37] font-medium mb-2">{post.category}</p>
+                    <h3 className="text-lg font-semibold text-[#1A1A1A] mb-2 group-hover:text-[#D4AF37] line-clamp-2">{post.title}</h3>
+                    <p className="text-sm text-gray-600 mb-3 line-clamp-2">{post.excerpt}</p>
+                    <span className="text-xs text-gray-500">{formatDate(post.date)}</span>
+                  </article>
+                </Link>
               ))}
             </div>
           ) : (

@@ -21,12 +21,24 @@ export default function Footer() {
   }, []);
 
   const handleCookieSettings = () => {
-    localStorage.removeItem('cookieConsent');
-    window.location.reload();
+    // Re-open the cookie settings dialog without losing the existing consent
+    // record or reloading the page. CookieBanner listens for this event.
+    if (typeof window.openCookieSettings === 'function') {
+      window.openCookieSettings();
+    } else {
+      window.dispatchEvent(new Event('cookie-settings-open'));
+    }
   };
 
   return (
-    <footer className="bg-[#1A1A1A] text-white">
+    <footer
+      className="bg-[#1A1A1A] text-white"
+      itemScope
+      itemType="https://schema.org/ProfessionalService"
+    >
+      <meta itemProp="name" content="RE-SET — Şafak Özkan Demartini Metodu" />
+      <meta itemProp="url" content="https://re-set.com.tr/" />
+      <meta itemProp="priceRange" content="₺₺" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Logo & Description */}
@@ -34,14 +46,15 @@ export default function Footer() {
             {contactInfo?.logo_url ? (
               <img
                 src={contactInfo.logo_url}
-                alt="Reset Logo"
+                alt="RE-SET — Şafak Özkan Demartini Metodu logosu"
                 className="h-12 w-auto object-contain mb-4 grayscale hover:grayscale-0 transition-all duration-300"
+                itemProp="logo"
               />
             ) : (
               <span className="text-2xl font-serif font-bold text-white mb-4 block">RESET</span>
             )}
 
-            <p className="text-gray-400 mb-4">
+            <p className="text-gray-400 mb-4" itemProp="description">
               Demartini Metodu ile değerlerinizi keşfedin ve hayatınızı dönüştürün. İstanbul'da profesyonel danışmanlık hizmeti.
             </p>
             <div className="flex items-center space-x-4">
@@ -85,26 +98,48 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Contact */}
+          {/* Contact (NAP — Yerel SEO için microdata) */}
           <div>
             <h4 className="text-lg font-semibold mb-4">İletişim</h4>
             <ul className="space-y-2 text-gray-400">
               {contactInfo?.email && (
                 <li className="flex items-start">
                   <i className="ri-mail-line mt-1 mr-2"></i>
-                  <span>{contactInfo.email}</span>
+                  <a
+                    href={`mailto:${contactInfo.email}`}
+                    className="hover:text-[#D4AF37] transition-colors"
+                    itemProp="email"
+                  >
+                    {contactInfo.email}
+                  </a>
                 </li>
               )}
               {contactInfo?.phone && (
                 <li className="flex items-start">
                   <i className="ri-phone-line mt-1 mr-2"></i>
-                  <span>{contactInfo.phone}</span>
+                  <a
+                    href={`tel:${contactInfo.phone.replace(/\s/g, '')}`}
+                    className="hover:text-[#D4AF37] transition-colors"
+                    itemProp="telephone"
+                  >
+                    {contactInfo.phone}
+                  </a>
                 </li>
               )}
               {contactInfo?.address && (
-                <li className="flex items-start">
+                <li
+                  className="flex items-start"
+                  itemProp="address"
+                  itemScope
+                  itemType="https://schema.org/PostalAddress"
+                >
                   <i className="ri-map-pin-line mt-1 mr-2"></i>
-                  <span>{contactInfo.address}</span>
+                  <span>
+                    <span itemProp="streetAddress">{contactInfo.address}</span>
+                    <meta itemProp="addressLocality" content="İstanbul" />
+                    <meta itemProp="addressRegion" content="Nişantaşı" />
+                    <meta itemProp="addressCountry" content="TR" />
+                  </span>
                 </li>
               )}
             </ul>
@@ -115,6 +150,18 @@ export default function Footer() {
         <div className="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row items-center justify-between">
           <p className="text-gray-400 text-sm mb-4 md:mb-0">
             © {new Date().getFullYear()} Reset. Tüm hakları saklıdır.
+            <span className="mx-2 text-gray-600" aria-hidden="true">|</span>
+            <span className="text-gray-500">
+              Developed by{' '}
+              <a
+                href="https://nodeworks.at"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-[#D4AF37] transition-colors duration-300"
+              >
+                NodeWorks.at
+              </a>
+            </span>
           </p>
           <div className="flex items-center space-x-6 text-sm">
             <Link to="/kvkk" className="text-gray-400 hover:text-[#D4AF37] transition-colors cursor-pointer">

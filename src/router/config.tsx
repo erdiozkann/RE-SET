@@ -6,6 +6,7 @@ const HomePage = lazy(() => import('../pages/home/page'));
 const AboutPage = lazy(() => import('../pages/about/page'));
 const MethodsPage = lazy(() => import('../pages/methods/page'));
 const BlogPage = lazy(() => import('../pages/blog/page'));
+const BlogDetailPage = lazy(() => import('../pages/blog/[id]/page'));
 const PodcastPage = lazy(() => import('../pages/podcast/page'));
 const YouTubePage = lazy(() => import('../pages/youtube/page'));
 const BookingPage = lazy(() => import('../pages/booking/page'));
@@ -36,6 +37,7 @@ const routes: RouteObject[] = [
       { path: 'about', element: <AboutPage /> },
       { path: 'methods', element: <MethodsPage /> },
       { path: 'blog', element: <BlogPage /> },
+      { path: 'blog/:id', element: <BlogDetailPage /> },
       { path: 'podcast', element: <PodcastPage /> },
       { path: 'youtube', element: <YouTubePage /> },
       { path: 'booking', element: <BookingPage /> },

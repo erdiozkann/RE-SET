@@ -7,7 +7,7 @@
 -- Adds missing columns required by the UI but missing in DB
 ALTER TABLE public.blog_posts 
 ADD COLUMN IF NOT EXISTS "category" TEXT DEFAULT 'Genel',
-ADD COLUMN IF NOT EXISTS "readTime" TEXT DEFAULT '5 dk',
+ADD COLUMN IF NOT EXISTS "read_time" TEXT DEFAULT '5 dk',
 ADD COLUMN IF NOT EXISTS "featured" BOOLEAN DEFAULT FALSE,
 ADD COLUMN IF NOT EXISTS "status" TEXT DEFAULT 'published',
 ADD COLUMN IF NOT EXISTS "featured_image" TEXT;

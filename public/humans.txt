@@ -1,0 +1,7 @@
+/* TEAM */
+Developer: NodeWorks
+Site: https://nodeworks.at
+Location: Austria / Turkey
+
+/* TECHNOLOGY COLOPHON */
+HTML5, CSS3, React, Vite, TailwindCSS, Supabase

@@ -11,8 +11,14 @@ export default function Layout() {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[10000] focus:bg-[#1A1A1A] focus:text-white focus:px-4 focus:py-2 focus:rounded-md focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
+      >
+        İçeriğe atla
+      </a>
       <Header />
-      <main className="flex-1">
+      <main id="main-content" tabIndex={-1} className="flex-1">
         <AnimatePresence mode="wait">
           <Suspense fallback={null}>
             <PageTransition key={location.pathname}>
