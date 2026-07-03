@@ -135,23 +135,21 @@ export default function AccountSettingsTab() {
     }
 
     try {
-      // Mevcut şifreyi kontrol et
-      const { data: user } = await supabase
-        .from('users')
-        .select('password')
-        .eq('email', currentUser.email)
-        .single();
+      // Mevcut şifreyi Supabase Auth ile doğrula (düz-metin kolon karşılaştırması KALDIRILDI)
+      const { error: reauthError } = await supabase.auth.signInWithPassword({
+        email: currentUser.email,
+        password: passwordForm.currentPassword,
+      });
 
-      if (!user || user.password !== passwordForm.currentPassword) {
+      if (reauthError) {
         toast.error('Mevcut şifre yanlış');
         return;
       }
 
-      // Şifreyi güncelle
-      const { error } = await supabase
-        .from('users')
-        .update({ password: passwordForm.newPassword })
-        .eq('email', currentUser.email);
+      // Şifreyi Supabase Auth üzerinden güncelle (parola artık DB'de düz-metin tutulmuyor)
+      const { error } = await supabase.auth.updateUser({
+        password: passwordForm.newPassword,
+      });
 
       if (error) throw error;
 

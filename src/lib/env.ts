@@ -1,8 +1,6 @@
 export const env = {
   SUPABASE_URL: import.meta.env.VITE_SUPABASE_URL || '',
   SUPABASE_KEY: import.meta.env.VITE_SUPABASE_ANON_KEY || '',
-  DEMO_EMAIL: import.meta.env.VITE_DEMO_EMAIL || 'info@re-set.com.tr',
-  DEMO_PASSWORD: import.meta.env.VITE_DEMO_PASSWORD || '123456',
   isDev: import.meta.env.DEV,
   isProd: import.meta.env.PROD,
 };

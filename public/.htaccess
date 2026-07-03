@@ -1,26 +1,82 @@
+# ============================================================================
+#  RE-SET — Apache config (Hostinger)
+#  Rewrite (HTTPS + SPA) · Compression · Security headers/CSP · Caching
+# ============================================================================
+
+# ---------------------------------------------------------------------------
+# 1) Rewrite: HTTPS, legacy redirect, SPA fallback
+# ---------------------------------------------------------------------------
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
 
-  # 1. Force HTTPS
+  # Force HTTPS
   RewriteCond %{HTTPS} off
   RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-  # 2. Serve existing files directly
+  # SEO: 301-redirect old /methods slug to canonical /demartini-yontemi
+  RewriteRule ^methods/?$ /demartini-yontemi [R=301,L]
+
+  # Serve existing files/dirs directly
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
 
-  # 3. For all other requests, rewrite to index.html (SPA Fallback)
+  # SPA fallback → index.html
   RewriteRule ^ index.html [L]
 </IfModule>
 
-# Optional: Disable directory listing
+# Disable directory listing
 Options -Indexes
 
-# Optional: Cache control for static assets
+# ---------------------------------------------------------------------------
+# 2) Compression (gzip + brotli). Cuts critical-path JS/CSS ~3x.
+# ---------------------------------------------------------------------------
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css text/xml \
+    application/javascript application/x-javascript application/json \
+    application/xml application/rss+xml application/manifest+json \
+    image/svg+xml font/ttf font/otf font/woff font/woff2 application/font-woff2
+</IfModule>
+<IfModule mod_brotli.c>
+  AddOutputFilterByType BROTLI_COMPRESS text/html text/plain text/css text/xml \
+    application/javascript application/x-javascript application/json \
+    application/xml application/rss+xml application/manifest+json \
+    image/svg+xml font/ttf font/otf font/woff font/woff2 application/font-woff2
+</IfModule>
+
+# ---------------------------------------------------------------------------
+# 3) Security headers
+# ---------------------------------------------------------------------------
 <IfModule mod_headers.c>
-  <FilesMatch "\.(js|css|gif|png|jpg|jpeg|svg|webp|ico)$">
-    Header set Cache-Control "max-age=31536000, public"
+  # HSTS — 1 year. includeSubDomains assumes every *.re-set.com.tr is HTTPS.
+  # Add `preload` and submit to hstspreload.org only when you are certain.
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=(), interest-cohort=()"
+  Header always set Cross-Origin-Opener-Policy "same-origin"
+
+  # Content-Security-Policy
+  # NOTE: 'unsafe-inline' on script-src is required by the inline Consent Mode
+  # bootstrap in index.html + GA/Clarity injectors. Migrate to a nonce later.
+  # Font Awesome (cdnjs) kaldırıldı → CSP'den de çıkarıldı. Kalan üçüncü taraf:
+  # Google Fonts, jsDelivr (Remixicon), Supabase, GA4, Clarity, YouTube (embed).
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.clarity.ms; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' data: https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' data: https: blob:; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://www.google-analytics.com https://region1.google-analytics.com https://*.analytics.google.com https://*.clarity.ms; frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com; media-src 'self' https:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests"
+</IfModule>
+
+# ---------------------------------------------------------------------------
+# 4) Caching
+#    Hashed build assets → immutable 1 year. HTML → always revalidate so a new
+#    deploy is picked up immediately.
+# ---------------------------------------------------------------------------
+<IfModule mod_headers.c>
+  <FilesMatch "\.(js|css|woff2?|ttf|otf|eot|gif|png|jpe?g|svg|webp|avif|ico)$">
+    Header set Cache-Control "max-age=31536000, public, immutable"
+  </FilesMatch>
+  <FilesMatch "\.(html|json|xml|txt)$">
+    Header set Cache-Control "no-cache, must-revalidate"
   </FilesMatch>
 </IfModule>

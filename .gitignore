@@ -29,6 +29,9 @@ hostinger-deploy
 .env.test.local
 .env.production.local
 
+# Local MCP config (may contain API keys) — track .mcp.json.example only
+.mcp.json
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

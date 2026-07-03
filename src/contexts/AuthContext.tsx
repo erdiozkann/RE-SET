@@ -3,12 +3,23 @@ import type { ReactNode } from 'react';
 import { supabase } from '../lib/supabase';
 import type { User } from '../types';
 
-// Helper: Timeout wrapper to prevent hanging Promises
+// Helper: Timeout wrapper to prevent hanging Promises.
+// The timer is cleared as soon as the action settles so it doesn't keep a
+// reference alive (this was leaking one timer per call before).
 const withTimeout = <T,>(action: () => Promise<T> | PromiseLike<T>, ms = 15000, msg = 'Sunucu yanıt vermedi (Zaman aşımı)'): Promise<T> => {
-    return Promise.race([
-        Promise.resolve(action()),
-        new Promise<T>((_, reject) => setTimeout(() => reject(new Error(msg)), ms))
-    ]);
+    return new Promise<T>((resolve, reject) => {
+        const timeoutId = setTimeout(() => reject(new Error(msg)), ms);
+        Promise.resolve(action()).then(
+            (value) => {
+                clearTimeout(timeoutId);
+                resolve(value);
+            },
+            (err) => {
+                clearTimeout(timeoutId);
+                reject(err);
+            },
+        );
+    });
 };
 
 // ============================================
@@ -125,10 +136,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
 
         // 2. Fallback: Trust Auth Metadata
+        // GÜVENLİK: yalnızca app_metadata (server-only) + sabit admin e-postası.
+        // user_metadata KULLANICI TARAFINDAN YAZILABİLİR — asla yetki kaynağı olamaz.
         const appRole = authUser.app_metadata?.role;
-        const userRole = authUser.user_metadata?.role;
         const isHardcodedAdmin = authUser.email && authUser.email.toLowerCase() === 'info@re-set.com.tr';
-        const isAdmin = (appRole === 'ADMIN') || (userRole === 'ADMIN') || isHardcodedAdmin;
+        const isAdmin = (appRole === 'ADMIN') || isHardcodedAdmin;
 
         const fallbackRole: User['role'] = isAdmin ? 'ADMIN' : (getCachedRole(authUser.id) || 'CLIENT');
 
@@ -166,6 +178,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const initAuth = async () => {
             // 🧹 Stale Session Cleanup
             cleanStaleSessions(import.meta.env.VITE_SUPABASE_URL || 'woaenxpydppxyfphwdix');
+
+            // ⚡ Anonim ziyaretçi hızlı çıkışı: localStorage'da Supabase auth token yoksa
+            //    oturum da yoktur → getSession ağ çağrısını ATLA (LCP'yi kritik yoldan kurtarır).
+            //    %99 pazarlama ziyaretçisi giriş yapmamıştır; onlar için ağ turu gereksiz.
+            try {
+                const hasStoredSession =
+                    typeof window !== 'undefined' &&
+                    Object.keys(window.localStorage).some((k) => /^sb-.*-auth-token$/.test(k));
+                if (!hasStoredSession) {
+                    if (mounted) {
+                        setUser(null);
+                        setLoading(false);
+                    }
+                    return;
+                }
+            } catch {
+                /* localStorage erişilemezse (gizli mod vb.) normal akışa düş */
+            }
 
             try {
                 // 1. Get Session
@@ -240,11 +270,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
 
         if (profile.role !== 'ADMIN' && profile.approved === false) {
-            // Auto-approve during testing or for testsprite users
-            const isTestUser = profile.email?.endsWith('@testsprite.com');
-            const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-            
-            if (!isTestUser && !isLocalhost) {
+            // Auto-approve bypass only runs in local DEV builds. In production
+            // we always require an explicit admin approval — never trust the
+            // email domain or hostname as a security boundary.
+            const allowAutoApprove =
+                import.meta.env.DEV &&
+                typeof window !== 'undefined' &&
+                (profile.email?.endsWith('@testsprite.com') ||
+                    window.location.hostname === 'localhost' ||
+                    window.location.hostname === '127.0.0.1');
+
+            if (!allowAutoApprove) {
                 throw new Error('Hesabınız henüz yönetici tarafından onaylanmamış.');
             }
         }
@@ -269,9 +305,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         if (!authData.user) throw new Error('Kullanıcı oluşturulamadı');
 
-        const isTestUser = email.endsWith('@testsprite.com');
-        const isLocalhost = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
-        const shouldAutoApprove = isTestUser || isLocalhost;
+        // Same rule as signIn: auto-approve only in DEV. Prod accounts always
+        // require an explicit admin approval before they're treated as active.
+        const shouldAutoApprove =
+            import.meta.env.DEV &&
+            typeof window !== 'undefined' &&
+            (email.endsWith('@testsprite.com') ||
+                window.location.hostname === 'localhost' ||
+                window.location.hostname === '127.0.0.1');
 
         return {
             id: authData.user.id,
