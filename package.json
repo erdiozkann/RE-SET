@@ -29,7 +29,7 @@
     "vite": "^7.0.3",
     "vite-prerender-plugin": "^0.5.13"
   },
-  "name": "react",
+  "name": "re-set",
   "private": true,
   "scripts": {
     "build": "vite build && node scripts/generate-sitemap.mjs && node scripts/generate-llms-full.mjs",
@@ -41,5 +41,5 @@
     "test:smoke": "playwright test tests/smoke"
   },
   "type": "module",
-  "version": "0.0.0"
+  "version": "1.0.0"
 }

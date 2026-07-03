@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 const ROUTES: Array<{ path: string; titleMatch: RegExp }> = [
   { path: '/about', titleMatch: /Hakkımda|Şafak Özkan/ },
-  { path: '/methods', titleMatch: /Demartini|Yöntemler/ },
+  { path: '/demartini-yontemi', titleMatch: /Demartini|Yöntem/ },
   { path: '/blog', titleMatch: /Blog/ },
   { path: '/contact', titleMatch: /İletişim|Contact/ },
 ];

@@ -5,7 +5,7 @@ test.describe('SEO / GEO surfaces', () => {
     const res = await request.get('/sitemap.xml');
     expect(res.status()).toBe(200);
     const body = await res.text();
-    for (const path of ['/about', '/methods', '/blog', '/contact']) {
+    for (const path of ['/about', '/demartini-yontemi', '/blog', '/contact']) {
       expect(body).toContain(path);
     }
   });
