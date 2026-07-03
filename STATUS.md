@@ -40,8 +40,13 @@ Kod tarafı ✅ tamam · Kullanıcı aksiyonları ⏳ bekliyor
 - [x] `og-image.jpg` üretildi (1200×630, markalı; kaynak `scripts/og-card.html`, headless Chrome+sips)
 - [x] **`prerender.tsx` boş body → gerçek statik HTML** ✅ DOĞRULANDI (build+headless render): 12 sayfa, H1+entity+FAQ+FAQPage JSON-LD statik HTML'de; React createRoot ile temiz mount
 - [x] hreflang kaldırıldı (tek dilli, yanıltıcıydı) · sitemap home trailing-slash `/` (canonical ile tutarlı)
-- [ ] `AggregateRating`+`Review`, `VideoObject`/`PodcastEpisode` şema (gerçek yorum verisi gerekiyor)
+- [x] ✅ **VideoObject/PodcastEpisode/Review + blog listesi prerendered HTML'e girdi** (2026-07-03): build zamanında youtube_videos(8)/podcast_episodes(2)/reviews(1)/blog_posts(1) çekilip `/youtube`,`/podcast`,`/blog` gövdesine taranabilir liste + JSON-LD enjekte. AggregateRating YOK (1 yorum = self-serving, honest-data). Bonus: `import.meta.env` fix'iyle blog detay sayfaları artık prerender oluyor (process.env boştu).
+- [x] ✅ **FAQ tek kaynağa çekildi + 8→15 soru** (`src/data/faq.ts`; home görünür+JSON-LD+prerender senkron, cloaking yok). Yeni kelime-hedefli sorular: John Demartini kimdir, Yöntem=Metot, Breakthrough Experience, Değer Belirleme/değerler hiyerarşisi, Quantum Collapse, hangi konular, terapi mi. index.html meta keywords tam kümeye genişletildi.
 - [x] ✅ YouTube handle çözüldü: `@SafakOzkan-y6i` (sitenin gerçek kanalı; sameAs index.html+about hizalandı). @safakozkan yanlıştı, kaldırıldı.
+
+### 🎯 İçerik otoritesi hedefi (kullanıcı, 2026-07-03): "Demartini/John Demartini aramalarında + GEO/AEO ilk sayfa; blog'u kullan"
+- **Dürüst beklenti:** "demartini metodu/yöntemi (Türkiye/İstanbul)" + uzun-kuyruk + AEO atıf = KAZANILABİLİR (foundation hazır). Çıplak "john demartini" #1 = Dr. Demartini'nin kendi global markası, on-page ile zor; "john demartini kimdir/türkçe/metodu" hedeflenebilir.
+- **Sıradaki büyük iş: BLOG KÜMESİ** (şu an 1 yazı). Kelime kümesine göre 10-15 makale planı çıkarıldı; yazımı sürüyor/onay bekliyor. Yazma: admin panelden (Supabase'e doğrudan yazamıyorum — anon key read-only).
 
 ### 🟡 FAZ 2 — Performans (başladı)
 - [x] Font Awesome kaldırıldı (index.html) — hiç kullanılmıyordu; CSP'den cdnjs düşürüldü
