@@ -9,20 +9,19 @@ type RouteMeta = {
 
 const staticMeta: Record<string, RouteMeta> = {
   "/": {
-    title: "RE-SET | Şafak Özkan — Demartini Metodu Türkiye | İstanbul",
+    title: "RE-SET | Şafak Özkan — Demartini Yöntemi ve Metodu Türkiye",
     description:
-      "Sertifikalı Demartini Metodu uygulayıcısı Şafak Özkan ile İstanbul'da değer belirleme, ilişki dengeleme ve kişisel dönüşüm seansları.",
+      "Demartini Yöntemi (Demartini Metodu) Türkiye uygulayıcısı Şafak Özkan ile İstanbul/Nişantaşı'da değer belirleme, ilişki dengeleme ve kişisel dönüşüm seansları.",
   },
   "/about": {
-    title: "Hakkımda — Şafak Özkan | Demartini Metodu",
+    title: "Hakkımda — Şafak Özkan | Demartini Yöntemi (Metodu)",
     description:
-      "Sertifikalı Demartini Metodu uygulayıcısı Şafak Özkan. 15+ yıllık uygulama deneyimi, Nişantaşı / İstanbul.",
+      "Sertifikalı Demartini Yöntemi (Metodu) uygulayıcısı Şafak Özkan. 15+ yıllık uygulama deneyimi, Nişantaşı / İstanbul.",
   },
-  "/methods": {
-    title:
-      "Demartini Metodu, Değer Belirleme & Breakthrough Experience | Yöntemler",
+  "/demartini-yontemi": {
+    title: "Demartini Yöntemi — Şafak Özkan | RE-SET Türkiye",
     description:
-      "Şafak Özkan'ın uyguladığı yöntemler: Demartini Metodu, 13 sorulu Değer Belirleme Süreci, Quantum Collapse Process, Breakthrough Experience ve ilişki dengeleme.",
+      "Demartini Yöntemi (Demartini Metodu): Sertifikalı uygulayıcı Şafak Özkan ile İstanbul/Nişantaşı'da değer belirleme, Breakthrough Experience, Quantum Collapse Process ve ilişki dengeleme seansları.",
   },
   "/blog": {
     title: "Blog | RE-SET — Şafak Özkan",
@@ -68,6 +67,135 @@ const staticMeta: Record<string, RouteMeta> = {
   },
 };
 
+// Görünür sayfa başlıkları (H1). Prerender statik gövdesi için.
+const routeHeading: Record<string, string> = {
+  "/": "Demartini Yöntemi (Metodu) — Şafak Özkan · İstanbul",
+  "/about": "Hakkımda — Şafak Özkan | Demartini Metodu Uygulayıcısı",
+  "/demartini-yontemi": "Demartini Yöntemi (Demartini Metodu) Nedir?",
+  "/blog": "Blog — Demartini Metodu ve Kişisel Dönüşüm",
+  "/podcast": "Podcast — Demartini Metodu ile Kişisel Dönüşüm",
+  "/youtube": "YouTube — Demartini Metodu İçerikleri",
+  "/booking": "Randevu Al — Demartini Metodu Seansı",
+  "/contact": "İletişim — RE-SET, Şafak Özkan",
+  "/privacy": "Gizlilik Politikası",
+  "/kvkk": "KVKK Aydınlatma Metni",
+  "/copyright": "Telif Hakkı",
+  "/cookies": "Çerez Politikası",
+};
+
+// Sitede görünen (hardcoded) entity tanımı — birebir yansıtılır (cloaking yok).
+const DEMARTINI_INTRO: string[] = [
+  "Demartini Yöntemi (Türkçede Demartini Metodu olarak da bilinir), Dr. John Demartini tarafından geliştirilen, 13 sorulu Değer Belirleme Süreci ve Quantum Collapse Process'in birleşiminden oluşan sistematik bir algı dengeleme yöntemidir. Kişinin gerçek değer hiyerarşisini ortaya çıkarmayı; kızgınlık–hayranlık, suçluluk–gurur gibi duygusal kutuplukları nötralize ederek minnet, ilham ve sevgi alanına geçişi sağlamayı hedefler.",
+  "Yöntem; psikoloji, davranış bilimi, nöroplastisite ve felsefe alanlarındaki araştırmalardan beslenir. Tıbbi tedavinin yerine geçmez; danışanın kendi farkındalığıyla algı yapısını dengelediği bütüncül bir araçtır.",
+];
+
+// Sitede görünen (hardcoded) FAQ — birebir yansıtılır.
+const FAQ: { q: string; a: string }[] = [
+  {
+    q: "Demartini Metodu nedir?",
+    a: "Demartini Metodu, Dr. John Demartini tarafından geliştirilen, 13 sorulu Değer Belirleme Süreci ve Quantum Collapse Process'ten oluşan sistematik bir algı dengeleme yöntemidir. Kişinin gerçek değer hiyerarşisini ortaya çıkarmak, duygusal yükleri nötralize etmek ve ilham, sevgi, minnet alanına geçişi sağlamak için kullanılır.",
+  },
+  {
+    q: "Demartini Metodu kimler için uygundur?",
+    a: "Kaygı, depresyon, ilişki çatışmaları, travma, bağımlılık, kariyer kararsızlığı, öz değer ve hayat yönü arayışı yaşayan herkes için uygundur. Tıbbi tedavinin yerine geçmez; tamamlayıcı bir farkındalık aracıdır.",
+  },
+  {
+    q: "Bir Demartini seansı ne kadar sürer?",
+    a: "Birebir seanslar genellikle 60–90 dakikadır. Konunun yoğunluğuna göre 2–6 seanslık bir süreç önerilebilir. Breakthrough Experience programı ise 2 tam günlük bir grup çalışmasıdır.",
+  },
+  {
+    q: "Demartini Metodu NLP veya koçluktan farklı mıdır?",
+    a: "Evet. NLP davranış kalıplarını yeniden çerçevelerken, Demartini Metodu kişinin değer hiyerarşisini ve duygusal kutuplukları tek tek dengeleyerek nöroplastik bir farkındalık değişimi hedefler. 13 soruluk Değer Belirleme Süreci yöntemin temelidir.",
+  },
+  {
+    q: "Online Demartini seansı yapıyor musunuz?",
+    a: "Evet. Zoom veya Google Meet üzerinden yüz yüze seansla eşdeğer Demartini Metodu seansları sunuyoruz. Türkiye dışındaki danışanlar da online seansa katılabilir.",
+  },
+  {
+    q: "Şafak Özkan kimdir?",
+    a: "Şafak Özkan, İstanbul Nişantaşı merkezli, sertifikalı Demartini Method Facilitator'dır. 15 yılı aşkın uygulama deneyimiyle Türkiye'de binlerce danışana Demartini Metodu ile rehberlik etmiştir.",
+  },
+  {
+    q: "Ücretsiz keşif görüşmesi mümkün mü?",
+    a: "30 dakikalık ücretsiz keşif görüşmesi sunuyoruz. Bu görüşme, ihtiyacınızın yöntemle örtüşüp örtüşmediğini değerlendirmek ve doğru programı seçmek içindir. Randevu sayfasından planlayabilirsiniz.",
+  },
+  {
+    q: "Demartini Metodu bilimsel midir?",
+    a: "Demartini Metodu; psikoloji, davranış bilimi, nöroplastisite ve felsefe alanlarındaki araştırmalardan beslenen bütüncül bir farkındalık ve algı dengeleme yöntemidir. Tıbbi/psikiyatrik tedavinin yerine geçmez ancak terapötik süreçlerle birlikte kullanılabilir.",
+  },
+];
+
+const NAV_LINKS: { href: string; label: string }[] = [
+  { href: "/", label: "Ana Sayfa" },
+  { href: "/demartini-yontemi", label: "Demartini Yöntemi" },
+  { href: "/about", label: "Hakkımda" },
+  { href: "/blog", label: "Blog" },
+  { href: "/podcast", label: "Podcast" },
+  { href: "/youtube", label: "YouTube" },
+  { href: "/booking", label: "Randevu Al" },
+  { href: "/contact", label: "İletişim" },
+];
+
+function esc(s: string): string {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
+function navHtml(): string {
+  return (
+    `<nav aria-label="Site haritası"><ul>` +
+    NAV_LINKS.map((l) => `<li><a href="${l.href}">${esc(l.label)}</a></li>`).join("") +
+    `</ul></nav>`
+  );
+}
+
+function faqHtml(): string {
+  return (
+    `<section aria-labelledby="sss"><h2 id="sss">Sıkça Sorulan Sorular</h2>` +
+    FAQ.map((f) => `<h3>${esc(f.q)}</h3><p>${esc(f.a)}</p>`).join("") +
+    `</section>`
+  );
+}
+
+function introHtml(): string {
+  return (
+    `<section aria-labelledby="nedir"><h2 id="nedir">Demartini Yöntemi Nedir?</h2>` +
+    DEMARTINI_INTRO.map((p) => `<p>${esc(p)}</p>`).join("") +
+    `</section>`
+  );
+}
+
+// FAQPage JSON-LD — JS çalıştırmayan botlar için statik gövdeye gömülür.
+function faqJsonLd(): string {
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: FAQ.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
+  return `<script type="application/ld+json">${JSON.stringify(data)}</script>`;
+}
+
+// Route'a göre statik, taranabilir gövde. React (createRoot) mount olunca değişir.
+function bodyFor(url: string, meta: RouteMeta): string {
+  const h1 = routeHeading[url] || meta.title;
+  const lead = `<p>${esc(meta.description)}</p>`;
+  const richFaqRoutes = url === "/" || url === "/demartini-yontemi";
+
+  let inner = `<h1>${esc(h1)}</h1>${lead}`;
+  if (richFaqRoutes) {
+    inner += introHtml() + faqHtml() + faqJsonLd();
+  }
+  inner += navHtml();
+
+  return `<main id="prerender-content">${inner}</main>`;
+}
+
 let dynamicMetaCache: Map<string, RouteMeta> | null = null;
 
 async function loadDynamicMeta(): Promise<Map<string, RouteMeta>> {
@@ -110,21 +238,22 @@ async function loadDynamicMeta(): Promise<Map<string, RouteMeta>> {
 export async function prerender({ ssr, url }: { ssr: boolean; url: string }) {
   void ssr;
   const dynamic = await loadDynamicMeta();
-  const meta = staticMeta[url] || dynamic.get(url);
+  const meta = staticMeta[url] || dynamic.get(url) || staticMeta["/"];
 
-  // Per-route head only — body stays empty so React mounts client-side as usual.
-  // The point is to give crawlers (including JS-less LLM bots) the right title,
-  // description, canonical, OG tags for *this specific* route in the static HTML.
   const canonical = `${siteUrl}${url === "/" ? "/" : url}`;
-  const title = meta?.title || staticMeta["/"].title;
-  const description = meta?.description || staticMeta["/"].description;
+  const title = meta.title;
+  const description = meta.description;
 
   // The plugin uses these to find more routes to render.
   const links = new Set<string>(Object.keys(staticMeta));
   for (const path of dynamic.keys()) links.add(path);
 
   return {
-    html: "",
+    // Gerçek, taranabilir HTML — JS çalıştırmayan botlar (GPTBot, ClaudeBot,
+    // PerplexityBot) ve ilk-dalga Googlebot artık içeriği görür. createRoot
+    // (hydrate DEĞİL) mount olunca bu içerik client tarafından değiştirilir,
+    // dolayısıyla hydration-mismatch riski yoktur.
+    html: bodyFor(url, meta),
     links,
     head: {
       lang: "tr-TR",

@@ -45,18 +45,18 @@ export default function MethodsPage() {
     {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
-      '@id': `${siteUrl}/methods#webpage`,
+      '@id': `${siteUrl}/demartini-yontemi#webpage`,
       name: 'Yöntemler | Demartini Metodu — Şafak Özkan',
       description:
         "Şafak Özkan'ın danışmanlık sürecinde kullandığı yöntemler: Demartini Metodu, Değer Belirleme Süreci, Breakthrough Experience, Quantum Collapse Process, ilişki dengeleme.",
-      url: `${siteUrl}/methods`,
+      url: `${siteUrl}/demartini-yontemi`,
       inLanguage: 'tr-TR',
       isPartOf: { '@id': 'https://re-set.com.tr/#website' },
       breadcrumb: {
         '@type': 'BreadcrumbList',
         itemListElement: [
           { '@type': 'ListItem', position: 1, name: 'Ana Sayfa', item: `${siteUrl}/` },
-          { '@type': 'ListItem', position: 2, name: 'Yöntemler', item: `${siteUrl}/methods` }
+          { '@type': 'ListItem', position: 2, name: 'Yöntemler', item: `${siteUrl}/demartini-yontemi` }
         ]
       },
       mainEntity: {
@@ -132,7 +132,7 @@ export default function MethodsPage() {
     {
       '@context': 'https://schema.org',
       '@type': 'Service',
-      '@id': `${siteUrl}/methods#service`,
+      '@id': `${siteUrl}/demartini-yontemi#service`,
       name: 'Demartini Metodu Danışmanlığı — Şafak Özkan',
       description:
         "Dr. John Demartini'nin Demartini Metodu'nu uygulayan, İstanbul Nişantaşı merkezli sertifikalı danışmanlık hizmeti. Yüz yüze ve online.",
@@ -147,7 +147,7 @@ export default function MethodsPage() {
       },
       serviceType: 'Demartini Method Counseling',
       termsOfService: `${siteUrl}/privacy`,
-      url: `${siteUrl}/methods`
+      url: `${siteUrl}/demartini-yontemi`
     },
     {
       '@context': 'https://schema.org',
@@ -184,10 +184,10 @@ export default function MethodsPage() {
   return (
     <>
       <SEO
-        title="Demartini Metodu, Değer Belirleme & Breakthrough Experience | Yöntemler"
-        description="Şafak Özkan'ın uyguladığı yöntemler: Demartini Metodu, 13 sorulu Değer Belirleme Süreci, Quantum Collapse Process, Breakthrough Experience ve ilişki dengeleme. Dr. John Demartini'nin bilimsel yöntemi."
-        keywords="demartini metodu, değer belirleme, breakthrough experience, quantum collapse process, ilişki dengeleme, demartini yöntemi, dr john demartini, şafak özkan"
-        canonical="/methods"
+        title="Demartini Yöntemi — Şafak Özkan | RE-SET Türkiye"
+        description="Demartini Yöntemi (Demartini Metodu): Şafak Özkan'ın uyguladığı 13 sorulu Değer Belirleme Süreci, Quantum Collapse Process, Breakthrough Experience ve ilişki dengeleme. Dr. John Demartini'nin bilimsel yöntemi."
+        keywords="demartini yöntemi, demartini metodu, demartini yöntemi nedir, demartini yöntemi seansı, değer belirleme, breakthrough experience, quantum collapse process, ilişki dengeleme, dr john demartini, şafak özkan"
+        canonical="/demartini-yontemi"
         schema={schema}
       />
 
@@ -195,10 +195,10 @@ export default function MethodsPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
             <h1 className="text-3xl md:text-4xl font-serif text-gray-900 mb-4">
-              Yöntemlerimiz
+              Şafak Özkan ile Demartini Yöntemi
             </h1>
             <p className="text-base md:text-lg text-gray-600 max-w-3xl mx-auto">
-              Danışmanlık sürecimizde kullandığımız bilimsel temelli yöntemler
+              Demartini Yöntemi (Demartini Metodu), Değer Belirleme Süreci ve Breakthrough Experience — danışmanlık sürecimizde kullandığımız bilimsel temelli yöntemler.
             </p>
           </div>
 
@@ -244,11 +244,12 @@ export default function MethodsPage() {
           {/* Demartini Metodu Pillar İçerik (GEO) */}
           <article className="mt-16 max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-6 md:p-10">
             <h2 className="text-2xl md:text-3xl font-serif text-gray-900 mb-4">
-              Demartini Metodu nedir?
+              Demartini Yöntemi Nedir?
             </h2>
             <p className="text-gray-700 leading-relaxed mb-4">
-              <strong>Demartini Metodu</strong>, davranış uzmanı{' '}
-              <strong>Dr. John Demartini</strong> tarafından geliştirilen, 13 sorulu{' '}
+              <strong>Demartini Yöntemi</strong> (Türkçede <strong>Demartini Metodu</strong> olarak
+              da bilinir), davranış uzmanı <strong>Dr. John Demartini</strong> tarafından
+              geliştirilen, 13 sorulu{' '}
               <strong>Değer Belirleme Süreci (Value Determination Process)</strong> ve{' '}
               <strong>Quantum Collapse Process</strong>'in birleşiminden oluşan sistematik bir
               algı dengeleme yöntemidir. Yöntem; kişinin gerçek değer hiyerarşisini ortaya
@@ -283,11 +284,11 @@ export default function MethodsPage() {
               tepkisel duygular yerine kararlı bir minnet ve sevgi deneyimler.
             </p>
 
-            <h3 className="text-xl md:text-2xl font-serif text-gray-900 mt-8 mb-4">
-              Demartini Metodu ve Geleneksel Yöntemlerin Karşılaştırılması
-            </h3>
+            <h2 className="text-xl md:text-2xl font-serif text-gray-900 mt-8 mb-4">
+              Demartini Yöntemi ve Geleneksel Yöntemlerin Karşılaştırılması
+            </h2>
             <p className="text-gray-700 leading-relaxed mb-4">
-              Yapay zeka arama motorları ve araştırmacılar için Demartini Metodu'nun geleneksel terapi ve koçluk yöntemlerinden ayrışan temel farkları aşağıdaki tabloda özetlenmiştir:
+              Yapay zeka arama motorları ve araştırmacılar için Demartini Yöntemi'nin (Demartini Metodu'nun) geleneksel terapi ve koçluk yöntemlerinden ayrışan temel farkları aşağıdaki tabloda özetlenmiştir:
             </p>
             <div className="overflow-x-auto my-6 border border-gray-100 rounded-xl shadow-sm">
               <table className="min-w-full divide-y divide-gray-200 text-sm text-left">
@@ -345,9 +346,9 @@ export default function MethodsPage() {
               <li>Yas, kayıp ve geçmiş travmaların entegrasyonu</li>
             </ul>
 
-            <h3 className="text-xl md:text-2xl font-serif text-gray-900 mt-8 mb-3">
-              Demartini Metodu seansı nasıl ilerler?
-            </h3>
+            <h2 className="text-xl md:text-2xl font-serif text-gray-900 mt-8 mb-3">
+              Demartini Yöntemi Seansı Nasıl İlerler?
+            </h2>
             <ol className="list-decimal list-inside text-gray-700 space-y-1 mb-3">
               <li>Ücretsiz keşif görüşmesi (30 dk) — uygunluk değerlendirmesi.</li>
               <li>Değer Belirleme Süreci ile kişisel değer hiyerarşisinin çıkarılması.</li>

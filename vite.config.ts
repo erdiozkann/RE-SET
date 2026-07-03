@@ -71,7 +71,7 @@ export default defineConfig({
       additionalPrerenderRoutes: [
         "/",
         "/about",
-        "/methods",
+        "/demartini-yontemi",
         "/blog",
         "/podcast",
         "/youtube",

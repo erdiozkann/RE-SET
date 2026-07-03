@@ -20,9 +20,9 @@ const KVKKPage = lazy(() => import('../pages/kvkk/page'));
 const PrivacyPage = lazy(() => import('../pages/privacy/page'));
 const CopyrightPage = lazy(() => import('../pages/copyright/page'));
 const NotFoundPage = lazy(() => import('../pages/NotFound'));
+const CookiesPage = lazy(() => import('../pages/cookies/page'));
 // Defense-in-depth: Only import DebugPage in DEV
 const DebugPage = import.meta.env.DEV ? lazy(() => import('../pages/debug/page')) : null;
-import CookiesPage from '../pages/cookies/page';
 
 import ProtectedRoute from '../components/ProtectedRoute';
 
@@ -35,7 +35,7 @@ const routes: RouteObject[] = [
     children: [
       { index: true, element: <HomePage /> },
       { path: 'about', element: <AboutPage /> },
-      { path: 'methods', element: <MethodsPage /> },
+      { path: 'demartini-yontemi', element: <MethodsPage /> },
       { path: 'blog', element: <BlogPage /> },
       { path: 'blog/:id', element: <BlogDetailPage /> },
       { path: 'podcast', element: <PodcastPage /> },
@@ -44,6 +44,7 @@ const routes: RouteObject[] = [
       { path: 'contact', element: <ContactPage /> },
       { path: 'kvkk', element: <KVKKPage /> },
       { path: 'privacy', element: <PrivacyPage /> },
+      { path: 'cookies', element: <CookiesPage /> },
       { path: 'copyright', element: <CopyrightPage /> },
     ],
   },
@@ -88,14 +89,6 @@ const routes: RouteObject[] = [
         <ProtectedRoute>
           <ClientPanelPage />
         </ProtectedRoute>
-      </PageTransition>
-    ),
-  },
-  {
-    path: '/cookies',
-    element: (
-      <PageTransition>
-        <CookiesPage />
       </PageTransition>
     ),
   },

@@ -1,19 +1,20 @@
-# RE-SET — Şafak Özkan | Demartini Metodu Türkiye (Kapsamlı Veri Kümesi)
+# RE-SET — Şafak Özkan | Demartini Yöntemi (Metodu) Türkiye (Kapsamlı Veri Kümesi)
 
-> Bu dosya, RE-SET platformundaki yöntemlerin ve blog yazılarının LLM indekslemesi için birleştirilmiş halini içerir.
+> Bu dosya, RE-SET platformundaki Demartini Yöntemi içeriklerinin ve blog yazılarının LLM indekslemesi için birleştirilmiş halini içerir.
+> Canonical sayfa: https://re-set.com.tr/demartini-yontemi
 
 ---
 
-## YÖNTEMLERİMİZ
+## DEMARTINI YÖNTEMİ VE YÖNTEMLERİMİZ
 
-### 1. Demartini Metodu
-Dr. John Demartini tarafından geliştirilen, 13 sorulu Değer Belirleme Süreci ve Quantum Collapse Process ile kişinin değer hiyerarşisini ortaya çıkaran, duygusal kutuplukları nötralize eden sistematik bir algı dengeleme yöntemidir.
+### 1. Demartini Yöntemi (Demartini Metodu)
+Demartini Yöntemi — Türkçede "Demartini Metodu" olarak da bilinir — Dr. John Demartini tarafından geliştirilen, 13 sorulu Değer Belirleme Süreci ve Quantum Collapse Process ile kişinin değer hiyerarşisini ortaya çıkaran, duygusal kutuplukları nötralize eden sistematik bir algı dengeleme yöntemidir.
 
 ### 2. Değer Belirleme Süreci (Value Determination Process)
-Dr. John Demartini'nin 13 reflektif soru üzerinden bireyin gerçek değer hiyerarşisini ortaya çıkardığı süreç. Sosyal idealizmden bağımsız, davranışla doğrulanan içsel öncelik haritasıdır.
+Dr. John Demartini'nin 13 reflektif soru üzerinden bireyin gerçek değer hiyerarşisini ortaya çıkardığı süreç. Sosyal idealizmden bağımsız, davranışla doğrulanan içsel öncelik haritasıdır. Demartini Yöntemi'nin temel adımıdır.
 
 ### 3. Quantum Collapse Process
-Demartini Metodu içinde yer alan, duygusal kutuplukları (kızgınlık/hayranlık, suçluluk/gurur) nötralize eden algı dengeleme tekniğidir.
+Demartini Yöntemi (Demartini Metodu) içinde yer alan, duygusal kutuplukları (kızgınlık/hayranlık, suçluluk/gurur) nötralize eden algı dengeleme tekniğidir.
 
 ---
 

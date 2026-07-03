@@ -8,15 +8,14 @@
 
   <!-- ============ SEO Meta ============ -->
   <!-- title, description, canonical and og/twitter title+description+url are injected per-route by src/prerender.tsx -->
-  <title>RE-SET | Şafak Özkan — Demartini Metodu Türkiye | İstanbul</title>
+  <title>RE-SET | Şafak Özkan — Demartini Yöntemi ve Metodu Türkiye | İstanbul</title>
   <meta name="keywords"
     content="Demartini Metodu, Demartini yöntemi, Şafak Özkan, değer belirleme, Breakthrough Experience, ilişki dengeleme, Dr. John Demartini, kişisel dönüşüm, Demartini İstanbul, Demartini Nişantaşı, Quantum Collapse Process" />
   <meta name="last-modified" content="2026-05-23" />
 
-  <!-- Dil & Bölge -->
+  <!-- Dil & Bölge (tek dilli site — hreflang gereksiz; her route'ta homepage'e işaret
+       eden yanıltıcı alternate'ler kaldırıldı) -->
   <meta http-equiv="content-language" content="tr-TR" />
-  <link rel="alternate" hreflang="tr-TR" href="https://re-set.com.tr/" />
-  <link rel="alternate" hreflang="x-default" href="https://re-set.com.tr/" />
 
   <!-- Yazar / Telif -->
   <meta name="author" content="Şafak Özkan — Reset Danışmanlık" />
@@ -73,9 +72,9 @@
     href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
     rel="stylesheet">
 
-  <!-- Icons -->
+  <!-- Icons (Remixicon only — Font Awesome kaldırıldı: hiç kullanılmıyordu) -->
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
   <!-- ============ Schema.org Global (Organization + WebSite + Person) ============ -->
   <script type="application/ld+json">
@@ -94,6 +93,8 @@
         },
         "founder": { "@id": "https://re-set.com.tr/#safakozkan" },
         "sameAs": [
+          "https://www.instagram.com/safakozkandemartini/",
+          "https://www.youtube.com/@safakozkan",
           "https://drdemartini.com/tr/demartini-method"
         ],
         "areaServed": { "@type": "Country", "name": "Türkiye" }
@@ -118,7 +119,12 @@
         "jobTitle": "Sertifikalı Demartini Metodu Uygulayıcısı",
         "url": "https://re-set.com.tr/about",
         "worksFor": { "@id": "https://re-set.com.tr/#organization" },
+        "sameAs": [
+          "https://www.instagram.com/safakozkandemartini/",
+          "https://www.youtube.com/@safakozkan"
+        ],
         "knowsAbout": [
+          "Demartini Yöntemi",
           "Demartini Metodu",
           "Değer Belirleme Süreci",
           "Breakthrough Experience",

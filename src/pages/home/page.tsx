@@ -356,6 +356,9 @@ export default function HomePage() {
                   className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight"
                   style={{ color: heroContent.text_color || '#1A1A1A' }}
                 >
+                  <span className="block text-base md:text-lg font-semibold tracking-wide text-[#C19B2E] mb-2">
+                    Demartini Yöntemi (Metodu) · Şafak Özkan · İstanbul
+                  </span>
                   {heroContent.title}
                 </h1>
                 <p
@@ -464,7 +467,7 @@ export default function HomePage() {
         <section className="py-12 md:py-16 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-8">
-              <h2 className="text-3xl md:text-4xl font-serif text-gray-900 mb-3">Yöntemlerimiz</h2>
+              <h2 className="text-3xl md:text-4xl font-serif text-gray-900 mb-3">Demartini Yöntemi ve Yöntemlerimiz</h2>
               <p className="text-base md:text-lg text-gray-600 max-w-2xl mx-auto">
                 Danışmanlık sürecimizde bilimsel temelli ve etkili yöntemler kullanıyoruz
               </p>
@@ -487,7 +490,7 @@ export default function HomePage() {
             </div>
             <div className="text-center mt-8">
               <Link
-                to="/methods"
+                to="/demartini-yontemi"
                 className="inline-block px-6 py-3 bg-[#D4AF37] text-[#1A1A1A] rounded-full font-semibold hover:bg-[#C19B2E] transition-colors shadow-lg"
               >
                 Tüm Yöntemlerimiz
@@ -507,10 +510,11 @@ export default function HomePage() {
             id="what-is-demartini"
             className="text-3xl md:text-4xl font-serif text-[#1A1A1A] mb-6 text-center"
           >
-            Demartini Metodu nedir?
+            Demartini Yöntemi Nedir?
           </h2>
           <p className="text-base md:text-lg text-gray-700 leading-relaxed mb-5">
-            <strong>Demartini Metodu</strong>, Dr. John Demartini tarafından geliştirilen, 13 sorulu
+            <strong>Demartini Yöntemi</strong> (Türkçede <strong>Demartini Metodu</strong> olarak
+            da bilinir), Dr. John Demartini tarafından geliştirilen, 13 sorulu
             <strong> Değer Belirleme Süreci</strong> ve <strong>Quantum Collapse Process</strong>
             'in birleşiminden oluşan sistematik bir algı dengeleme yöntemidir. Kişinin gerçek değer
             hiyerarşisini ortaya çıkarmayı; kızgınlık–hayranlık, suçluluk–gurur gibi duygusal

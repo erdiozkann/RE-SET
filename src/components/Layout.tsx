@@ -1,10 +1,12 @@
-import { Suspense } from 'react';
+import { Suspense, lazy } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import Header from './feature/Header';
 import Footer from './feature/Footer';
-import CookieBanner from './feature/CookieBanner';
 import { AnimatePresence } from 'framer-motion';
 import PageTransition from './PageTransition';
+
+// Çerez banner'ı kritik yolda değil (consent default-denied) → ertele
+const CookieBanner = lazy(() => import('./feature/CookieBanner'));
 
 export default function Layout() {
   const location = useLocation();
@@ -28,7 +30,9 @@ export default function Layout() {
         </AnimatePresence>
       </main>
       <Footer />
-      <CookieBanner />
+      <Suspense fallback={null}>
+        <CookieBanner />
+      </Suspense>
     </div>
   );
 }

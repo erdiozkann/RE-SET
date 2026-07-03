@@ -17,7 +17,7 @@ export default function SEO({
   title,
   description,
   keywords,
-  ogImage = 'https://readdy.ai/api/search-image?query=Professional%20therapy%20and%20counseling%20services%2C%20modern%20minimalist%20office%20interior%2C%20warm%20and%20welcoming%20atmosphere%2C%20soft%20natural%20lighting%2C%20professional%20setting%2C%20high%20quality%20photography&width=1200&height=630&seq=seo-og&orientation=landscape',
+  ogImage = '/og-image.jpg',
   ogType = 'website',
   canonical,
   schema,
@@ -26,7 +26,10 @@ export default function SEO({
   nofollow = false
 }: SEOProps) {
   const siteUrl = (import.meta.env.VITE_SITE_URL || 'https://re-set.com.tr').replace(/\/$/, '');
-  const fullTitle = `${title} | Reset - Şafak Özkan Danışmanlık`;
+  // Sayfalar tam (markalı) başlık geçirir — burada tekrar ek YAPMA (çift-suffix olurdu).
+  const fullTitle = title;
+  // og:image her zaman mutlak URL olmalı
+  const ogImageUrl = ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage.startsWith('/') ? '' : '/'}${ogImage}`;
 
   useEffect(() => {
     const canonicalPath = canonical || window.location.pathname || '/';
@@ -82,9 +85,7 @@ export default function SEO({
     }
     setMetaTag('author', 'Şafak Özkan');
     setMetaTag('robots', robotsDirectives);
-    setMetaTag('language', 'Turkish');
-    setMetaTag('revisit-after', '7 days');
-    
+
     if (lastModified) {
       setMetaTag('last-modified', lastModified);
     } else {
@@ -96,15 +97,15 @@ export default function SEO({
     setMetaTag('og:description', description, true);
     setMetaTag('og:type', ogType, true);
     setMetaTag('og:url', canonicalUrl, true);
-    setMetaTag('og:image', ogImage, true);
-    setMetaTag('og:site_name', 'Reset - Şafak Özkan Danışmanlık', true);
+    setMetaTag('og:image', ogImageUrl, true);
+    setMetaTag('og:site_name', 'RE-SET — Şafak Özkan', true);
     setMetaTag('og:locale', 'tr_TR', true);
 
     // Twitter Card tags
     setMetaTag('twitter:card', 'summary_large_image');
     setMetaTag('twitter:title', fullTitle);
     setMetaTag('twitter:description', description);
-    setMetaTag('twitter:image', ogImage);
+    setMetaTag('twitter:image', ogImageUrl);
 
     // Canonical URL
     setLinkTag('canonical', canonicalUrl);
@@ -132,7 +133,7 @@ export default function SEO({
     return () => {
       // Optional: Remove meta tags on unmount if needed
     };
-  }, [title, description, keywords, ogImage, ogType, canonical, schema, lastModified, fullTitle, noindex, nofollow, siteUrl]);
+  }, [title, description, keywords, ogImageUrl, ogType, canonical, schema, lastModified, fullTitle, noindex, nofollow, siteUrl]);
 
   return null;
 }

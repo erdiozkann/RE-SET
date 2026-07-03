@@ -27,7 +27,7 @@ export default function Header() {
   const navLinks = [
     { path: '/', label: 'Ana Sayfa' },
     { path: '/about', label: 'Hakkımda' },
-    { path: '/methods', label: 'Yöntemler' },
+    { path: '/demartini-yontemi', label: 'Yöntemler' },
     { path: '/blog', label: 'Blog' },
     { path: '/podcast', label: 'Podcast' },
     { path: '/booking', label: 'Randevu' },

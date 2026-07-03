@@ -27,7 +27,7 @@ async function generate() {
   const staticPages = [
     { loc: '', changefreq: 'weekly', priority: '1.0' },
     { loc: '/about', changefreq: 'monthly', priority: '0.9' },
-    { loc: '/methods', changefreq: 'monthly', priority: '0.9' },
+    { loc: '/demartini-yontemi', changefreq: 'monthly', priority: '0.9' },
     { loc: '/blog', changefreq: 'weekly', priority: '0.8' },
     { loc: '/podcast', changefreq: 'weekly', priority: '0.7' },
     { loc: '/youtube', changefreq: 'weekly', priority: '0.7' },
@@ -62,7 +62,8 @@ async function generate() {
   const today = new Date().toISOString().split('T')[0];
 
   const xmlEntries = allPages.map(page => {
-    const locUrl = `${siteUrl}${page.loc}`;
+    // Ana sayfa canonical'ı ile tutarlı olsun: trailing slash'lı (https://re-set.com.tr/)
+    const locUrl = page.loc === '' ? `${siteUrl}/` : `${siteUrl}${page.loc}`;
     const lastmod = page.lastmod || today;
     return `
   <url>
