@@ -5,6 +5,7 @@ import ReviewsSlider from '../../components/feature/ReviewsSlider';
 import { servicesApi, contentApi, methodsApi } from '../../lib/api';
 import type { ServiceType, HeroContent, AboutContent, ContactInfo, Method } from '../../types';
 import { FAQ } from '../../data/faq';
+import { optimizedImage } from '../../lib/img';
 
 
 
@@ -265,7 +266,7 @@ export default function HomePage() {
               )}
               <img
                 ref={heroImageRef}
-                src={heroContent.image}
+                src={optimizedImage(heroContent.image, { width: 1400 })}
                 alt="Şafak Özkan ile Demartini Metodu danışmanlığı — RE-SET İstanbul"
                 className={`w-full h-full object-cover object-top transition-opacity duration-700 ${heroImageLoaded ? 'opacity-100' : 'opacity-0'}`}
                 fetchPriority="high"
@@ -351,7 +352,7 @@ export default function HomePage() {
                 <div className="aspect-square w-full max-w-md rounded-2xl overflow-hidden shadow-xl bg-gray-100 flex items-center justify-center">
                   {aboutContent.image ? (
                     <img
-                      src={aboutContent.image}
+                      src={optimizedImage(aboutContent.image, { width: 800 })}
                       alt="Şafak Özkan"
                       className="w-full h-full object-cover object-center"
                       loading="lazy"

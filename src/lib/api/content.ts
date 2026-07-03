@@ -18,11 +18,24 @@ let aboutContentsCache: AboutContent[] | null = null;
 let contactInfoCache: ContactInfo | null = null;
 let profileImagesCache: ProfileImage[] | null = null;
 
+// In-flight istek paylaşımı: Header + Footer + sayfa aynı anda getContactInfo()
+// çağırdığında, ilk yanıt gelmeden hepsi cache'i boş görüp AYRI ağ turu
+// atıyordu (contact_info 3×). Süren promise'i paylaşınca tek tur kalır.
+const inflight = new Map<string, Promise<unknown>>();
+function dedupe<T>(key: string, fetcher: () => Promise<T>): Promise<T> {
+  const existing = inflight.get(key) as Promise<T> | undefined;
+  if (existing) return existing;
+  const p = fetcher().finally(() => inflight.delete(key));
+  inflight.set(key, p);
+  return p;
+}
+
 registerCacheClearer(() => {
   heroContentsCache = null;
   aboutContentsCache = null;
   contactInfoCache = null;
   profileImagesCache = null;
+  inflight.clear();
 });
 
 // Re-export `clearContentCache` from the central module so admin save flows
@@ -32,26 +45,29 @@ export { clearContentCache } from './_cache';
 export const contentApi = {
   async getHeroContents(): Promise<HeroContent[]> {
     if (heroContentsCache) return heroContentsCache;
-    const { data, error } = await supabasePublic.from('hero_contents').select('*');
+    return dedupe('hero_contents', async () => {
+      if (heroContentsCache) return heroContentsCache;
+      const { data, error } = await supabasePublic.from('hero_contents').select('*');
 
-    if (error) {
-      console.error('Hero içerikleri alınırken hata:', error);
-      throw error;
-    }
+      if (error) {
+        console.error('Hero içerikleri alınırken hata:', error);
+        throw error;
+      }
 
-    const mapped = (data || []).map((item) => ({
-      id: item.id,
-      title: item.title,
-      description: item.description,
-      location: item.location,
-      titleSize: item.title_size,
-      descriptionSize: item.description_size,
-      image: item.image,
-      text_color: item.text_color,
-    }));
+      const mapped = (data || []).map((item) => ({
+        id: item.id,
+        title: item.title,
+        description: item.description,
+        location: item.location,
+        titleSize: item.title_size,
+        descriptionSize: item.description_size,
+        image: item.image,
+        text_color: item.text_color,
+      }));
 
-    heroContentsCache = mapped;
-    return heroContentsCache;
+      heroContentsCache = mapped;
+      return heroContentsCache;
+    });
   },
 
   async updateHeroContent(
@@ -95,26 +111,29 @@ export const contentApi = {
 
   async getAboutContents(): Promise<AboutContent[]> {
     if (aboutContentsCache) return aboutContentsCache;
-    const { data, error } = await supabasePublic.from('about_contents').select('*');
+    return dedupe('about_contents', async () => {
+      if (aboutContentsCache) return aboutContentsCache;
+      const { data, error } = await supabasePublic.from('about_contents').select('*');
 
-    if (error) {
-      console.error('Hakkımızda içerikleri alınırken hata:', error);
-      throw error;
-    }
+      if (error) {
+        console.error('Hakkımızda içerikleri alınırken hata:', error);
+        throw error;
+      }
 
-    const mapped = (data || []).map((item) => ({
-      id: item.id,
-      title: item.title,
-      paragraph1: item.paragraph1,
-      paragraph2: item.paragraph2,
-      location: item.location,
-      image: item.image,
-      story: item.story,
-      text_color: item.text_color,
-    }));
+      const mapped = (data || []).map((item) => ({
+        id: item.id,
+        title: item.title,
+        paragraph1: item.paragraph1,
+        paragraph2: item.paragraph2,
+        location: item.location,
+        image: item.image,
+        story: item.story,
+        text_color: item.text_color,
+      }));
 
-    aboutContentsCache = mapped;
-    return aboutContentsCache;
+      aboutContentsCache = mapped;
+      return aboutContentsCache;
+    });
   },
 
   async updateAboutContent(
@@ -135,41 +154,44 @@ export const contentApi = {
 
   async getContactInfo(): Promise<ContactInfo> {
     if (contactInfoCache) return contactInfoCache;
+    return dedupe('contact_info', async () => {
+      if (contactInfoCache) return contactInfoCache;
 
-    const { data, error } = await supabasePublic
-      .from('contact_info')
-      .select('*')
-      .limit(1)
-      .maybeSingle();
+      const { data, error } = await supabasePublic
+        .from('contact_info')
+        .select('*')
+        .limit(1)
+        .maybeSingle();
 
-    const fallback: ContactInfo = {
-      id: 'fallback',
-      email: '',
-      phone: '',
-      address: '',
-      workingHours: '',
-      instagram: '',
-      youtube: '',
-      logo_url: '',
-    };
+      const fallback: ContactInfo = {
+        id: 'fallback',
+        email: '',
+        phone: '',
+        address: '',
+        workingHours: '',
+        instagram: '',
+        youtube: '',
+        logo_url: '',
+      };
 
-    if (error) {
-      console.error('[ContentAPI] Contact Info error:', error);
-      return fallback;
-    }
-    if (!data) return fallback;
+      if (error) {
+        console.error('[ContentAPI] Contact Info error:', error);
+        return fallback;
+      }
+      if (!data) return fallback;
 
-    contactInfoCache = {
-      id: data.id,
-      email: data.email,
-      phone: data.phone,
-      address: data.address,
-      workingHours: data.working_hours,
-      instagram: data.instagram,
-      youtube: data.youtube,
-      logo_url: data.logo_url,
-    };
-    return contactInfoCache;
+      contactInfoCache = {
+        id: data.id,
+        email: data.email,
+        phone: data.phone,
+        address: data.address,
+        workingHours: data.working_hours,
+        instagram: data.instagram,
+        youtube: data.youtube,
+        logo_url: data.logo_url,
+      };
+      return contactInfoCache;
+    });
   },
 
   async updateContactInfo(updates: Partial<ContactInfo>): Promise<ContactInfo> {
