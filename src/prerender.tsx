@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import { FAQ } from "./data/faq";
 
 const siteUrl = "https://re-set.com.tr";
 
@@ -87,42 +88,6 @@ const routeHeading: Record<string, string> = {
 const DEMARTINI_INTRO: string[] = [
   "Demartini Yöntemi (Türkçede Demartini Metodu olarak da bilinir), Dr. John Demartini tarafından geliştirilen, 13 sorulu Değer Belirleme Süreci ve Quantum Collapse Process'in birleşiminden oluşan sistematik bir algı dengeleme yöntemidir. Kişinin gerçek değer hiyerarşisini ortaya çıkarmayı; kızgınlık–hayranlık, suçluluk–gurur gibi duygusal kutuplukları nötralize ederek minnet, ilham ve sevgi alanına geçişi sağlamayı hedefler.",
   "Yöntem; psikoloji, davranış bilimi, nöroplastisite ve felsefe alanlarındaki araştırmalardan beslenir. Tıbbi tedavinin yerine geçmez; danışanın kendi farkındalığıyla algı yapısını dengelediği bütüncül bir araçtır.",
-];
-
-// Sitede görünen (hardcoded) FAQ — birebir yansıtılır.
-const FAQ: { q: string; a: string }[] = [
-  {
-    q: "Demartini Metodu nedir?",
-    a: "Demartini Metodu, Dr. John Demartini tarafından geliştirilen, 13 sorulu Değer Belirleme Süreci ve Quantum Collapse Process'ten oluşan sistematik bir algı dengeleme yöntemidir. Kişinin gerçek değer hiyerarşisini ortaya çıkarmak, duygusal yükleri nötralize etmek ve ilham, sevgi, minnet alanına geçişi sağlamak için kullanılır.",
-  },
-  {
-    q: "Demartini Metodu kimler için uygundur?",
-    a: "Kaygı, depresyon, ilişki çatışmaları, travma, bağımlılık, kariyer kararsızlığı, öz değer ve hayat yönü arayışı yaşayan herkes için uygundur. Tıbbi tedavinin yerine geçmez; tamamlayıcı bir farkındalık aracıdır.",
-  },
-  {
-    q: "Bir Demartini seansı ne kadar sürer?",
-    a: "Birebir seanslar genellikle 60–90 dakikadır. Konunun yoğunluğuna göre 2–6 seanslık bir süreç önerilebilir. Breakthrough Experience programı ise 2 tam günlük bir grup çalışmasıdır.",
-  },
-  {
-    q: "Demartini Metodu NLP veya koçluktan farklı mıdır?",
-    a: "Evet. NLP davranış kalıplarını yeniden çerçevelerken, Demartini Metodu kişinin değer hiyerarşisini ve duygusal kutuplukları tek tek dengeleyerek nöroplastik bir farkındalık değişimi hedefler. 13 soruluk Değer Belirleme Süreci yöntemin temelidir.",
-  },
-  {
-    q: "Online Demartini seansı yapıyor musunuz?",
-    a: "Evet. Zoom veya Google Meet üzerinden yüz yüze seansla eşdeğer Demartini Metodu seansları sunuyoruz. Türkiye dışındaki danışanlar da online seansa katılabilir.",
-  },
-  {
-    q: "Şafak Özkan kimdir?",
-    a: "Şafak Özkan, İstanbul Nişantaşı merkezli, sertifikalı Demartini Method Facilitator'dır. 15 yılı aşkın uygulama deneyimiyle Türkiye'de binlerce danışana Demartini Metodu ile rehberlik etmiştir.",
-  },
-  {
-    q: "Ücretsiz keşif görüşmesi mümkün mü?",
-    a: "30 dakikalık ücretsiz keşif görüşmesi sunuyoruz. Bu görüşme, ihtiyacınızın yöntemle örtüşüp örtüşmediğini değerlendirmek ve doğru programı seçmek içindir. Randevu sayfasından planlayabilirsiniz.",
-  },
-  {
-    q: "Demartini Metodu bilimsel midir?",
-    a: "Demartini Metodu; psikoloji, davranış bilimi, nöroplastisite ve felsefe alanlarındaki araştırmalardan beslenen bütüncül bir farkındalık ve algı dengeleme yöntemidir. Tıbbi/psikiyatrik tedavinin yerine geçmez ancak terapötik süreçlerle birlikte kullanılabilir.",
-  },
 ];
 
 const NAV_LINKS: { href: string; label: string }[] = [
