@@ -74,7 +74,10 @@
 
   <!-- Icons (Remixicon only — Font Awesome kaldırıldı: hiç kullanılmıyordu) -->
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css" rel="stylesheet">
+  <!-- Remixicon: render-blocking'ten çıkar (ikonlar dekoratif; sayfa daha erken boyanır) -->
+  <link rel="preload" as="style" href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css"
+    onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css" rel="stylesheet"></noscript>
 
   <!-- ============ Schema.org Global (Organization + WebSite + Person) ============ -->
   <script type="application/ld+json">

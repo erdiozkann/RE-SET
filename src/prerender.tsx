@@ -1,6 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { FAQ } from "./data/faq";
 import { mdToHtml } from "./lib/markdown";
+import { optimizedImage } from "./lib/img";
 
 const siteUrl = "https://re-set.com.tr";
 
@@ -287,6 +288,7 @@ type DynData = {
   videos: Video[];
   podcasts: Podcast[];
   reviews: Review[];
+  heroImage: string | null;
 };
 
 let dynamicCache: DynData | null = null;
@@ -294,7 +296,7 @@ let dynamicCache: DynData | null = null;
 async function loadDynamicData(): Promise<DynData> {
   if (dynamicCache) return dynamicCache;
 
-  const data: DynData = { meta: new Map(), posts: [], postByPath: new Map(), videos: [], podcasts: [], reviews: [] };
+  const data: DynData = { meta: new Map(), posts: [], postByPath: new Map(), videos: [], podcasts: [], reviews: [], heroImage: null };
   // vite build sırasında import.meta.env değerleri statik olarak gömülür;
   // process.env prerender SSR bağlamında boş olduğu için ona güvenilmez.
   const url = import.meta.env.VITE_SUPABASE_URL || process.env.VITE_SUPABASE_URL;
@@ -307,7 +309,7 @@ async function loadDynamicData(): Promise<DynData> {
 
   try {
     const supabase = createClient(url, key);
-    const [postsRes, videosRes, podcastsRes, reviewsRes] = await Promise.all([
+    const [postsRes, videosRes, podcastsRes, reviewsRes, heroRes] = await Promise.all([
       supabase.from("blog_posts").select("id, title, excerpt, content").eq("status", "published"),
       supabase
         .from("youtube_videos")
@@ -316,6 +318,7 @@ async function loadDynamicData(): Promise<DynData> {
         .order("published_at", { ascending: false }),
       supabase.from("podcast_episodes").select("title, description, audio_url, date, episode"),
       supabase.from("reviews").select("name, rating, text, date").eq("approved", true),
+      supabase.from("hero_contents").select("image").limit(1),
     ]);
 
     if (postsRes.data) {
@@ -334,6 +337,7 @@ async function loadDynamicData(): Promise<DynData> {
     if (videosRes.data) data.videos = videosRes.data as Video[];
     if (podcastsRes.data) data.podcasts = podcastsRes.data as Podcast[];
     if (reviewsRes.data) data.reviews = reviewsRes.data as Review[];
+    if (heroRes.data && heroRes.data[0]) data.heroImage = (heroRes.data[0] as { image?: string }).image || null;
   } catch (err) {
     console.warn("[prerender] dynamic data fetch failed:", err);
   }
@@ -355,6 +359,33 @@ export async function prerender({ ssr, url }: { ssr: boolean; url: string }) {
   const links = new Set<string>(Object.keys(staticMeta));
   for (const path of dynamic.meta.keys()) links.add(path);
 
+  const headElements: Array<{ type: string; props: Record<string, string> }> = [
+    { type: "meta", props: { name: "description", content: description } },
+    { type: "link", props: { rel: "canonical", href: canonical } },
+    { type: "meta", props: { property: "og:title", content: title } },
+    { type: "meta", props: { property: "og:description", content: description } },
+    { type: "meta", props: { property: "og:url", content: canonical } },
+    { type: "meta", props: { property: "og:type", content: "website" } },
+    { type: "meta", props: { property: "og:locale", content: "tr_TR" } },
+    { type: "meta", props: { name: "twitter:card", content: "summary_large_image" } },
+    { type: "meta", props: { name: "twitter:title", content: title } },
+    { type: "meta", props: { name: "twitter:description", content: description } },
+  ];
+
+  // LCP: ana sayfada hero görselini JS/Supabase turunu beklemeden önden indir.
+  // client-fetch zinciri (JS→hero_contents→img) yerine tarayıcı paralel başlar.
+  if (url === "/" && dynamic.heroImage) {
+    headElements.push({
+      type: "link",
+      props: {
+        rel: "preload",
+        as: "image",
+        href: optimizedImage(dynamic.heroImage, { width: 1400 }),
+        fetchpriority: "high",
+      },
+    });
+  }
+
   return {
     // Gerçek, taranabilir HTML — JS çalıştırmayan botlar (GPTBot, ClaudeBot,
     // PerplexityBot) ve ilk-dalga Googlebot artık içeriği görür. createRoot
@@ -365,27 +396,7 @@ export async function prerender({ ssr, url }: { ssr: boolean; url: string }) {
     head: {
       lang: "tr-TR",
       title,
-      elements: new Set([
-        { type: "meta", props: { name: "description", content: description } },
-        { type: "link", props: { rel: "canonical", href: canonical } },
-        { type: "meta", props: { property: "og:title", content: title } },
-        {
-          type: "meta",
-          props: { property: "og:description", content: description },
-        },
-        { type: "meta", props: { property: "og:url", content: canonical } },
-        { type: "meta", props: { property: "og:type", content: "website" } },
-        { type: "meta", props: { property: "og:locale", content: "tr_TR" } },
-        {
-          type: "meta",
-          props: { name: "twitter:card", content: "summary_large_image" },
-        },
-        { type: "meta", props: { name: "twitter:title", content: title } },
-        {
-          type: "meta",
-          props: { name: "twitter:description", content: description },
-        },
-      ]),
+      elements: new Set(headElements),
     },
   };
 }
