@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { FAQ } from "./data/faq";
+import { mdToHtml } from "./lib/markdown";
 
 const siteUrl = "https://re-set.com.tr";
 
@@ -111,7 +112,7 @@ function esc(s: string): string {
 // Supabase'ten build zamanında çekilen gerçek içerik (uydurma yok).
 type Video = { title: string; youtube_id: string; category?: string; published_at?: string; description?: string };
 type Podcast = { title: string; description?: string; audio_url?: string; date?: string; episode?: string };
-type BlogPost = { id: string; title: string; excerpt?: string };
+type BlogPost = { id: string; title: string; excerpt?: string; content?: string };
 type Review = { name: string; rating?: number; text?: string; date?: string };
 
 function navHtml(): string {
@@ -268,6 +269,12 @@ function bodyFor(url: string, meta: RouteMeta, data: DynData): string {
   if (url === "/youtube") inner += videoSection(data.videos);
   if (url === "/podcast") inner += podcastSection(data.podcasts);
   if (url === "/blog") inner += blogSection(data.posts);
+  if (url.startsWith("/blog/")) {
+    const post = data.postByPath.get(url);
+    if (post?.content) {
+      inner += `<article>${mdToHtml(post.content)}</article>`;
+    }
+  }
   inner += navHtml();
 
   return `<main id="prerender-content">${inner}</main>`;
@@ -276,6 +283,7 @@ function bodyFor(url: string, meta: RouteMeta, data: DynData): string {
 type DynData = {
   meta: Map<string, RouteMeta>;
   posts: BlogPost[];
+  postByPath: Map<string, BlogPost>;
   videos: Video[];
   podcasts: Podcast[];
   reviews: Review[];
@@ -286,7 +294,7 @@ let dynamicCache: DynData | null = null;
 async function loadDynamicData(): Promise<DynData> {
   if (dynamicCache) return dynamicCache;
 
-  const data: DynData = { meta: new Map(), posts: [], videos: [], podcasts: [], reviews: [] };
+  const data: DynData = { meta: new Map(), posts: [], postByPath: new Map(), videos: [], podcasts: [], reviews: [] };
   // vite build sırasında import.meta.env değerleri statik olarak gömülür;
   // process.env prerender SSR bağlamında boş olduğu için ona güvenilmez.
   const url = import.meta.env.VITE_SUPABASE_URL || process.env.VITE_SUPABASE_URL;
@@ -300,7 +308,7 @@ async function loadDynamicData(): Promise<DynData> {
   try {
     const supabase = createClient(url, key);
     const [postsRes, videosRes, podcastsRes, reviewsRes] = await Promise.all([
-      supabase.from("blog_posts").select("id, title, excerpt").eq("status", "published"),
+      supabase.from("blog_posts").select("id, title, excerpt, content").eq("status", "published"),
       supabase
         .from("youtube_videos")
         .select("title, youtube_id, category, published_at, description")
@@ -313,7 +321,9 @@ async function loadDynamicData(): Promise<DynData> {
     if (postsRes.data) {
       data.posts = postsRes.data as BlogPost[];
       for (const post of data.posts) {
-        data.meta.set(`/blog/${post.id}`, {
+        const path = `/blog/${post.id}`;
+        data.postByPath.set(path, post);
+        data.meta.set(path, {
           title: `${post.title} | RE-SET Blog`,
           description:
             post.excerpt ||

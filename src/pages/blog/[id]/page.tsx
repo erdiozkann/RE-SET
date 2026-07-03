@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
+import DOMPurify from 'dompurify';
 import { blogApi } from '../../../lib/api';
 import SEO from '../../../components/SEO';
+import { mdToHtml } from '../../../lib/markdown';
 import type { BlogPost } from '../../../types';
 
 export default function BlogDetailPage() {
@@ -204,11 +206,9 @@ export default function BlogDetailPage() {
             className="prose prose-lg max-w-none text-gray-700 leading-relaxed
               prose-headings:font-serif prose-headings:text-[#1A1A1A]
               prose-a:text-[#D4AF37] prose-a:no-underline hover:prose-a:underline
-              prose-img:rounded-xl prose-img:shadow-sm
-              whitespace-pre-wrap"
-          >
-            {post.content}
-          </div>
+              prose-img:rounded-xl prose-img:shadow-sm"
+            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(mdToHtml(post.content)) }}
+          />
         </div>
       </section>
     </>
