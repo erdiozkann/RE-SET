@@ -66,3 +66,6 @@ playwright-report/
 
 # OS
 Thumbs.db
+
+# VPS deploy build output (regenerated from HOSTINGER_UPLOAD)
+deploy/vps/html/

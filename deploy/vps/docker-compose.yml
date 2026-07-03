@@ -1,0 +1,33 @@
+# RE-SET statik site — VPS (82.29.180.227), Traefik arkasında.
+# Postiz'e DOKUNMAZ; ayrı bir servis. nginx:alpine ~15MB RAM.
+#
+# ⚠️ ÖNEMLİ: entrypoints + certresolver adları senin Traefik kurulumunla
+# BİREBİR aynı olmalı. Emin olmak için /docker/postiz/docker-compose.yml
+# içindeki `postiz-brand` servisinin traefik.* label'larına bak, oradaki
+# entrypoints/certresolver değerlerini buraya kopyala (aşağıda websecure /
+# letsencrypt varsaydım — DURUM.md'deki "letsencrypt resolver" ile uyumlu).
+
+services:
+  reset:
+    image: nginx:alpine
+    container_name: reset
+    restart: unless-stopped
+    networks:
+      - proxy
+    volumes:
+      - ./html:/usr/share/nginx/html:ro
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
+      # apex + www tek router'da; www→apex 301'i nginx yapıyor
+      - "traefik.http.routers.reset.rule=Host(`re-set.com.tr`) || Host(`www.re-set.com.tr`)"
+      - "traefik.http.routers.reset.entrypoints=websecure"
+      - "traefik.http.routers.reset.tls=true"
+      - "traefik.http.routers.reset.tls.certresolver=letsencrypt"
+      - "traefik.http.services.reset.loadbalancer.server.port=80"
+      # (opsiyonel) http→https yönlendirme zaten global entrypoint'te varsa gerekmez
+
+networks:
+  proxy:
+    external: true
