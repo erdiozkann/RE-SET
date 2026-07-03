@@ -28,7 +28,8 @@ Kod tarafı ✅ tamam · Kullanıcı aksiyonları ⏳ bekliyor
 - [ ] **KULLANICI:** admin şifresini (`123456`) döndür — public repo'da sızdı
 - [ ] **KULLANICI:** TestSprite API key'ini iptal et (public repo'da sızdı)
 - [ ] **KULLANICI:** RE-SET Supabase'i MCP'ye bağla **veya** DIAGNOSE.sql'i çalıştırıp çıktıyı paylaş → sonra RLS migration uygula
-- [ ] **KULLANICI/BİRLİKTE:** git history purge (filter-repo) + review sonrası deploy
+- [x] ✅ **git history purge YAPILDI + PUSH'LANDI** (2026-07-03): `git-filter-repo` ile `.mcp.json` tüm history'den çıkarıldı + TestSprite key (`testsprite_tests/tmp/config.json`'da da vardı) REDACTED'e çevrildi; hiçbir commit'te key yok. Yedek: `~/reset-backup-20260703-050846.bundle`. `origin/main` force-push edildi (remote HEAD temiz). NOT: GitHub eski SHA'yı GC'ye kadar cache'leyebilir → gerçek koruma key revoke.
+- [x] ✅ **Working-tree review + 5 commit** (güvenlik / SEO / perf / temizlik / handle-fix); tsc temiz, `npm run build` 12 sayfa prerender OK. HENÜZ HOSTING'E DEPLOY EDİLMEDİ (sadece git push).
 
 ### 🟠 FAZ 1 — SEO/GEO ana fix (devam ediyor)
 - [x] Title çift-suffix düzeltildi (`SEO.tsx`: `fullTitle = title`)
@@ -40,7 +41,7 @@ Kod tarafı ✅ tamam · Kullanıcı aksiyonları ⏳ bekliyor
 - [x] **`prerender.tsx` boş body → gerçek statik HTML** ✅ DOĞRULANDI (build+headless render): 12 sayfa, H1+entity+FAQ+FAQPage JSON-LD statik HTML'de; React createRoot ile temiz mount
 - [x] hreflang kaldırıldı (tek dilli, yanıltıcıydı) · sitemap home trailing-slash `/` (canonical ile tutarlı)
 - [ ] `AggregateRating`+`Review`, `VideoObject`/`PodcastEpisode` şema (gerçek yorum verisi gerekiyor)
-- ⚠️ YouTube handle teyidi: `@safakozkan` mı `@SafakOzkan-y6i` mi? (şu an @safakozkan yazıldı)
+- [x] ✅ YouTube handle çözüldü: `@SafakOzkan-y6i` (sitenin gerçek kanalı; sameAs index.html+about hizalandı). @safakozkan yanlıştı, kaldırıldı.
 
 ### 🟡 FAZ 2 — Performans (başladı)
 - [x] Font Awesome kaldırıldı (index.html) — hiç kullanılmıyordu; CSP'den cdnjs düşürüldü
