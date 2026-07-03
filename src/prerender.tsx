@@ -137,11 +137,17 @@ const NAV_LINKS: { href: string; label: string }[] = [
 ];
 
 function esc(s: string): string {
-  return s
+  return (s || "")
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
 }
+
+// Supabase'ten build zamanında çekilen gerçek içerik (uydurma yok).
+type Video = { title: string; youtube_id: string; category?: string; published_at?: string; description?: string };
+type Podcast = { title: string; description?: string; audio_url?: string; date?: string; episode?: string };
+type BlogPost = { id: string; title: string; excerpt?: string };
+type Review = { name: string; rating?: number; text?: string; date?: string };
 
 function navHtml(): string {
   return (
@@ -181,45 +187,168 @@ function faqJsonLd(): string {
   return `<script type="application/ld+json">${JSON.stringify(data)}</script>`;
 }
 
+// --- YouTube: taranabilir liste + VideoObject (ItemList) JSON-LD ---
+function videoSection(videos: Video[]): string {
+  if (!videos.length) return "";
+  const items = videos
+    .map(
+      (v) =>
+        `<article><h3><a href="https://www.youtube.com/watch?v=${esc(v.youtube_id)}" rel="noopener">${esc(v.title)}</a></h3>` +
+        (v.category ? `<p>${esc(v.category)}</p>` : "") +
+        `</article>`,
+    )
+    .join("");
+  const html = `<section aria-labelledby="videolar"><h2 id="videolar">Videolar</h2>${items}</section>`;
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    itemListElement: videos.map((v, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item: {
+        "@type": "VideoObject",
+        name: v.title,
+        description: v.description?.trim() || `Şafak Özkan — Demartini Metodu üzerine video: ${v.title}`,
+        thumbnailUrl: `https://img.youtube.com/vi/${v.youtube_id}/hqdefault.jpg`,
+        uploadDate: v.published_at || undefined,
+        contentUrl: `https://www.youtube.com/watch?v=${v.youtube_id}`,
+        embedUrl: `https://www.youtube.com/embed/${v.youtube_id}`,
+      },
+    })),
+  };
+  return html + `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>`;
+}
+
+// --- Podcast: taranabilir liste + PodcastEpisode (PodcastSeries) JSON-LD ---
+function podcastSection(eps: Podcast[]): string {
+  if (!eps.length) return "";
+  const items = eps
+    .map(
+      (e) =>
+        `<article><h3>${e.episode ? esc(e.episode) + " · " : ""}${esc(e.title)}</h3>` +
+        (e.description ? `<p>${esc(e.description.slice(0, 300))}</p>` : "") +
+        (e.audio_url ? `<p><a href="${esc(e.audio_url)}" rel="noopener">Dinle</a></p>` : "") +
+        `</article>`,
+    )
+    .join("");
+  const html = `<section aria-labelledby="bolumler"><h2 id="bolumler">Bölümler</h2>${items}</section>`;
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "PodcastSeries",
+    name: "RE-SET Podcast — Şafak Özkan",
+    url: `${siteUrl}/podcast`,
+    author: { "@type": "Person", name: "Şafak Özkan" },
+    episode: eps.map((e) => ({
+      "@type": "PodcastEpisode",
+      name: e.title,
+      description: e.description?.trim() || undefined,
+      datePublished: e.date || undefined,
+      ...(e.audio_url
+        ? { associatedMedia: { "@type": "MediaObject", contentUrl: e.audio_url } }
+        : {}),
+    })),
+  };
+  return html + `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>`;
+}
+
+// --- Blog: taranabilir yazı listesi (link + excerpt) ---
+function blogSection(posts: BlogPost[]): string {
+  if (!posts.length) return "";
+  const items = posts
+    .map(
+      (p) =>
+        `<article><h3><a href="/blog/${esc(p.id)}">${esc(p.title)}</a></h3>` +
+        (p.excerpt ? `<p>${esc(p.excerpt)}</p>` : "") +
+        `</article>`,
+    )
+    .join("");
+  return `<section aria-labelledby="yazilar"><h2 id="yazilar">Yazılar</h2>${items}</section>`;
+}
+
+// --- Tek gerçek yorum: dürüst Review JSON-LD (AggregateRating YOK: self-serving) ---
+function reviewSection(reviews: Review[]): string {
+  const r = reviews.find((x) => x.text && (x.rating ?? 0) > 0);
+  if (!r) return "";
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Review",
+    itemReviewed: {
+      "@type": "Person",
+      name: "Şafak Özkan",
+      url: `${siteUrl}/about`,
+    },
+    author: { "@type": "Person", name: r.name },
+    reviewRating: { "@type": "Rating", ratingValue: r.rating, bestRating: 5, worstRating: 1 },
+    reviewBody: r.text,
+    datePublished: r.date || undefined,
+  };
+  const html =
+    `<section aria-labelledby="yorum"><h2 id="yorum">Danışan Deneyimi</h2>` +
+    `<blockquote><p>${esc(r.text || "")}</p><cite>${esc(r.name)}</cite></blockquote></section>`;
+  return html + `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>`;
+}
+
 // Route'a göre statik, taranabilir gövde. React (createRoot) mount olunca değişir.
-function bodyFor(url: string, meta: RouteMeta): string {
+function bodyFor(url: string, meta: RouteMeta, data: DynData): string {
   const h1 = routeHeading[url] || meta.title;
   const lead = `<p>${esc(meta.description)}</p>`;
   const richFaqRoutes = url === "/" || url === "/demartini-yontemi";
 
   let inner = `<h1>${esc(h1)}</h1>${lead}`;
   if (richFaqRoutes) {
-    inner += introHtml() + faqHtml() + faqJsonLd();
+    inner += introHtml() + faqHtml() + faqJsonLd() + reviewSection(data.reviews);
   }
+  if (url === "/youtube") inner += videoSection(data.videos);
+  if (url === "/podcast") inner += podcastSection(data.podcasts);
+  if (url === "/blog") inner += blogSection(data.posts);
   inner += navHtml();
 
   return `<main id="prerender-content">${inner}</main>`;
 }
 
-let dynamicMetaCache: Map<string, RouteMeta> | null = null;
+type DynData = {
+  meta: Map<string, RouteMeta>;
+  posts: BlogPost[];
+  videos: Video[];
+  podcasts: Podcast[];
+  reviews: Review[];
+};
 
-async function loadDynamicMeta(): Promise<Map<string, RouteMeta>> {
-  if (dynamicMetaCache) return dynamicMetaCache;
+let dynamicCache: DynData | null = null;
 
-  const meta = new Map<string, RouteMeta>();
-  const url = process.env.VITE_SUPABASE_URL;
-  const key = process.env.VITE_SUPABASE_ANON_KEY;
+async function loadDynamicData(): Promise<DynData> {
+  if (dynamicCache) return dynamicCache;
+
+  const data: DynData = { meta: new Map(), posts: [], videos: [], podcasts: [], reviews: [] };
+  // vite build sırasında import.meta.env değerleri statik olarak gömülür;
+  // process.env prerender SSR bağlamında boş olduğu için ona güvenilmez.
+  const url = import.meta.env.VITE_SUPABASE_URL || process.env.VITE_SUPABASE_URL;
+  const key = import.meta.env.VITE_SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY;
 
   if (!url || !key) {
-    dynamicMetaCache = meta;
-    return meta;
+    dynamicCache = data;
+    return data;
   }
 
   try {
     const supabase = createClient(url, key);
-    const { data: posts } = await supabase
-      .from("blog_posts")
-      .select("id, title, excerpt")
-      .eq("status", "published");
+    const [postsRes, videosRes, podcastsRes, reviewsRes] = await Promise.all([
+      supabase.from("blog_posts").select("id, title, excerpt").eq("status", "published"),
+      supabase
+        .from("youtube_videos")
+        .select("title, youtube_id, category, published_at, description")
+        .eq("is_published", true)
+        .order("published_at", { ascending: false }),
+      supabase.from("podcast_episodes").select("title, description, audio_url, date, episode"),
+      supabase.from("reviews").select("name, rating, text, date").eq("approved", true),
+    ]);
 
-    if (posts) {
-      for (const post of posts) {
-        meta.set(`/blog/${post.id}`, {
+    if (postsRes.data) {
+      data.posts = postsRes.data as BlogPost[];
+      for (const post of data.posts) {
+        data.meta.set(`/blog/${post.id}`, {
           title: `${post.title} | RE-SET Blog`,
           description:
             post.excerpt ||
@@ -227,18 +356,21 @@ async function loadDynamicMeta(): Promise<Map<string, RouteMeta>> {
         });
       }
     }
+    if (videosRes.data) data.videos = videosRes.data as Video[];
+    if (podcastsRes.data) data.podcasts = podcastsRes.data as Podcast[];
+    if (reviewsRes.data) data.reviews = reviewsRes.data as Review[];
   } catch (err) {
-    console.warn("[prerender] dynamic blog meta fetch failed:", err);
+    console.warn("[prerender] dynamic data fetch failed:", err);
   }
 
-  dynamicMetaCache = meta;
-  return meta;
+  dynamicCache = data;
+  return data;
 }
 
 export async function prerender({ ssr, url }: { ssr: boolean; url: string }) {
   void ssr;
-  const dynamic = await loadDynamicMeta();
-  const meta = staticMeta[url] || dynamic.get(url) || staticMeta["/"];
+  const dynamic = await loadDynamicData();
+  const meta = staticMeta[url] || dynamic.meta.get(url) || staticMeta["/"];
 
   const canonical = `${siteUrl}${url === "/" ? "/" : url}`;
   const title = meta.title;
@@ -246,14 +378,14 @@ export async function prerender({ ssr, url }: { ssr: boolean; url: string }) {
 
   // The plugin uses these to find more routes to render.
   const links = new Set<string>(Object.keys(staticMeta));
-  for (const path of dynamic.keys()) links.add(path);
+  for (const path of dynamic.meta.keys()) links.add(path);
 
   return {
     // Gerçek, taranabilir HTML — JS çalıştırmayan botlar (GPTBot, ClaudeBot,
     // PerplexityBot) ve ilk-dalga Googlebot artık içeriği görür. createRoot
     // (hydrate DEĞİL) mount olunca bu içerik client tarafından değiştirilir,
     // dolayısıyla hydration-mismatch riski yoktur.
-    html: bodyFor(url, meta),
+    html: bodyFor(url, meta, dynamic),
     links,
     head: {
       lang: "tr-TR",
