@@ -105,7 +105,7 @@ export default function About() {
       })),
       "sameAs": [
         "https://drdemartini.com/tr/demartini-method",
-        "https://www.youtube.com/@safakozkan",
+        "https://www.youtube.com/@SafakOzkan-y6i",
         "https://www.instagram.com/safakozkandemartini/"
       ]
     },
