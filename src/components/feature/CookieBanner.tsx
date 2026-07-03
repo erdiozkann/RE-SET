@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import type { ClarityCommand } from '../../lib/clarity';
 
@@ -29,6 +29,7 @@ const DEFAULT_PREFERENCES: CookiePreferences = {
 
 const safeLocalStorage = {
   get(key: string): string | null {
+    if (typeof window === 'undefined') return null;
     try {
       return window.localStorage.getItem(key);
     } catch {
@@ -36,6 +37,7 @@ const safeLocalStorage = {
     }
   },
   set(key: string, value: string): void {
+    if (typeof window === 'undefined') return;
     try {
       window.localStorage.setItem(key, value);
     } catch {
@@ -43,6 +45,7 @@ const safeLocalStorage = {
     }
   },
   remove(key: string): void {
+    if (typeof window === 'undefined') return;
     try {
       window.localStorage.removeItem(key);
     } catch {
@@ -95,6 +98,12 @@ export default function CookieBanner() {
 
   const dialogRef = useRef<HTMLDivElement | null>(null);
   const previouslyFocusedRef = useRef<HTMLElement | null>(null);
+  // Snapshot of the saved consent at the moment the banner became visible.
+  // Lets the X button distinguish "first-time user, no consent on record"
+  // (→ return to initial accept/reject screen) from "user already decided,
+  // just popped settings open from Footer" (→ hide the banner entirely).
+  const savedPreferencesRef = useRef<CookiePreferences | null>(null);
+  const location = useLocation();
 
   const applyConsent = useCallback((prefs: CookiePreferences) => {
     // Google Consent Mode v2 — KVKK/GDPR mandates separating analytics from advertising.
@@ -113,6 +122,20 @@ export default function CookieBanner() {
     window.dispatchEvent(new CustomEvent(CONSENT_EVENT, { detail: prefs }));
   }, []);
 
+  // Discard unsaved toggles and either return to the initial banner (first
+  // visit, no saved decision) or hide entirely (decision on record).
+  const handleCloseSettings = useCallback(() => {
+    const saved = savedPreferencesRef.current;
+    if (saved) {
+      setPreferences(saved);
+      setShowSettings(false);
+      setShowBanner(false);
+    } else {
+      setPreferences(DEFAULT_PREFERENCES);
+      setShowSettings(false);
+    }
+  }, []);
+
   // Load + apply saved preferences on mount; re-prompt if expired.
   useEffect(() => {
     const stored = safeLocalStorage.get(STORAGE_KEY);
@@ -120,23 +143,32 @@ export default function CookieBanner() {
 
     if (!saved || isConsentExpired()) {
       if (stored) safeLocalStorage.remove(STORAGE_KEY);
+      savedPreferencesRef.current = null;
       setShowBanner(true);
       return;
     }
 
     setPreferences(saved);
+    savedPreferencesRef.current = saved;
     applyConsent(saved);
   }, [applyConsent]);
 
-  // Allow other parts of the app (e.g. Footer "Çerez Ayarları") to re-open the banner
-  // without forcing a page reload.
+  // Allow other parts of the app (e.g. Footer "Çerez Ayarları") to re-open the
+  // settings panel without forcing a page reload.
   useEffect(() => {
     const open = () => {
+      // Refresh the saved snapshot before showing the panel so X restores the
+      // user's last decision instead of the in-memory default.
+      const stored = safeLocalStorage.get(STORAGE_KEY);
+      const saved = deserializePreferences(stored);
+      if (saved) {
+        savedPreferencesRef.current = saved;
+        setPreferences(saved);
+      }
       setShowBanner(true);
       setShowSettings(true);
     };
     window.addEventListener(OPEN_EVENT, open);
-    // Imperative API: window.openCookieSettings()
     window.openCookieSettings = open;
     return () => {
       window.removeEventListener(OPEN_EVENT, open);
@@ -146,38 +178,66 @@ export default function CookieBanner() {
     };
   }, []);
 
-  // Body scroll lock while the dialog (especially settings panel) is open.
+  // If the user clicks the "Çerez Politikamızı" link while the banner is open,
+  // close the banner so they can read the policy without the modal scroll
+  // lock fighting them. They can reopen via Footer when ready.
+  useEffect(() => {
+    if (showBanner && location.pathname === '/cookies') {
+      setShowBanner(false);
+      setShowSettings(false);
+    }
+  }, [location.pathname, showBanner]);
+
+  // Body scroll lock while the dialog is open. Defensively skipped on /cookies
+  // (the route effect above should already have closed the banner).
   useEffect(() => {
     if (!showBanner) return;
+    if (location.pathname === '/cookies') return;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     return () => {
       document.body.style.overflow = previousOverflow;
     };
-  }, [showBanner]);
+  }, [showBanner, location.pathname]);
 
-  // Focus management: trap focus inside dialog, restore previous focus on close, handle ESC.
+  // Capture-and-restore focus is keyed on showBanner ONLY. Re-capturing on
+  // every showSettings toggle would record an element inside the dialog
+  // itself as the "previous" focus target.
   useEffect(() => {
     if (!showBanner) return;
-
     previouslyFocusedRef.current = (document.activeElement as HTMLElement) || null;
+    return () => {
+      previouslyFocusedRef.current?.focus?.();
+      previouslyFocusedRef.current = null;
+    };
+  }, [showBanner]);
 
+  // Focus trap + initial focus + ESC handling. Re-binds when the rendered
+  // dialog subtree swaps (banner ↔ settings). The handler queries the live
+  // dialog ref on every keypress so it survives dynamic DOM mutations.
+  useEffect(() => {
+    if (!showBanner) return;
     const dialog = dialogRef.current;
-    const focusables = dialog ? Array.from(dialog.querySelectorAll<HTMLElement>(FOCUSABLE)) : [];
-    focusables[0]?.focus();
+    if (!dialog) return;
+
+    const initialFocusables = dialog.querySelectorAll<HTMLElement>(FOCUSABLE);
+    initialFocusables[0]?.focus();
 
     const handleKey = (e: KeyboardEvent) => {
+      const current = dialogRef.current;
+      if (!current) return;
+
       if (e.key === 'Escape') {
-        // Only allow closing the *settings* panel with ESC; the initial banner must be
-        // dismissed via an explicit accept/reject choice (consent must be deliberate).
+        // ESC mirrors the X button — same close semantics. The initial banner
+        // (no saved consent) ignores ESC because consent must be deliberate.
         if (showSettings) {
           e.stopPropagation();
-          setShowSettings(false);
+          handleCloseSettings();
         }
         return;
       }
-      if (e.key !== 'Tab' || !dialog) return;
-      const nodes = Array.from(dialog.querySelectorAll<HTMLElement>(FOCUSABLE));
+      if (e.key !== 'Tab') return;
+      const nodes = Array.from(current.querySelectorAll<HTMLElement>(FOCUSABLE));
       if (nodes.length === 0) return;
       const first = nodes[0];
       const last = nodes[nodes.length - 1];
@@ -190,12 +250,8 @@ export default function CookieBanner() {
       }
     };
     document.addEventListener('keydown', handleKey);
-
-    return () => {
-      document.removeEventListener('keydown', handleKey);
-      previouslyFocusedRef.current?.focus?.();
-    };
-  }, [showBanner, showSettings]);
+    return () => document.removeEventListener('keydown', handleKey);
+  }, [showBanner, showSettings, handleCloseSettings]);
 
   const savePreferences = useCallback(
     (prefs: CookiePreferences) => {
@@ -203,6 +259,7 @@ export default function CookieBanner() {
       safeLocalStorage.set(DATE_KEY, new Date().toISOString());
       applyConsent(prefs);
       setPreferences(prefs);
+      savedPreferencesRef.current = prefs;
       setShowBanner(false);
       setShowSettings(false);
     },
@@ -310,7 +367,7 @@ export default function CookieBanner() {
                     Çerez Tercihleri
                   </h3>
                   <button
-                    onClick={() => setShowSettings(false)}
+                    onClick={handleCloseSettings}
                     aria-label="Ayarlar panelini kapat"
                     className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-600 cursor-pointer focus:outline-none focus:ring-2 focus:ring-gray-400 rounded"
                   >
@@ -334,20 +391,26 @@ export default function CookieBanner() {
                   <div className="border border-gray-200 rounded-lg p-4">
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center">
-                        <h4 className="font-semibold text-gray-900">Zorunlu Çerezler</h4>
+                        <h4 id="cookie-necessary-label" className="font-semibold text-gray-900">
+                          Zorunlu Çerezler
+                        </h4>
                         <span className="ml-2 px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded">
                           Her Zaman Aktif
                         </span>
                       </div>
-                      <span
+                      {/* Real <button disabled> keeps the switch reachable for
+                          screen readers without the focusable-span hack. */}
+                      <button
+                        type="button"
                         role="switch"
                         aria-checked="true"
                         aria-disabled="true"
-                        aria-label="Zorunlu çerezler — devre dışı bırakılamaz"
+                        aria-labelledby="cookie-necessary-label"
+                        disabled
                         className="w-12 h-6 bg-gray-300 rounded-full relative cursor-not-allowed"
                       >
                         <span className="absolute right-1 top-1 w-4 h-4 bg-white rounded-full block"></span>
-                      </span>
+                      </button>
                     </div>
                     <p className="text-sm text-gray-600">
                       Web sitesinin düzgün çalışması için gerekli olan çerezlerdir. Bu çerezler
