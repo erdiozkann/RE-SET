@@ -19,20 +19,18 @@ Bu işlem sonucunda projenin kök dizininde `HOSTINGER_UPLOAD` klasörü oluşac
 3. `public_html` klasörüne girin.
 4. Yerel bilgisayarınızdaki `HOSTINGER_UPLOAD` klasörünün **İÇİNDEKİ** tüm dosyaları `public_html` içine yükleyin.
 
-## 🛣️ 3. SPA Routing (.htaccess)
+## 🛣️ 3. SPA Routing + Güvenlik + Sıkıştırma (.htaccess)
 
-React bir Single Page Application (SPA) olduğu için, sayfa yenilemelerinde 404 hatası almamak için `public_html` içinde `.htaccess` dosyası oluşturun ve aşağıdaki kodları yapıştırın:
+**ELLE `.htaccess` YAZMAYIN.** `HOSTINGER_UPLOAD/` içindeki hazır `.htaccess`
+dosyası zaten hepsini içeriyor:
+- SPA fallback (404 önleme)
+- HTTPS zorlama + `/methods → /demartini-yontemi` 301
+- Güvenlik başlıkları (HSTS, CSP, X-Frame, nosniff, Referrer/Permissions-Policy, COOP)
+- gzip + brotli sıkıştırma + immutable asset cache
 
-```apache
-<IfModule mod_rewrite.c>
-  RewriteEngine On
-  RewriteBase /
-  RewriteRule ^index\.html$ - [L]
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule . /index.html [L]
-</IfModule>
-```
+Sadece 2. adımdaki toplu yüklemeyle `.htaccess` de `public_html`'e gitsin.
+Gizli dosya olduğu için File Manager'da "Show hidden files (dotfiles)"
+seçeneğini açmayı unutmayın; yoksa `.htaccess` yüklenmez.
 
 ## 🗄️ 4. Veritabanı Güncelleme (Supabase)
 
