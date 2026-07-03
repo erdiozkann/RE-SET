@@ -46,7 +46,10 @@ Kod tarafı ✅ tamam · Kullanıcı aksiyonları ⏳ bekliyor
 
 ### 🎯 İçerik otoritesi hedefi (kullanıcı, 2026-07-03): "Demartini/John Demartini aramalarında + GEO/AEO ilk sayfa; blog'u kullan"
 - **Dürüst beklenti:** "demartini metodu/yöntemi (Türkiye/İstanbul)" + uzun-kuyruk + AEO atıf = KAZANILABİLİR (foundation hazır). Çıplak "john demartini" #1 = Dr. Demartini'nin kendi global markası, on-page ile zor; "john demartini kimdir/türkçe/metodu" hedeflenebilir.
-- **Sıradaki büyük iş: BLOG KÜMESİ** (şu an 1 yazı). Kelime kümesine göre 10-15 makale planı çıkarıldı; yazımı sürüyor/onay bekliyor. Yazma: admin panelden (Supabase'e doğrudan yazamıyorum — anon key read-only).
+- **BLOG KÜMESİ — 5 makale YAYINLANDI** (2026-07-03, admin panelden browser otomasyonuyla): John Demartini Kimdir?, Değer Belirleme Süreci (13 soru), Breakthrough Experience, Demartini ile Kaygı, Demartini vs Koçluk vs Terapi. Hepsi markdown (gerçek H2/H3), AEO soruları, iç link, tıbbi uyarı. Taslaklar repoda `content/blog/*.md`. Toplam blog = 6 yazı, 6 sayfa prerender.
+- **Markdown render açıldı** (`marked` + `src/lib/markdown.ts`): blog detay client'ta DOMPurify'lı, prerender'da statik `<article>` H2/H3/p → SEO/AEO için gerçek yapı.
+- Kalan (opsiyonel): pillar derinleştir, ilişki dengeleme, minnettarlık, travma, seans süreci makaleleri. Kapak görselleri boş (placeholder) — panelden eklenebilir.
+- ⚠️ **REDEPLOY GEREK:** yeni makaleler + markdown render git'te ve build'de var ama Hostinger'da DEĞİL. Yeni ZIP Desktop'ta (`RE-SET-deploy-*.zip`, 87 dosya). Canlıda şu an yeni yazılar `##` düz metin görünür; redeploy sonrası düzelir.
 
 ### 🟡 FAZ 2 — Performans (başladı)
 - [x] Font Awesome kaldırıldı (index.html) — hiç kullanılmıyordu; CSP'den cdnjs düşürüldü
