@@ -21,7 +21,7 @@ services:
       - "traefik.enable=true"
       - "traefik.docker.network=proxy"
       # apex + www tek router'da; www→apex 301'i nginx yapıyor
-      - "traefik.http.routers.reset.rule=Host(`re-set.com.tr`) || Host(`www.re-set.com.tr`)"
+      - "traefik.http.routers.reset.rule=Host(`re-set.com.tr`)"
       - "traefik.http.routers.reset.entrypoints=websecure"
       - "traefik.http.routers.reset.tls=true"
       - "traefik.http.routers.reset.tls.certresolver=letsencrypt"
