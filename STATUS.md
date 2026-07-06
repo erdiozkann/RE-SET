@@ -128,3 +128,11 @@ Erdi'den gelen tam plan konuşmada; özeti + uyum durumu:
 - [x] Fiyat public siteden tamamen kaldırıldı (priceRange, service price, ücret SSS)
 - ⚠️ Admin "Sayfalar" tab + route'lar REDEPLOY sonrası canlıda
 - KARAR: deploy artık **VPS üzerinden** (manuel Hostinger yok) — taşıma başlıyor
+
+## ✅ VPS DEPLOY YAPILDI (2026-07-07) — DNS cutover bekliyor
+- [x] Statik site rsync → VPS `/docker/reset/html` (70 dosya, default SSH key ile, scoped)
+- [x] `reset` container (nginx:alpine) Traefik arkasında UP + `nginx -t` OK + içeride site sunuluyor (doğrulandı). Postiz'e dokunulmadı.
+- [x] Traefik label'ları yerel postiz kopyasından doğrulandı: proxy ağı + entrypoints=websecure + certresolver=letsencrypt + port 80
+- [x] Tek-komut redeploy: `deploy/vps/deploy.sh` (npm run build sonrası çalıştır)
+- [ ] **KULLANICI/DNS:** Hostinger DNS → `re-set.com.tr` + `www` A kaydı → `82.29.180.227`. Sonra Traefik cert otomatik. Rollback: eski Hostinger IP.
+- Not: DNS cutover sonrası tüm FAZ 1 (meta keywords sil, Trained düzeltmesi) + CMS route'ları + perf fix'leri canlı olur.
