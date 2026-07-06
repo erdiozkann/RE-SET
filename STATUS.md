@@ -85,3 +85,25 @@ Kod tarafı ✅ tamam · Kullanıcı aksiyonları ⏳ bekliyor
 ## Notlar
 - RE-SET Supabase projesi: `woaenxpydppxyfphwdix` — bağlı MCP hesabında DEĞİL (farklı hesap).
 - Değişiklikler henüz commit/deploy edilmedi (review şart — deploy disiplini).
+
+---
+
+## 🗺️ MASTER SEO/GEO/AEO PLANI (2026-07-06 — kanonik yol haritası)
+Erdi'den gelen tam plan konuşmada; özeti + uyum durumu:
+
+### Bu oturumdaki işlerle UYUMSUZLUKLAR (Faz 1'de düzeltilecek)
+- 🔴 **Meta keywords**: Bu oturumda index.html'e geniş keyword listesi EKLEDİM. Plan Kural 4 + Faz 1: **meta keywords TAMAMEN SİLİNECEK** (Haziran 2026 Spam Update sinyali). → Faz 1 görevi.
+- 🟠 **Yayınlanan 5 blog yazısı** (John Demartini, Değer Belirleme, Breakthrough, Kaygı, Koçluk/Terapi): plan bunları Tier-2 kabul eder ama **Bölüm 7 şablonuna** (cevap kapsülü + PAA H2 + Şafak özgün katkısı + disclaimer + "son güncelleme") uymuyorlar. Faz 2'de şablona revize + disclaimer (3.3) eklenecek.
+- 🟠 **Title'lar**: "demartini yöntemi ve metodu" keyword-yığını → plan ≤60 karakter temiz format istiyor.
+
+### Faz sırası (plan Bölüm 12)
+- **FAZ 0** (şu an): lisans ✅ · 13 TR facilitator rekabet kontrolü (running) · AI baseline 15 sorgu (running) · Şafak input listesi ✅ `docs/SAFAK-INPUT-LISTESI.md`
+- **FAZ 1**: teknik temizlik — meta keywords sil, title/description yeniden yaz, sitemap→GSC, robots (AI crawler'lara İZİN), 301, schema altyapısı. *Yeni içerikten ÖNCE biter.*
+- **FAZ 2**: 3→14 sayfa çekirdek içerik (Bölüm 6 mimarisi), her sayfa Bölüm 7 şablonu + Erdi onayı
+- **FAZ 3**: blog (Tier-3) + GBP + YouTube + misafir yazı
+- **FAZ 4**: aylık KPI + iterasyon
+
+### Mutlak kurallar (Bölüm 0)
+İnsan onayı olmadan yayın yok · uydurma yok (kaynak URL şart) · YMYL: tıbbi iddia yasak + disclaimer · keyword stuffing yasak · her sayfaya Şafak'ın gerçek katkısı · unvan "Trained/Eğitimli" (Sertifikalı/Master DEĞİL).
+
+**KPI baseline (Tem 2026):** 3 indeksli sayfa, ~35 gösterim/ay, "demartini metodu" poz. 13.4, AI atıf 0/15.
