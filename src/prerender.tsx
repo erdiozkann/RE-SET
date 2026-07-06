@@ -115,6 +115,7 @@ type Video = { title: string; youtube_id: string; category?: string; published_a
 type Podcast = { title: string; description?: string; audio_url?: string; date?: string; episode?: string };
 type BlogPost = { id: string; title: string; excerpt?: string; content?: string };
 type Review = { name: string; rating?: number; text?: string; date?: string };
+type SitePageRow = { slug: string; title: string; description?: string; content?: string };
 
 function navHtml(): string {
   return (
@@ -259,7 +260,7 @@ function reviewSection(reviews: Review[]): string {
 
 // Route'a göre statik, taranabilir gövde. React (createRoot) mount olunca değişir.
 function bodyFor(url: string, meta: RouteMeta, data: DynData): string {
-  const h1 = routeHeading[url] || meta.title;
+  const h1 = data.pageByPath.get(url)?.title || routeHeading[url] || meta.title;
   const lead = `<p>${esc(meta.description)}</p>`;
   const richFaqRoutes = url === "/" || url === "/demartini-yontemi";
 
@@ -276,6 +277,10 @@ function bodyFor(url: string, meta: RouteMeta, data: DynData): string {
       inner += `<article>${mdToHtml(post.content)}</article>`;
     }
   }
+  const cmsPage = data.pageByPath.get(url);
+  if (cmsPage?.content) {
+    inner += `<article>${mdToHtml(cmsPage.content)}</article>`;
+  }
   inner += navHtml();
 
   return `<main id="prerender-content">${inner}</main>`;
@@ -289,6 +294,7 @@ type DynData = {
   podcasts: Podcast[];
   reviews: Review[];
   heroImage: string | null;
+  pageByPath: Map<string, SitePageRow>;
 };
 
 let dynamicCache: DynData | null = null;
@@ -296,7 +302,7 @@ let dynamicCache: DynData | null = null;
 async function loadDynamicData(): Promise<DynData> {
   if (dynamicCache) return dynamicCache;
 
-  const data: DynData = { meta: new Map(), posts: [], postByPath: new Map(), videos: [], podcasts: [], reviews: [], heroImage: null };
+  const data: DynData = { meta: new Map(), posts: [], postByPath: new Map(), videos: [], podcasts: [], reviews: [], heroImage: null, pageByPath: new Map() };
   // vite build sırasında import.meta.env değerleri statik olarak gömülür;
   // process.env prerender SSR bağlamında boş olduğu için ona güvenilmez.
   const url = import.meta.env.VITE_SUPABASE_URL || process.env.VITE_SUPABASE_URL;
@@ -309,7 +315,7 @@ async function loadDynamicData(): Promise<DynData> {
 
   try {
     const supabase = createClient(url, key);
-    const [postsRes, videosRes, podcastsRes, reviewsRes, heroRes] = await Promise.all([
+    const [postsRes, videosRes, podcastsRes, reviewsRes, heroRes, pagesRes] = await Promise.all([
       supabase.from("blog_posts").select("id, title, excerpt, content").eq("status", "published"),
       supabase
         .from("youtube_videos")
@@ -319,6 +325,7 @@ async function loadDynamicData(): Promise<DynData> {
       supabase.from("podcast_episodes").select("title, description, audio_url, date, episode"),
       supabase.from("reviews").select("name, rating, text, date").eq("approved", true),
       supabase.from("hero_contents").select("image").limit(1),
+      supabase.from("site_pages").select("slug, title, description, content").eq("is_published", true),
     ]);
 
     if (postsRes.data) {
@@ -338,6 +345,16 @@ async function loadDynamicData(): Promise<DynData> {
     if (podcastsRes.data) data.podcasts = podcastsRes.data as Podcast[];
     if (reviewsRes.data) data.reviews = reviewsRes.data as Review[];
     if (heroRes.data && heroRes.data[0]) data.heroImage = (heroRes.data[0] as { image?: string }).image || null;
+    if (pagesRes.data) {
+      for (const row of pagesRes.data as SitePageRow[]) {
+        const path = `/${row.slug}`;
+        data.pageByPath.set(path, row);
+        data.meta.set(path, {
+          title: `${row.title} | Şafak Özkan — RE-SET`,
+          description: row.description || row.title,
+        });
+      }
+    }
   } catch (err) {
     console.warn("[prerender] dynamic data fetch failed:", err);
   }

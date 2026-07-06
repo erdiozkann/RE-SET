@@ -290,6 +290,17 @@ export interface BlogPost {
   status: 'published' | 'draft' | 'archived';
 }
 
+export interface SitePage {
+  id: string;
+  slug: string;
+  title: string;
+  description: string;
+  content: string;
+  isPublished: boolean;
+  sortOrder: number;
+  updatedAt?: string;
+}
+
 export interface PodcastEpisode {
   id: string;
   title: string;

@@ -21,6 +21,7 @@ import ContentTab from './components/ContentTab';
 import MethodsTab from './components/MethodsTab';
 import AccountSettingsTab from './components/AccountSettingsTab';
 import BlogTab from './components/BlogTab';
+import PagesTab from './components/PagesTab';
 import PodcastTab from './components/PodcastTab';
 import YouTubeTab from './components/YouTubeTab';
 import AccountingTab from './components/AccountingTab';
@@ -42,6 +43,7 @@ type TabType =
   | 'content'
   | 'methods'
   | 'blog'
+  | 'pages'
   | 'podcast'
   | 'youtube'
   | 'accounting'
@@ -66,7 +68,7 @@ export default function AdminPage() {
     const validTabs: TabType[] = [
       'dashboard', 'appointments', 'clients', 'services', 'config',
       'pending', 'accounts', 'progress', 'reviews', 'messages',
-      'content', 'methods', 'blog', 'podcast', 'youtube',
+      'content', 'methods', 'blog', 'pages', 'podcast', 'youtube',
       'accounting', 'ads', 'account-settings'
     ];
     return validTabs.includes(tab as TabType);
@@ -99,6 +101,7 @@ export default function AdminPage() {
       // Content
       case 'content': return <ContentTab />;
       case 'blog': return <BlogTab />;
+      case 'pages': return <PagesTab />;
       case 'podcast': return <PodcastTab />;
       case 'youtube': return <YouTubeTab />;
       case 'ads':
@@ -139,6 +142,7 @@ export default function AdminPage() {
       content: 'İçerik Yönetimi',
       methods: 'Yöntemler',
       blog: 'Blog Yazıları',
+      pages: 'Sayfalar',
       podcast: 'Podcast Bölümleri',
       youtube: 'YouTube Videoları',
       accounting: 'Muhasebe & Cari',

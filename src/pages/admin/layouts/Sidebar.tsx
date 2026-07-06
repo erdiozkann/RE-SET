@@ -16,6 +16,7 @@ type TabType =
     | 'content'
     | 'methods'
     | 'blog'
+    | 'pages'
     | 'podcast'
     | 'youtube'
     | 'accounting'
@@ -81,6 +82,7 @@ export default function Sidebar({ activeTab, setActiveTab, isOpen = true, onClos
             icon: 'ri-movie-line',
             items: [
                 { id: 'blog', label: 'Blog', icon: 'ri-article-line' },
+                { id: 'pages', label: 'Sayfalar', icon: 'ri-pages-line' },
                 { id: 'podcast', label: 'Podcast', icon: 'ri-mic-line' },
                 { id: 'youtube', label: 'YouTube', icon: 'ri-youtube-line' },
                 { id: 'content', label: 'İçerik Yönetimi', icon: 'ri-file-text-line' },

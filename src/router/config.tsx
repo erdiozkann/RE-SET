@@ -3,6 +3,7 @@ import type { RouteObject } from 'react-router-dom';
 import Layout from '../components/Layout';
 
 const HomePage = lazy(() => import('../pages/home/page'));
+const CmsPage = lazy(() => import('../pages/cms/page'));
 const AboutPage = lazy(() => import('../pages/about/page'));
 const MethodsPage = lazy(() => import('../pages/methods/page'));
 const BlogPage = lazy(() => import('../pages/blog/page'));
@@ -46,6 +47,9 @@ const routes: RouteObject[] = [
       { path: 'privacy', element: <PrivacyPage /> },
       { path: 'cookies', element: <CookiesPage /> },
       { path: 'copyright', element: <CopyrightPage /> },
+      // Panelden yönetilen CMS sayfaları (site_pages). En sonda: yukarıdaki
+      // sabit rotalar eşleşmezse slug'a bakılır, yoksa 404.
+      { path: ':slug', element: <CmsPage /> },
     ],
   },
   {

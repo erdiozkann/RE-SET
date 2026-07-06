@@ -16,3 +16,4 @@ export * from './messages';
 export * from './blog';
 export * from './podcast';
 export * from './youtube';
+export * from './sitePages';
