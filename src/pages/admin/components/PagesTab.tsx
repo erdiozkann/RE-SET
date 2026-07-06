@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import toast from 'react-hot-toast';
+import { useToast } from '../../../components/ToastContainer';
 import { sitePagesApi } from '../../../lib/api';
 import type { SitePage } from '../../../types';
 
@@ -14,6 +14,7 @@ const empty = () => ({
 
 // Panelden yönetilen içerik sayfaları (site_pages). slug = URL (/slug).
 export default function PagesTab() {
+  const toast = useToast();
   const [pages, setPages] = useState<SitePage[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
