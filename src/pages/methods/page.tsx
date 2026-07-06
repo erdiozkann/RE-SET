@@ -135,7 +135,7 @@ export default function MethodsPage() {
       '@id': `${siteUrl}/demartini-yontemi#service`,
       name: 'Demartini Metodu Danışmanlığı — Şafak Özkan',
       description:
-        "Dr. John Demartini'nin Demartini Metodu'nu uygulayan, İstanbul Nişantaşı merkezli sertifikalı danışmanlık hizmeti. Yüz yüze ve online.",
+        "Dr. John Demartini'nin Demartini Metodu'nu uygulayan, İstanbul Nişantaşı merkezli danışmanlık hizmeti. Yüz yüze ve online.",
       provider: { '@id': 'https://re-set.com.tr/#safakozkan' },
       areaServed: [
         { '@type': 'City', name: 'İstanbul' },

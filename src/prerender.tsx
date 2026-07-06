@@ -19,12 +19,12 @@ const staticMeta: Record<string, RouteMeta> = {
   "/about": {
     title: "Hakkımda — Şafak Özkan | Demartini Yöntemi (Metodu)",
     description:
-      "Sertifikalı Demartini Yöntemi (Metodu) uygulayıcısı Şafak Özkan. 15+ yıllık uygulama deneyimi, Nişantaşı / İstanbul.",
+      "Eğitimli Demartini Yöntemi (Metodu) uygulayıcısı Şafak Özkan. 15+ yıllık uygulama deneyimi, Nişantaşı / İstanbul.",
   },
   "/demartini-yontemi": {
     title: "Demartini Yöntemi — Şafak Özkan | RE-SET Türkiye",
     description:
-      "Demartini Yöntemi (Demartini Metodu): Sertifikalı uygulayıcı Şafak Özkan ile İstanbul/Nişantaşı'da değer belirleme, Breakthrough Experience, Quantum Collapse Process ve ilişki dengeleme seansları.",
+      "Demartini Yöntemi (Demartini Metodu): Eğitimli uygulayıcı Şafak Özkan ile İstanbul/Nişantaşı'da değer belirleme, Breakthrough Experience, Quantum Collapse Process ve ilişki dengeleme seansları.",
   },
   "/blog": {
     title: "Blog | RE-SET — Şafak Özkan",

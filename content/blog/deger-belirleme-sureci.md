@@ -48,4 +48,4 @@ Değer Belirleme Süreci, [Demartini Metodu'nun](/demartini-yontemi) ilk ve teme
 Evet. Hayat koşulları, dönemler ve öncelikler değiştikçe değerler hiyerarşisi de yeniden şekillenebilir. Bu yüzden süreç, farklı dönemlerde tekrar edilebilir.
 
 **Değer Belirleme Süreci'ni tek başıma yapabilir miyim?**
-Sorulara kendi başınıza da yanıt verebilirsiniz; ancak sertifikalı bir uygulayıcıyla çalışmak, cevapların gerçek davranışı yansıtıp yansıtmadığını netleştirmeye yardımcı olur. Bir [keşif görüşmesi](/booking) ile başlayabilirsiniz.
+Sorulara kendi başınıza da yanıt verebilirsiniz; ancak eğitimli bir uygulayıcıyla çalışmak, cevapların gerçek davranışı yansıtıp yansıtmadığını netleştirmeye yardımcı olur. Bir [keşif görüşmesi](/booking) ile başlayabilirsiniz.

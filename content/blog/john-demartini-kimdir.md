@@ -47,7 +47,7 @@ Ayrıca 2006 yapımı **"The Secret" (Sır)** kitabı ve filminde yer alan uzman
 
 ## Demartini Metodu Türkiye'de
 
-Demartini Metodu, Türkiye'de sertifikalı uygulayıcılar aracılığıyla uygulanmaktadır. **Şafak Özkan**, İstanbul Nişantaşı merkezli, sertifikalı bir Demartini Method Facilitator'dır ve 15 yılı aşkın deneyimiyle bu yöntemi Türkçe olarak danışanlarına aktarmaktadır.
+Demartini Metodu, Türkiye'de eğitimli uygulayıcılar aracılığıyla uygulanmaktadır. **Şafak Özkan**, İstanbul Nişantaşı merkezli, Eğitimli (Trained) bir Demartini Method Facilitator'dır ve 15 yılı aşkın deneyimiyle bu yöntemi Türkçe olarak danışanlarına aktarmaktadır.
 
 Yöntemi ilk kez merak ediyorsanız, [Demartini Yöntemi Nedir?](/demartini-yontemi) sayfasından temel adımları inceleyebilir ya da bir [keşif görüşmesi](/booking) için iletişime geçebilirsiniz.
 
@@ -57,7 +57,7 @@ Yöntemi ilk kez merak ediyorsanız, [Demartini Yöntemi Nedir?](/demartini-yont
 "Dr." unvanını kullanır; ancak çalışmaları tıbbi tedavi değil, davranış ve farkındalık alanındadır. Demartini Metodu tıbbi/psikiyatrik tedavinin yerine geçmez.
 
 **John Demartini Türkçe içerik var mı?**
-Evet. Demartini Metodu Türkiye'de sertifikalı uygulayıcılar tarafından Türkçe olarak uygulanır; bu sitedeki yazılar ve videolar da Türkçe kaynak sunar.
+Evet. Demartini Metodu Türkiye'de eğitimli uygulayıcılar tarafından Türkçe olarak uygulanır; bu sitedeki yazılar ve videolar da Türkçe kaynak sunar.
 
 **Demartini Metodu ile John Demartini aynı şey mi?**
 Demartini Metodu, John Demartini'nin geliştirdiği yöntemin adıdır. Kişi (John Demartini) yöntemin kurucusu, "Demartini Metodu/Yöntemi" ise geliştirdiği sistemdir.

@@ -85,7 +85,7 @@ export default function HomePage() {
       name: 'RE-SET — Şafak Özkan Demartini Metodu',
       alternateName: ['Reset Danışmanlık', 'Demartini Metodu İstanbul'],
       description:
-        "İstanbul'da Dr. John Demartini'nin Demartini Metodu'nu uygulayan sertifikalı danışmanlık. Değer belirleme, ilişki dengeleme, Breakthrough Experience ve kişisel dönüşüm seansları.",
+        "İstanbul'da Dr. John Demartini'nin Demartini Yöntemi'ni uygulayan danışmanlık. Değer belirleme, ilişki dengeleme, Breakthrough Experience ve kişisel dönüşüm seansları.",
       url: 'https://re-set.com.tr/',
       image: 'https://re-set.com.tr/og-image.jpg',
       telephone: contactInfo?.phone || '',
@@ -184,7 +184,7 @@ export default function HomePage() {
       '@type': 'Person',
       '@id': 'https://re-set.com.tr/#safakozkan',
       name: 'Şafak Özkan',
-      jobTitle: 'Sertifikalı Demartini Metodu Uygulayıcısı',
+      jobTitle: 'Eğitimli Demartini Yöntemi Uygulayıcısı',
       url: 'https://re-set.com.tr/about',
       worksFor: { '@id': 'https://re-set.com.tr/#organization' },
       hasOccupation: {
@@ -249,7 +249,7 @@ export default function HomePage() {
     <>
       <SEO
         title="Reset - Şafak Özkan | Demartini Metodu İstanbul"
-        description="İstanbul'da sertifikalı Demartini Metodu uygulayıcısı Şafak Özkan. Değerlerinizi keşfedin, hayat dengenizi bulun, potansiyelinizi ortaya çıkarın."
+        description="İstanbul'da eğitimli Demartini Yöntemi uygulayıcısı Şafak Özkan. Değerlerinizi keşfedin, hayat dengenizi bulun, potansiyelinizi ortaya çıkarın."
         keywords="demartini metodu, demartini metodu istanbul, demartini metodu türkiye, değer belirleme, breakthrough experience, şafak özkan, yaşam dengeleme"
         schema={schema}
       />
@@ -333,7 +333,7 @@ export default function HomePage() {
                   {aboutContent.title}
                 </h2>
                 <p className="text-lg md:text-xl text-[#D4AF37] mb-4 font-medium">
-                  Sertifikalı Demartini Metodu Uygulayıcısı
+                  Eğitimli Demartini Yöntemi Uygulayıcısı
                 </p>
                 <p className="text-base text-gray-600 leading-relaxed mb-3">
                   {aboutContent.paragraph1}

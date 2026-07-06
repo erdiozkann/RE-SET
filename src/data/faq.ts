@@ -22,7 +22,7 @@ export const FAQ: FaqItem[] = [
   },
   {
     q: 'John Demartini kimdir?',
-    a: 'Dr. John Demartini, insan davranışı uzmanı, araştırmacı, yazar ve eğitmendir. Demartini Metodu\'nun ve Breakthrough Experience programının kurucusudur; "The Breakthrough Experience" başta olmak üzere çok sayıda kitabın yazarıdır ve "The Secret" filminde yer almıştır. Şafak Özkan, onun Türkiye\'deki sertifikalı uygulayıcılarındandır.',
+    a: 'Dr. John Demartini, insan davranışı uzmanı, araştırmacı, yazar ve eğitmendir. Demartini Metodu\'nun ve Breakthrough Experience programının kurucusudur; "The Breakthrough Experience" başta olmak üzere çok sayıda kitabın yazarıdır ve "The Secret" filminde yer almıştır. Şafak Özkan, onun Türkiye\'deki eğitimli (Trained) uygulayıcılarındandır.',
   },
   {
     q: 'Demartini Metodu kimler için uygundur?',
@@ -62,7 +62,7 @@ export const FAQ: FaqItem[] = [
   },
   {
     q: 'Şafak Özkan kimdir?',
-    a: "Şafak Özkan, İstanbul Nişantaşı merkezli, sertifikalı Demartini Method Facilitator'dır. 15 yılı aşkın uygulama deneyimiyle Türkiye'de binlerce danışana Demartini Metodu ile rehberlik etmiştir.",
+    a: "Şafak Özkan, İstanbul Nişantaşı merkezli, Eğitimli Demartini Yöntemi Uygulayıcısı'dır (Dr. John Demartini'nin resmi dizininde Trained seviyesinde listelenir). 15 yılı aşkın uygulama deneyimiyle Türkiye'de binlerce danışana Demartini Metodu ile rehberlik etmiştir.",
   },
   {
     q: 'Ücretsiz keşif görüşmesi mümkün mü?',

@@ -78,11 +78,10 @@ export default function SEO({
 
     // Basic meta tags
     setMetaTag('description', description);
-    if (keywords) {
-      setMetaTag('keywords', keywords);
-    } else {
-      removeMetaTag('keywords');
-    }
+    // Meta keywords Google tarafından kullanılmıyor + spam sinyali (Haziran 2026
+    // Spam Update). Prop gelse bile ASLA yazma — her zaman kaldır.
+    void keywords;
+    removeMetaTag('keywords');
     setMetaTag('author', 'Şafak Özkan');
     setMetaTag('robots', robotsDirectives);
 

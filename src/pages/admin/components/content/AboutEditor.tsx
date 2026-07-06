@@ -32,7 +32,7 @@ export default function AboutEditor() {
                     image: aboutData[0].image || '',
                     story: aboutData[0].story || `Hayatımın büyük bir bölümünde, başkalarının beklentilerini karşılamaya odaklanmış, kendi iç sesimi duymakta zorlandığım bir dönem yaşadım. Kurumsal dünyada geçirdiğim yıllar boyunca başarılı görünürken, içimde derin bir boşluk hissediyordum.
 
-Bu iç yolculuk, beni Demartini Metodu ve değer belirleme dünyasıyla tanıştırdı. Önce kendi hayatımı dönüştürdüm, sonra bu dönüşümün gücünü başkalarıyla paylaşma arzusu doğdu. Dr. John Demartini'den aldığım uluslararası sertifikalarımla ve sürekli eğitimlerle kendimi geliştirdim ve bugün buradayım.
+Bu iç yolculuk, beni Demartini Metodu ve değer belirleme dünyasıyla tanıştırdı. Önce kendi hayatımı dönüştürdüm, sonra bu dönüşümün gücünü başkalarıyla paylaşma arzusu doğdu. Dr. John Demartini'nin resmi uygulayıcı eğitimini alarak ve sürekli eğitimlerle kendimi geliştirdim ve bugün buradayım.
 
 Artık biliyorum ki, gerçek değişim içeriden başlar. Her bireyin kendine özgü bir potansiyeli vardır ve bu potansiyeli ortaya çıkarmak için sadece doğru rehberliğe ve içsel farkındalığa ihtiyaç vardır.`,
                     text_color: aboutData[0].text_color || '#1A1A1A'

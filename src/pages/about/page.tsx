@@ -70,8 +70,8 @@ export default function About() {
       "@type": "Person",
       "@id": "https://re-set.com.tr/#safakozkan",
       "name": "Şafak Özkan",
-      "jobTitle": "Sertifikalı Demartini Metodu Uygulayıcısı",
-      "description": "İstanbul Nişantaşı merkezli, sertifikalı Demartini Method Facilitator. 15+ yıllık uygulama deneyimi. Değer belirleme, ilişki dengeleme, Breakthrough Experience ve kişisel dönüşüm alanlarında uzman.",
+      "jobTitle": "Eğitimli Demartini Yöntemi Uygulayıcısı",
+      "description": "İstanbul Nişantaşı merkezli, Eğitimli Demartini Yöntemi Uygulayıcısı (Trained Demartini Method Facilitator). 15+ yıllık uygulama deneyimi. Değer belirleme, ilişki dengeleme, Breakthrough Experience ve kişisel dönüşüm alanlarında uzman.",
       "url": `${siteUrl}/about`,
       "image": heroImage || 'https://re-set.com.tr/og-image.jpg',
       "worksFor": { "@id": "https://re-set.com.tr/#organization" },
@@ -126,17 +126,17 @@ export default function About() {
           "name": "Şafak Özkan kimdir?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Şafak Özkan, İstanbul Nişantaşı merkezli sertifikalı Demartini Method Facilitator'dır. 15 yılı aşkın uygulama deneyimiyle Türkiye'de binlerce danışana Demartini Metodu ile rehberlik etmiştir."
+            "text": "Şafak Özkan, İstanbul Nişantaşı merkezli Eğitimli Demartini Yöntemi Uygulayıcısı (Trained Demartini Method Facilitator)'dır. 15 yılı aşkın uygulama deneyimiyle Türkiye'de binlerce danışana Demartini Metodu ile rehberlik etmiştir."
           }
         },
         {
           "@type": "Question",
-          "name": "Şafak Özkan'ın sertifikaları nelerdir?",
+          "name": "Şafak Özkan'ın Demartini eğitimi ve yetkinliği nedir?",
           "acceptedAnswer": {
             "@type": "Answer",
             "text": certificates.length > 0
               ? `Sayfada listelenen tüm sertifikalar: ${certificates.map(c => c.title).join(', ')}.`
-              : "Tüm Demartini Method ve ilgili eğitim sertifikaları Hakkımda sayfasındaki Sertifikalar bölümünde listelenmektedir."
+              : "Şafak Özkan, Dr. John Demartini'nin resmi uygulayıcı dizininde 'Trained' seviyesinde listelenen bir Demartini Yöntemi uygulayıcısıdır; aldığı Demartini eğitimleri Hakkımda sayfasında yer alır."
           }
         }
       ]
@@ -178,7 +178,7 @@ export default function About() {
     <>
       <SEO
         title="Hakkımda - Şafak Özkan | Demartini Metodu"
-        description="Sertifikalı Demartini Metodu uygulayıcısı Şafak Özkan. 15 yılı aşkın deneyim."
+        description="Eğitimli Demartini Yöntemi uygulayıcısı Şafak Özkan. 15 yılı aşkın deneyim."
         keywords="şafak özkan, demartini metodu, hakkımda"
         schema={schema}
       />
@@ -197,7 +197,7 @@ export default function About() {
                     {aboutContent.title}
                   </h1>
                   <p className="text-lg md:text-xl text-[#D4AF37] mb-4 font-medium">
-                    Sertifikalı Demartini Metodu Uygulayıcısı
+                    Eğitimli Demartini Yöntemi Uygulayıcısı
                   </p>
                   <p className="text-base text-gray-600 leading-relaxed mb-6">
                     {aboutContent.paragraph1}

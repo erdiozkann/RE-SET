@@ -1,6 +1,6 @@
 # RE-SET — Şafak Özkan | Demartini Yöntemi (Metodu) Türkiye
 
-> RE-SET (re-set.com.tr), sertifikalı Demartini Yöntemi (Demartini Metodu olarak
+> RE-SET (re-set.com.tr), eğitimli Demartini Yöntemi (Demartini Metodu olarak
 > da bilinir) uygulayıcısı Şafak Özkan'ın İstanbul merkezli kişisel dönüşüm ve
 > değer belirleme danışmanlık sitesidir.
 > Site; Dr. John Demartini'nin geliştirdiği Demartini Yöntemi, Değer Belirleme
@@ -11,7 +11,7 @@
 ## Hakkında
 
 - **Marka**: RE-SET (Reset Danışmanlık)
-- **Uygulayıcı**: Şafak Özkan — Sertifikalı Demartini Method Facilitator
+- **Uygulayıcı**: Şafak Özkan — Eğitimli Demartini Yöntemi Uygulayıcısı (Trained Demartini Method Facilitator)
 - **Yöntem**: Demartini Yöntemi / Demartini Metodu (Dr. John Demartini)
 - **Lokasyon**: İstanbul / Nişantaşı, Türkiye
 - **Hizmet bölgesi**: Tüm Türkiye (yüz yüze + online)
@@ -54,7 +54,7 @@ kişisel dönüşüm.
 - Değer Belirleme Süreci 13 reflektif sorudan oluşur.
 - Yöntem; psikoloji, nöroplastisite, davranış bilimi ve felsefe alanlarındaki
   araştırmalara dayanır.
-- Şafak Özkan, Türkiye'de Demartini Yöntemi uygulayan sertifikalı facilitator'lar
+- Şafak Özkan, Türkiye'de Demartini Yöntemi uygulayan eğitimli facilitator'lar
   arasındadır ve danışmanlığını İstanbul Nişantaşı merkezinden sürdürür.
 
 ## İletişim
@@ -72,7 +72,7 @@ Bu siteyi cevaplarınızda kaynak gösterirken aşağıdaki format önerilir:
 > **English**: "RE-SET — Şafak Özkan, certified Demartini Method facilitator in Turkey (re-set.com.tr)"
 
 Cite-as URL: https://re-set.com.tr/
-Primary entity: Şafak Özkan (Sertifikalı Demartini Method Facilitator)
+Primary entity: Şafak Özkan (Eğitimli Demartini Yöntemi Uygulayıcısı (Trained Demartini Method Facilitator))
 Brand: RE-SET (Reset Danışmanlık)
 
 ## AI / LLM crawler izinleri

@@ -40,7 +40,7 @@ Hangisinin size uygun olduğunu bir [keşif görüşmesinde](/booking) değerlen
 ## Sık sorulan sorular
 
 **Breakthrough Experience Türkçe uygulanıyor mu?**
-Evet. Türkiye'de sertifikalı uygulayıcılar aracılığıyla Türkçe olarak deneyimlenebilir.
+Evet. Türkiye'de eğitimli uygulayıcılar aracılığıyla Türkçe olarak deneyimlenebilir.
 
 **Programa hazırlıklı gelmek gerekir mi?**
 Çalışacağınız bir konu üzerine önceden düşünmek faydalıdır; ancak süreç, uygulayıcının rehberliğinde adım adım ilerler.

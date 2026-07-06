@@ -14,6 +14,10 @@
   RewriteCond %{HTTPS} off
   RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
+  # Canonical host: www → apex (tek kanonik host https://re-set.com.tr)
+  RewriteCond %{HTTP_HOST} ^www\.re-set\.com\.tr$ [NC]
+  RewriteRule ^(.*)$ https://re-set.com.tr/$1 [L,R=301]
+
   # SEO: 301-redirect old /methods slug to canonical /demartini-yontemi
   RewriteRule ^methods/?$ /demartini-yontemi [R=301,L]
 

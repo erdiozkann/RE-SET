@@ -105,7 +105,7 @@ export default function BlogDetailPage() {
         '@id': 'https://re-set.com.tr/#safakozkan',
         name: 'Şafak Özkan',
         url: 'https://re-set.com.tr/about',
-        jobTitle: 'Sertifikalı Demartini Metodu Uygulayıcısı',
+        jobTitle: 'Eğitimli Demartini Yöntemi Uygulayıcısı',
       },
       publisher: {
         '@type': 'Organization',
