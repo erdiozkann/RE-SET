@@ -172,14 +172,6 @@ export default function ContactPage() {
         },
         {
           '@type': 'Question',
-          name: 'Demartini Metodu seans ücretleri nedir?',
-          acceptedAnswer: {
-            '@type': 'Answer',
-            text: 'Seans ücretleri hizmet türüne (birebir seans, Breakthrough Experience, online seans, ilişki dengeleme) göre değişir. Güncel ücretler için iletişime geçtiğinizde detaylı paylaşıyoruz.'
-          }
-        },
-        {
-          '@type': 'Question',
           name: 'Online Demartini seansı yapıyor musunuz?',
           acceptedAnswer: {
             '@type': 'Answer',

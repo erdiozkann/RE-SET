@@ -105,7 +105,6 @@ export default function HomePage() {
         { '@type': 'City', name: 'İstanbul' },
         { '@type': 'Country', name: 'Türkiye' }
       ],
-      priceRange: '₺₺',
       openingHoursSpecification: [
         {
           '@type': 'OpeningHoursSpecification',
@@ -380,7 +379,6 @@ export default function HomePage() {
                   <p className="text-gray-600 mb-4 text-sm">{service.description}</p>
                   <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
                     <span><i className="ri-time-line mr-1"></i>{service.duration} dakika</span>
-                    {service.price && <span className="text-lg font-semibold text-[#D4AF37]">{service.price} ₺</span>}
                   </div>
                   <Link
                     to="/booking"

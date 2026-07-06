@@ -32,9 +32,6 @@ Evet. Zoom veya Google Meet üzerinden yapılan online seanslar, yüz yüze sean
 ## Seansa nasıl hazırlanırım?
 Çalışmak istediğiniz bir konu üzerine önceden düşünmek faydalıdır; ancak süreç uygulayıcının rehberliğinde adım adım ilerlediği için özel bir hazırlık şart değildir. Sakin, kesintisiz bir ortam yeterlidir.
 
-## Fiyat / ücret politikası
-> `[ŞAFAK INPUT GEREKLİ]` — Fiyat yazılacak mı yoksa "keşif görüşmesinde paylaşılır" mı denecek? Uydurma fiyat YAZILMAZ (Kural 2). Karar Şafak/Erdi'ye ait.
-
 ## Mini SSS
 **Demartini seansı terapi midir?** Hayır; bir eğitim ve farkındalık çalışmasıdır, tıbbi/psikiyatrik tedavinin yerine geçmez.
 **Kaç seans gerekir?** Konuya göre genellikle 2–6 seans.

@@ -348,12 +348,6 @@ const BookingPage = () => {
                               <i className="ri-time-line mr-1"></i>
                               {`${service.duration} dakika`}
                             </span>
-                            {service.price && (
-                              <span className="flex items-center font-semibold text-[#D4AF37]">
-                                <i className="ri-money-dollar-circle-line mr-1"></i>
-                                {`${service.price} ₺`}
-                              </span>
-                            )}
                           </div>
                         </div>
                         <div className="w-8 h-8 rounded-full border-2 border-gray-300 group-hover:border-[#D4AF37] flex items-center justify-center ml-4">
