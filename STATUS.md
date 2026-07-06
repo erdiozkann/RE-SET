@@ -107,3 +107,15 @@ Erdi'den gelen tam plan konuşmada; özeti + uyum durumu:
 İnsan onayı olmadan yayın yok · uydurma yok (kaynak URL şart) · YMYL: tıbbi iddia yasak + disclaimer · keyword stuffing yasak · her sayfaya Şafak'ın gerçek katkısı · unvan "Trained/Eğitimli" (Sertifikalı/Master DEĞİL).
 
 **KPI baseline (Tem 2026):** 3 indeksli sayfa, ~35 gösterim/ay, "demartini metodu" poz. 13.4, AI atıf 0/15.
+
+---
+## ✅ FAZ 1 TAMAMLANDI (2026-07-07) — onay bekliyor
+- [x] Meta keywords SİLİNDİ (index.html + SEO.tsx her zaman strip) — spam sinyali
+- [x] **Unvan düzeltmesi (plan 3.1): "Sertifikalı"→"Eğitimli (Trained)"** — kod (Person jobTitle, prerender, FAQ, home, about, blog şema, llms.txt) + 5 blog draft + **3 CANLI DB yazısı** (John Demartini/Değer Belirleme/Breakthrough admin panelden düzeltildi). Yanlış "Certified" beyanı kalktı.
+- [x] Person sameAs → drdemartini.com/facilitators (doğrulama linki)
+- [x] www→apex 301 (.htaccess)
+- [x] Article+BreadcrumbList şema blog detayda mevcut · robots AI-crawler izin ✅ · /methods 301 ✅
+- [ ] **KULLANICI:** sitemap → GSC gönder (iki mülk) — ben gönderemem
+- [ ] **ŞAFAK ONAYI:** about bio "aldığım uluslararası sertifikalarımla" → kendi öz-geçmişi, dokunulmadı; softlanacak mı?
+- [ ] Title/description ≤60 ince ayar + disclaimer (3.3) → FAZ 2'ye taşındı (içerik sayfalarıyla)
+- ⚠️ REDEPLOY GEREK: FAZ 1 kod+DB düzeltmeleri HOSTINGER_UPLOAD'da hazır, Hostinger'a yüklenmeli.
