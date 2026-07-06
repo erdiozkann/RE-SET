@@ -119,3 +119,12 @@ Erdi'den gelen tam plan konuşmada; özeti + uyum durumu:
 - [ ] **ŞAFAK ONAYI:** about bio "aldığım uluslararası sertifikalarımla" → kendi öz-geçmişi, dokunulmadı; softlanacak mı?
 - [ ] Title/description ≤60 ince ayar + disclaimer (3.3) → FAZ 2'ye taşındı (içerik sayfalarıyla)
 - ⚠️ REDEPLOY GEREK: FAZ 1 kod+DB düzeltmeleri HOSTINGER_UPLOAD'da hazır, Hostinger'a yüklenmeli.
+
+---
+## FAZ 2 — CMS "Sayfalar" sistemi kuruldu (2026-07-07)
+- [x] `site_pages` tablosu + RLS **CANLIYA UYGULANDI** (Management API/SQL Editor) — public read yayınlı, admin write
+- [x] Kod: sitePagesApi + `/:slug` CmsPage (markdown+Service/Breadcrumb şema) + prerender fetch + admin "Sayfalar" tab (`src/pages/admin/components/PagesTab.tsx`)
+- [x] 2 seed taslak: demartini-seansi, deger-belirleme (is_published=false → Şafak input sonrası panelden yayınla)
+- [x] Fiyat public siteden tamamen kaldırıldı (priceRange, service price, ücret SSS)
+- ⚠️ Admin "Sayfalar" tab + route'lar REDEPLOY sonrası canlıda
+- KARAR: deploy artık **VPS üzerinden** (manuel Hostinger yok) — taşıma başlıyor
