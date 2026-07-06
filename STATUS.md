@@ -136,3 +136,13 @@ Erdi'den gelen tam plan konuşmada; özeti + uyum durumu:
 - [x] Tek-komut redeploy: `deploy/vps/deploy.sh` (npm run build sonrası çalıştır)
 - [ ] **KULLANICI/DNS:** Hostinger DNS → `re-set.com.tr` + `www` A kaydı → `82.29.180.227`. Sonra Traefik cert otomatik. Rollback: eski Hostinger IP.
 - Not: DNS cutover sonrası tüm FAZ 1 (meta keywords sil, Trained düzeltmesi) + CMS route'ları + perf fix'leri canlı olur.
+
+## ✅✅ VPS CUTOVER TAMAMLANDI — SİTE CANLI (2026-07-07)
+- [x] re-set.com.tr → 82.29.180.227 (A). ALIAS silindi (kullanıcı), `@` artık A.
+- [x] **Geçerli Let's Encrypt cert + HTTPS 200** — nginx/1.31.2 (VPS) Traefik arkasında
+- [x] Kök neden çözüldü: eski **AAAA (Hostinger CDN IPv6)** ACME'yi bozuyordu (LE IPv6'yı tercih→eski sunucu→404). AAAA kalkınca cert geldi.
+- [x] www reset router'ından çıkarıldı (www Hostinger'da kalıyor — kullanıcı tercihi)
+- [x] Canlı doğrulama: meta keywords 0, Trained (Sertifikalı 0), priceRange 0, 15 FAQ, /methods→301, gzip, CSP+HSTS — hepsi VPS'ten
+- [x] **Tek-komut deploy: `./deploy/vps/deploy.sh`** (build+rsync+compose up)
+- NOT: www.re-set.com.tr hâlâ Hostinger CDN'de. VPS'e almak istenirse: www CNAME+AAAA sil, www A→82.29.180.227 ekle, router'a www geri ekle.
+- Kalan: FAZ 2 içerik sayfaları (site_pages) taslak — Şafak input (klinik unvan + bio + seans anlatımı) gelince panelden yayınla.
