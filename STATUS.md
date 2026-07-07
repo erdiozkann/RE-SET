@@ -146,3 +146,9 @@ Erdi'den gelen tam plan konuşmada; özeti + uyum durumu:
 - [x] **Tek-komut deploy: `./deploy/vps/deploy.sh`** (build+rsync+compose up)
 - NOT: www.re-set.com.tr hâlâ Hostinger CDN'de. VPS'e almak istenirse: www CNAME+AAAA sil, www A→82.29.180.227 ekle, router'a www geri ekle.
 - Kalan: FAZ 2 içerik sayfaları (site_pages) taslak — Şafak input (klinik unvan + bio + seans anlatımı) gelince panelden yayınla.
+
+## FAZ 3 başladı — Tier-3 fırsat yazıları (2026-07-07)
+- [x] "Duygusal Yük Nedir, Nasıl Hafifler?" + "Değerlerini Keşfetmek" YAYINDA (panelden + tek-shot deploy, canlı prerendered). Baseline'ın en yüksek 2 boş-SERP fırsatı.
+- [x] Tek-shot deploy akışı doğrulandı: yaz → panel → `./deploy/vps/deploy.sh` → canlı
+- Blog = 8 yazı. Sıradaki Tier-3: kırgınlığı bırakmak, karar verememe, öz sabotaj, erteleme-ve-değerler.
+- FAZ 2 sayfaları (demartini-seansi/deger-belirleme/nasil-uygulanir/sss) draft — Şafak input (klinik unvan+bio) bekliyor.
