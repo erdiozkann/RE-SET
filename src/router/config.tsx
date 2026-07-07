@@ -2,7 +2,9 @@ import { lazy } from 'react';
 import type { RouteObject } from 'react-router-dom';
 import Layout from '../components/Layout';
 
-const HomePage = lazy(() => import('../pages/home/page'));
+// HomePage EAGER (lazy değil): landing page zaten hemen gerekiyor; lazy olunca
+// prerendered içerik Suspense spinner'ıyla değişip "3sn boş ekran" yaratıyordu.
+import HomePage from '../pages/home/page';
 const CmsPage = lazy(() => import('../pages/cms/page'));
 const AboutPage = lazy(() => import('../pages/about/page'));
 const MethodsPage = lazy(() => import('../pages/methods/page'));
