@@ -212,52 +212,35 @@ export default function HomePage() {
     }
   ];
 
-  if (heroLoading) {
-    return (
-      <div className="bg-white">
-        {/* Hero Skeleton */}
-        <div className="relative min-h-[90vh] flex items-center bg-gray-50 overflow-hidden animate-pulse">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
-            <div className="max-w-xl">
-              <div className="h-12 bg-gray-200 rounded w-3/4 mb-4"></div>
-              <div className="h-12 bg-gray-200 rounded w-1/2 mb-6"></div>
-              <div className="h-4 bg-gray-200 rounded w-full mb-2"></div>
-              <div className="h-4 bg-gray-200 rounded w-2/3 mb-8"></div>
-              <div className="flex gap-4">
-                <div className="h-14 bg-gray-200 rounded-full w-40"></div>
-                <div className="h-14 bg-gray-200 rounded-full w-48"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Additional Skeletons for other sections if needed, but Hero is critical for 'First Paint' */}
-        <div className="py-20 px-8 max-w-7xl mx-auto">
-          <div className="h-10 bg-gray-200 rounded w-1/3 mb-10 mx-auto"></div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="h-64 bg-gray-200 rounded-2xl"></div>
-            <div className="h-64 bg-gray-200 rounded-2xl"></div>
-            <div className="h-64 bg-gray-200 rounded-2xl"></div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  // heroLoading iken TÜM sayfayı gri skeleton'a çevirmek, prerendered içeriğin
+  // görünüp sonra kaybolup geri gelmesine (flaş) yol açıyordu = yavaş hissi.
+  // Onun yerine hero'yu statik fallback ile hemen render ediyoruz; gerçek
+  // içerik Supabase'ten gelince sorunsuz güncelleniyor.
+  const hero: HeroContent = heroContent || {
+    id: 'fallback',
+    title: 'Kendinle Başla',
+    description:
+      'Bireylerin öz güçlerini hatırlamalarına, potansiyellerini gerçekleştirmelerine ve yaşamlarını bilinçle yeniden tasarlamalarına ilham olmak.',
+    location: '',
+    titleSize: '',
+    descriptionSize: '',
+    image: '',
+    text_color: '',
+  };
 
   return (
     <>
       <SEO
-        title="Reset - Şafak Özkan | Demartini Metodu İstanbul"
+        title="RE-SET | Şafak Özkan — Demartini Yöntemi ve Metodu Türkiye"
         description="İstanbul'da eğitimli Demartini Yöntemi uygulayıcısı Şafak Özkan. Değerlerinizi keşfedin, hayat dengenizi bulun, potansiyelinizi ortaya çıkarın."
-        keywords="demartini metodu, demartini metodu istanbul, demartini metodu türkiye, değer belirleme, breakthrough experience, şafak özkan, yaşam dengeleme"
         schema={schema}
       />
 
-      {/* Hero Section */}
-      {heroContent && (
+      {/* Hero Section — her zaman render olur (fallback ile), flaş yok */}
+      {(
         <section className="relative min-h-[90vh] flex items-start bg-gradient-to-br from-teal-50 via-white to-amber-50 overflow-hidden">
           {/* Hero Background Image with Progressive Loading */}
-          {heroContent.image && (
+          {hero.image && (
             <div className="absolute inset-0 z-0">
               {/* Skeleton placeholder */}
               {!heroImageLoaded && (
@@ -265,7 +248,7 @@ export default function HomePage() {
               )}
               <img
                 ref={heroImageRef}
-                src={optimizedImage(heroContent.image, { width: 1400 })}
+                src={optimizedImage(hero.image, { width: 1400 })}
                 alt="Şafak Özkan ile Demartini Metodu danışmanlığı — RE-SET İstanbul"
                 className={`w-full h-full object-cover object-top transition-opacity duration-700 ${heroImageLoaded ? 'opacity-100' : 'opacity-0'}`}
                 fetchPriority="high"
@@ -286,18 +269,18 @@ export default function HomePage() {
               <div className="backdrop-blur-md bg-white/80 dark:bg-gray-900/80 rounded-3xl p-8 md:p-10 shadow-2xl border border-white/20">
                 <h1
                   className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight"
-                  style={{ color: heroContent.text_color || '#1A1A1A' }}
+                  style={{ color: hero.text_color || '#1A1A1A' }}
                 >
                   <span className="block text-base md:text-lg font-semibold tracking-wide text-[#C19B2E] mb-2">
                     Demartini Yöntemi (Metodu) · Şafak Özkan · İstanbul
                   </span>
-                  {heroContent.title}
+                  {hero.title}
                 </h1>
                 <p
                   className="text-base md:text-lg lg:text-xl mb-8 leading-relaxed"
-                  style={{ color: heroContent.text_color || '#4B5563' }}
+                  style={{ color: hero.text_color || '#4B5563' }}
                 >
-                  {heroContent.description}
+                  {hero.description}
                 </p>
 
                 {/* Butonlar */}
