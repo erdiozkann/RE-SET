@@ -20,13 +20,18 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=proxy"
-      # apex + www tek router'da; www→apex 301'i nginx yapıyor
       - "traefik.http.routers.reset.rule=Host(`re-set.com.tr`)"
       - "traefik.http.routers.reset.entrypoints=websecure"
       - "traefik.http.routers.reset.tls=true"
       - "traefik.http.routers.reset.tls.certresolver=letsencrypt"
       - "traefik.http.services.reset.loadbalancer.server.port=80"
-      # (opsiyonel) http→https yönlendirme zaten global entrypoint'te varsa gerekmez
+      # --- Rate limit (K3: L7 flood koruması) — per-IP (Traefik varsayılan
+      #     sourceCriterion = client IP). Meşru kullanıcı asla dolmaz (asset'ler
+      #     cache'li); flood keser. YALNIZ reset router'ına bağlı (Postiz'e dokunmaz).
+      - "traefik.http.middlewares.reset-rl.ratelimit.average=60"
+      - "traefik.http.middlewares.reset-rl.ratelimit.burst=120"
+      - "traefik.http.middlewares.reset-rl.ratelimit.period=1s"
+      - "traefik.http.routers.reset.middlewares=reset-rl"
 
 networks:
   proxy:
