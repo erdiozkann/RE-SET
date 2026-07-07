@@ -148,7 +148,12 @@ Erdi'den gelen tam plan konuşmada; özeti + uyum durumu:
 - Kalan: FAZ 2 içerik sayfaları (site_pages) taslak — Şafak input (klinik unvan + bio + seans anlatımı) gelince panelden yayınla.
 
 ## FAZ 3 başladı — Tier-3 fırsat yazıları (2026-07-07)
-- [x] "Duygusal Yük Nedir, Nasıl Hafifler?" + "Değerlerini Keşfetmek" YAYINDA (panelden + tek-shot deploy, canlı prerendered). Baseline'ın en yüksek 2 boş-SERP fırsatı.
+- [x] Tier-3 (4 yayında): duygusal yük, değerlerini keşfetmek, kırgınlığı bırakmak, karar verememe. Blog=10, hepsi prerendered.
 - [x] Tek-shot deploy akışı doğrulandı: yaz → panel → `./deploy/vps/deploy.sh` → canlı
 - Blog = 8 yazı. Sıradaki Tier-3: kırgınlığı bırakmak, karar verememe, öz sabotaj, erteleme-ve-değerler.
 - FAZ 2 sayfaları (demartini-seansi/deger-belirleme/nasil-uygulanir/sss) draft — Şafak input (klinik unvan+bio) bekliyor.
+
+## FAZ 3 güncel (2026-07-07): 4 Tier-3 yazı YAYINDA (blog=10)
+- duygusal yük · değerlerini keşfetmek · kırgınlığı bırakmak · karar verememe — hepsi canlı+prerendered, tek-shot deploy ile
+- Kalan Tier-3: öz sabotaj, erteleme-ve-değerler (opsiyonel)
+- Asıl dönüşüm: FAZ 2 para sayfaları (demartini-seansi/deger-belirleme) — Şafak input (klinik unvan + bio) gelince yayınlanır
