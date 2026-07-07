@@ -1,0 +1,26 @@
+name: Secret Scan
+
+# K7: her push/PR'da sızmış anahtar taraması (gitleaks). Global pre-commit
+# hook yerel commit'leri korur; bu CI GitHub tarafında ikinci savunma hattı.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  gitleaks:
+    name: gitleaks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout (full history)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Kişisel (org olmayan) repo → lisans gerekmez.

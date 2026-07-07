@@ -1,0 +1,12 @@
+# gitleaks yapılandırması — varsayılan kuralları genişletir + false-positive allowlist.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Bilinçli allowlist: public/hassas-olmayan tokenlar (history dahil)"
+# Cloudflare Web Analytics beacon token'ı — her sayfa HTML'inde herkese görünen
+# public site tanımlayıcısı, kimlik bilgisi DEĞİL. index.html'den kaldırıldı ama
+# geçmiş bir commit'te kalıyor; gitleaks bunu generic-api-key sanıyor (false positive).
+regexes = [
+  '''d17ce7c0b3e84178a5b2f51278dbb2b3''',
+]
