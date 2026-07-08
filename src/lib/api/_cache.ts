@@ -14,7 +14,6 @@ export function registerCacheClearer(clearFn: () => void): void {
 export function clearContentCache(): void {
   for (const clear of cacheClearers) clear();
   // Kept intentionally — used by admin save flows to confirm a refresh happened.
-  console.log('Content cache cleared');
 }
 
 // Throws if `action` doesn't settle within `ms` milliseconds. Used to keep

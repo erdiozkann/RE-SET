@@ -16,11 +16,11 @@
   <meta http-equiv="content-language" content="tr-TR" />
 
   <!-- Yazar / Telif -->
-  <meta name="author" content="Şafak Özkan — Reset Danışmanlık" />
+  <meta name="author" content="Şafak Özkan — RE-SET" />
   <meta name="designer" content="NodeWorks.at" />
   <meta name="web_author" content="NodeWorks (https://nodeworks.at)" />
-  <meta name="copyright" content="© 2026 Reset — Şafak Özkan. Tüm hakları saklıdır." />
-  <meta name="publisher" content="Reset Danışmanlık" />
+  <meta name="copyright" content="© 2026 RE-SET — Şafak Özkan. Tüm hakları saklıdır." />
+  <meta name="publisher" content="RE-SET — Şafak Özkan" />
   <meta name="robots"
     content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
   <meta name="googlebot"
@@ -33,11 +33,9 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="format-detection" content="telephone=yes" />
 
-  <!-- Geo Tags (Yerel SEO) -->
+  <!-- Geo Tags (Yerel SEO) — kesin koordinat YOK (gerçek konum GBP'de). -->
   <meta name="geo.region" content="TR-34" />
-  <meta name="geo.placename" content="İstanbul, Nişantaşı" />
-  <meta name="geo.position" content="41.0534;28.9943" />
-  <meta name="ICBM" content="41.0534, 28.9943" />
+  <meta name="geo.placename" content="İstanbul, Tarabya" />
 
   <!-- Open Graph (route-invariant only — title/description/url come from prerender) -->
   <meta property="og:type" content="website" />
@@ -62,13 +60,15 @@
   <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
   <link rel="author" href="/humans.txt" type="text/plain" />
 
-  <!-- Fonts -->
+  <!-- Fonts — render-blocking'ten çıkarıldı: sayfa sistem fontuyla anında boyanır,
+       Playfair/Inter yüklenince swap olur (display=swap). İlk boyama beklemez. -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="dns-prefetch" href="https://fonts.googleapis.com">
-  <link
+  <link rel="preload" as="style"
     href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap"
-    rel="stylesheet">
+    onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap"></noscript>
 
   <!-- Icons (Remixicon only — Font Awesome kaldırıldı: hiç kullanılmıyordu) -->
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
@@ -85,8 +85,8 @@
       {
         "@type": "Organization",
         "@id": "https://re-set.com.tr/#organization",
-        "name": "RE-SET — Reset Danışmanlık",
-        "alternateName": ["RE-SET", "Reset Danışmanlık"],
+        "name": "RE-SET — Şafak Özkan",
+        "alternateName": ["RE-SET", "RE-SET Danışmanlık"],
         "url": "https://re-set.com.tr/",
         "logo": {
           "@type": "ImageObject",
@@ -148,16 +148,9 @@
         "parentOrganization": { "@id": "https://re-set.com.tr/#organization" },
         "address": {
           "@type": "PostalAddress",
-          "streetAddress": "Valikonağı Caddesi, Nişantaşı",
-          "addressLocality": "Şişli",
+          "addressLocality": "İstanbul",
           "addressRegion": "İstanbul",
-          "postalCode": "34371",
           "addressCountry": "TR"
-        },
-        "geo": {
-          "@type": "GeoCoordinates",
-          "latitude": 41.0534,
-          "longitude": 28.9943
         },
         "openingHoursSpecification": {
           "@type": "OpeningHoursSpecification",

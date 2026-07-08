@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { servicesApi, appointmentsApi } from '../../lib/api';
+import { servicesApi, appointmentsApi, messagesApi } from '../../lib/api';
 import { getUserFriendlyErrorMessage } from '../../lib/errors';
 import { useToast } from '../../components/ToastContainer';
 import { supabase } from '../../lib/supabase';
 import type { ServiceType, WorkingConfig } from '../../types';
 import SEO from '../../components/SEO';
+import { metaFor } from '../../lib/routeMeta';
 
 const BookingPage = () => {
   const navigate = useNavigate();
@@ -20,6 +21,12 @@ const BookingPage = () => {
   const [selectedService, setSelectedService] = useState<ServiceType | null>(null);
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
+  // Hesapsız hızlı randevu talebi (anon ekran) — contact_messages'a yazar
+  const [quickName, setQuickName] = useState('');
+  const [quickPhone, setQuickPhone] = useState('');
+  const [quickWhen, setQuickWhen] = useState('');
+  const [quickSending, setQuickSending] = useState(false);
+  const [quickSent, setQuickSent] = useState(false);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -205,8 +212,17 @@ const BookingPage = () => {
         navigate('/client-panel', { replace: true });
       }, 2000);
     } catch (error: any) {
+      // Çifte-booking: DB'deki unique index (date,time) ihlali → 23505.
+      // (Bkz. _sql_migrations/2026-07-07_appointments_unique_slot.sql)
+      const code = error?.code || error?.details || '';
+      if (String(code).includes('23505') || /duplicate|unique/i.test(String(error?.message || ''))) {
+        toast.error('Bu tarih ve saat az önce doldu. Lütfen başka bir saat seçin.');
+        // Seçili saati sıfırla ve slot listesini tazele
+        setSelectedTime('');
+        setStep(2);
+        return;
+      }
       console.error('Randevu oluşturma hatası:', error);
-      console.error('Hata detayı:', error.message, error.details, error.hint);
       const message = getUserFriendlyErrorMessage(error);
       toast.error(message || 'Randevu oluşturulurken bir hata oluştu');
     }
@@ -233,33 +249,126 @@ const BookingPage = () => {
   if (showAccountCheck && !user) {
     return (
       <>
-        <SEO title="Randevu Al | Giriş Gerekli" description="Randevu almak için giriş yapmanız gerekmektedir." noindex />
+        <SEO
+          title={metaFor('/booking').title}
+          description={metaFor('/booking').description}
+          canonical="/booking"
+        />
         <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-amber-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl shadow-2xl p-8 md:p-12 max-w-lg w-full text-center">
             <div className="w-20 h-20 bg-gradient-to-br from-[#D4AF37] to-[#F4D03F] rounded-2xl flex items-center justify-center mx-auto mb-8 shadow-lg transform -rotate-6">
               <i className="ri-calendar-check-line text-4xl text-white"></i>
             </div>
-            <h2 className="text-3xl font-serif text-[#1A1A1A] mb-4">Randevu almak için giriş yapın</h2>
-            <p className="text-gray-600 mb-8 leading-relaxed">
-              Randevu oluşturabilmek için hesabınıza giriş yapmalısınız.
+            <h1 className="text-3xl font-serif text-[#1A1A1A] mb-4">Randevu Al</h1>
+            <p className="text-gray-600 mb-6 leading-relaxed">
+              Hesap açmadan <strong>randevu talebi</strong> bırakın — 30 dakikalık ücretsiz keşif
+              görüşmesi için sizi arayalım. Dilerseniz hesap oluşturarak seansınızı online da
+              planlayabilirsiniz.
             </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+
+            {/* SIFIR-friction birincil yol: hesapsız randevu talebi (contact_messages'a düşer) */}
+            {quickSent ? (
+              <div className="bg-green-50 border border-green-200 rounded-xl p-5 mb-4 text-left">
+                <p className="font-semibold text-green-800 mb-1">
+                  <i className="ri-check-line mr-1"></i> Talebiniz alındı!
+                </p>
+                <p className="text-sm text-green-700">
+                  En kısa sürede sizi arayacağız. Dilerseniz{' '}
+                  <button onClick={() => navigate('/contact')} className="underline cursor-pointer">
+                    iletişim sayfasından
+                  </button>{' '}
+                  detaylı mesaj da bırakabilirsiniz.
+                </p>
+              </div>
+            ) : (
+              <form
+                onSubmit={async (e) => {
+                  e.preventDefault();
+                  if (!quickName.trim() || !quickPhone.trim()) {
+                    toast.error('Lütfen ad ve telefon girin');
+                    return;
+                  }
+                  setQuickSending(true);
+                  try {
+                    await messagesApi.create({
+                      name: quickName.trim(),
+                      email: '',
+                      phone: quickPhone.trim(),
+                      subject: 'Randevu Talebi',
+                      message: `Hızlı randevu talebi (booking sayfası). Tercih edilen zaman: ${quickWhen.trim() || 'belirtilmedi'}`,
+                    });
+                    setQuickSent(true);
+                  } catch {
+                    toast.error('Talep gönderilemedi. Lütfen iletişim sayfasını deneyin.');
+                  } finally {
+                    setQuickSending(false);
+                  }
+                }}
+                className="text-left space-y-3 mb-4"
+              >
+                <div>
+                  <label htmlFor="quick-name" className="block text-sm font-medium text-gray-700 mb-1">Adınız *</label>
+                  <input
+                    id="quick-name"
+                    type="text"
+                    value={quickName}
+                    onChange={(e) => setQuickName(e.target.value)}
+                    required
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
+                    placeholder="Ad Soyad"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="quick-phone" className="block text-sm font-medium text-gray-700 mb-1">Telefon *</label>
+                  <input
+                    id="quick-phone"
+                    type="tel"
+                    value={quickPhone}
+                    onChange={(e) => setQuickPhone(e.target.value)}
+                    required
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
+                    placeholder="+90 5XX XXX XX XX"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="quick-when" className="block text-sm font-medium text-gray-700 mb-1">Tercih ettiğiniz gün/saat (opsiyonel)</label>
+                  <input
+                    id="quick-when"
+                    type="text"
+                    value={quickWhen}
+                    onChange={(e) => setQuickWhen(e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
+                    placeholder="örn. hafta içi 18:00 sonrası"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  disabled={quickSending}
+                  className="w-full px-6 py-4 bg-[#D4AF37] text-[#1A1A1A] rounded-xl font-semibold hover:bg-[#C19B2E] transition-all cursor-pointer shadow-md hover:shadow-lg disabled:opacity-60"
+                >
+                  {quickSending ? 'Gönderiliyor…' : 'Randevu Talebi Bırak (hesapsız)'}
+                </button>
+              </form>
+            )}
+            <div className="flex items-center gap-3 my-4">
+              <span className="flex-1 h-px bg-gray-200"></span>
+              <span className="text-xs text-gray-400">veya online planla</span>
+              <span className="flex-1 h-px bg-gray-200"></span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <button
                 onClick={() => navigate('/login')}
-                className="px-6 py-4 bg-[#1A1A1A] text-white rounded-xl font-semibold hover:bg-black transition-all cursor-pointer shadow-md hover:shadow-lg"
+                className="px-6 py-3 border border-gray-300 text-[#1A1A1A] rounded-xl font-medium hover:bg-gray-50 transition-all cursor-pointer"
               >
                 Giriş Yap
               </button>
               <button
                 onClick={() => navigate('/register')}
-                className="px-6 py-4 bg-[#D4AF37] text-[#1A1A1A] rounded-xl font-semibold hover:bg-[#C19B2E] transition-all cursor-pointer shadow-md hover:shadow-lg"
+                className="px-6 py-3 border border-gray-300 text-[#1A1A1A] rounded-xl font-medium hover:bg-gray-50 transition-all cursor-pointer"
               >
                 Hesap Oluştur
               </button>
             </div>
-            <p className="mt-8 text-sm text-gray-500">
-              Zaten hesabınız var mı? Giriş yapın.
-            </p>
           </div>
         </div>
       </>
@@ -288,8 +397,9 @@ const BookingPage = () => {
   return (
     <>
       <SEO
-        title="Randevu Oluştur - Reset Danışmanlık"
-        description="Reset Danışmanlık üzerinden online randevu oluşturun."
+        title={metaFor('/booking').title}
+        description={metaFor('/booking').description}
+        canonical="/booking"
       />
       <div className="min-h-screen bg-gradient-to-br from-white to-gray-50 py-12 px-4">
         <div className="max-w-4xl mx-auto">

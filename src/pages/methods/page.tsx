@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import SEO from '../../components/SEO';
 import { useToast } from '../../components/ToastContainer';
 import { methodsApi } from '../../lib/api';
+import { metaFor } from '../../lib/routeMeta';
 import type { Method } from '../../types';
 
 export default function MethodsPage() {
@@ -135,7 +136,7 @@ export default function MethodsPage() {
       '@id': `${siteUrl}/demartini-yontemi#service`,
       name: 'Demartini Metodu Danışmanlığı — Şafak Özkan',
       description:
-        "Dr. John Demartini'nin Demartini Metodu'nu uygulayan, İstanbul Nişantaşı merkezli danışmanlık hizmeti. Yüz yüze ve online.",
+        "Dr. John Demartini'nin Demartini Metodu'nu uygulayan, İstanbul Tarabya merkezli danışmanlık hizmeti. Yüz yüze ve online.",
       provider: { '@id': 'https://re-set.com.tr/#safakozkan' },
       areaServed: [
         { '@type': 'City', name: 'İstanbul' },
@@ -184,9 +185,8 @@ export default function MethodsPage() {
   return (
     <>
       <SEO
-        title="Demartini Yöntemi — Şafak Özkan | RE-SET Türkiye"
-        description="Demartini Yöntemi (Demartini Metodu): Şafak Özkan'ın uyguladığı 13 sorulu Değer Belirleme Süreci, Quantum Collapse Process, Breakthrough Experience ve ilişki dengeleme. Dr. John Demartini'nin bilimsel yöntemi."
-        keywords="demartini yöntemi, demartini metodu, demartini yöntemi nedir, demartini yöntemi seansı, değer belirleme, breakthrough experience, quantum collapse process, ilişki dengeleme, dr john demartini, şafak özkan"
+        title={metaFor('/demartini-yontemi').title}
+        description={metaFor('/demartini-yontemi').description}
         canonical="/demartini-yontemi"
         schema={schema}
       />
@@ -198,7 +198,7 @@ export default function MethodsPage() {
               Şafak Özkan ile Demartini Yöntemi
             </h1>
             <p className="text-base md:text-lg text-gray-600 max-w-3xl mx-auto">
-              Demartini Yöntemi (Demartini Metodu), Değer Belirleme Süreci ve Breakthrough Experience — danışmanlık sürecimizde kullandığımız bilimsel temelli yöntemler.
+              Demartini Yöntemi (Demartini Metodu), Değer Belirleme Süreci ve Breakthrough Experience — danışmanlık sürecimizde kullandığımız, psikoloji ve davranış bilimi gibi disiplinlerden beslenen yöntemler.
             </p>
           </div>
 
@@ -257,8 +257,8 @@ export default function MethodsPage() {
               nötralize etmeyi ve kararlı bir minnet–ilham–sevgi alanına geçişi amaçlar.
             </p>
             <p className="text-gray-700 leading-relaxed mb-4">
-              Yöntemin bilimsel arka planı psikoloji, davranış bilimi, nöroplastisite ve felsefe
-              alanlarındaki araştırmalara dayanır. Demartini Metodu tıbbi tedavinin yerine
+              Yöntemin kavramsal arka planı psikoloji, davranış bilimi, nöroplastisite ve felsefe
+              alanlarındaki çalışmalardan beslenir. Demartini Metodu tıbbi tedavinin yerine
               geçmez; bireyin kendi farkındalığıyla algı yapısını dengelediği bütüncül bir
               içgörü aracıdır.
             </p>
@@ -318,7 +318,7 @@ export default function MethodsPage() {
                   <tr>
                     <td className="px-6 py-4 font-semibold text-gray-900">Yaklaşım Yapısı</td>
                     <td className="px-6 py-4">Bilişsel, duygusal veya davranışsal yönlendirmeler.</td>
-                    <td className="px-6 py-4 text-teal-700 font-medium">Matematiksel ve bilimsel olarak kurgulanmış sistematik sorgulama.</td>
+                    <td className="px-6 py-4 text-teal-700 font-medium">Adım adım kurgulanmış, sistematik ve yapılandırılmış sorgulama.</td>
                   </tr>
                 </tbody>
               </table>
@@ -339,11 +339,41 @@ export default function MethodsPage() {
             </h3>
             <ul className="list-disc list-inside text-gray-700 space-y-1 mb-3">
               <li>İlişki çatışmaları (partner, aile, iş)</li>
-              <li>Kaygı, depresyon ve travma deneyimleri</li>
-              <li>Bağımlılık ve dürtüsel davranış kalıpları</li>
+              <li>Kaygı ve stresli dönemlerde algı dengeleme</li>
+              <li>Dürtüsel davranış kalıplarına dair farkındalık</li>
               <li>Kariyer kararsızlığı, hayat yönü arayışı</li>
               <li>Öz değer, suçluluk ve değersizlik hissi</li>
-              <li>Yas, kayıp ve geçmiş travmaların entegrasyonu</li>
+              <li>Yas, kayıp ve zorlu geçmiş deneyimlerin entegrasyonu</li>
+            </ul>
+            <p className="text-sm text-gray-500 italic mb-3">
+              Not: Demartini Metodu bir psikoterapi veya tıbbi tedavi değildir ve klinik bir
+              tanının (ör. depresyon, travma bozukluğu, bağımlılık) tedavisinin yerine geçmez.
+              Bu tür durumlarda ilgili sağlık uzmanına başvurulmalıdır; yöntem yalnızca
+              tamamlayıcı bir farkındalık aracı olarak kullanılabilir.
+            </p>
+
+            <h3 className="text-xl md:text-2xl font-serif text-gray-900 mt-8 mb-3">
+              Seans ve Programlar
+            </h3>
+            <ul className="list-disc list-inside text-gray-700 space-y-1 mb-3">
+              <li>
+                <a href="/demartini-seansi" className="text-teal-700 underline hover:text-teal-900">
+                  Demartini Seansı — İstanbul (Tarabya) &amp; Online
+                </a>
+                : yöntemin birebir uygulandığı 60–90 dk'lık çalışma.
+              </li>
+              <li>
+                <a href="/deger-belirleme" className="text-teal-700 underline hover:text-teal-900">
+                  Değer Belirleme Süreci
+                </a>
+                : 13 soruyla gerçek değerler hiyerarşinizi keşfedin.
+              </li>
+              <li>
+                <a href="/breakthrough-experience" className="text-teal-700 underline hover:text-teal-900">
+                  Breakthrough Experience
+                </a>
+                : Dr. Demartini'nin 2 tam günlük amiral programı.
+              </li>
             </ul>
 
             <h2 className="text-xl md:text-2xl font-serif text-gray-900 mt-8 mb-3">

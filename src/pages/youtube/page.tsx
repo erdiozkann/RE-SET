@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import SEO from '../../components/SEO';
+import { metaFor } from '../../lib/routeMeta';
 import { youtubeApi } from '../../lib/api';
 import type { YouTubeVideo } from '../../types';
 
@@ -48,7 +49,7 @@ export default function YouTube() {
   const schema = {
     '@context': 'https://schema.org',
     '@type': 'VideoGallery',
-    name: 'Reset YouTube Kanalı',
+    name: 'RE-SET YouTube Kanalı — Şafak Özkan',
     description: 'Demartini Metodu, değer belirleme ve Breakthrough Experience üzerine video içerikler',
     url: `${siteUrl}/youtube`,
     author: {
@@ -60,9 +61,9 @@ export default function YouTube() {
   return (
     <>
       <SEO
-        title="YouTube Yayınlarım | Demartini Metodu & Dönüşüm Videoları"
-        description="Demartini Metodu, değer belirleme ve Breakthrough Experience üzerine derinlemesine video içerikler. Şafak Özkan ile yaşam dönüşümü."
-        keywords="demartini metodu, video, kişisel gelişim, değer belirleme, breakthrough experience, şafak özkan"
+        title={metaFor('/youtube').title}
+        description={metaFor('/youtube').description}
+        canonical="/youtube"
         schema={schema}
       />
 
@@ -234,7 +235,7 @@ export default function YouTube() {
 
       {/* CTA Section */}
       <section className="py-20 bg-[#111111] relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-full opacity-20 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+        <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.15)_1px,transparent_0)] [background-size:24px_24px]"></div>
         <div className="max-w-4xl mx-auto px-4 md:px-8 text-center relative z-10">
           <i className="ri-youtube-fill text-5xl text-red-600 mb-6 inline-block"></i>
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-6 font-serif">

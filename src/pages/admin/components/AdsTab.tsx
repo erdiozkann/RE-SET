@@ -1,10 +1,12 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { AdAccount, AdCampaign, AdMetrics, AdConversion, AdROISummary } from '../../../types';
 import { adAccountsApi, adCampaignsApi, adMetricsApi, adConversionsApi, adROISummaryApi } from '../../../lib/api';
+import { useToast } from '../../../components/ToastContainer';
 
 type AdsSubTab = 'accounts' | 'campaigns' | 'metrics' | 'conversions' | 'roi';
 
 export default function AdsTab() {
+  const toast = useToast();
   const [activeSubTab, setActiveSubTab] = useState<AdsSubTab>('accounts');
   const [accounts, setAccounts] = useState<AdAccount[]>([]);
   const [campaigns, setCampaigns] = useState<AdCampaign[]>([]);
@@ -486,7 +488,7 @@ export default function AdsTab() {
   const handleAddAccount = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.accountName.trim()) {
-      alert('Lütfen hesap adını girin');
+      toast.error('Lütfen hesap adını girin');
       return;
     }
 
@@ -524,10 +526,9 @@ export default function AdsTab() {
         isActive: true
       });
       setShowAddForm(false);
-      console.log('Account added successfully');
     } catch (error) {
       console.error('Error adding account:', error);
-      alert('Hesap eklenirken hata oluştu. Lütfen tekrar deneyin.');
+      toast.error('Hesap eklenirken hata oluştu. Lütfen tekrar deneyin.');
     } finally {
       setIsSubmitting(false);
     }
@@ -539,7 +540,6 @@ export default function AdsTab() {
     try {
       await adAccountsApi.delete(id);
       setAccounts(accounts.filter(a => a.id !== id));
-      console.log('Account deleted successfully');
     } catch (error) {
       console.error('Error deleting account:', error);
     }

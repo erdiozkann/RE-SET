@@ -58,13 +58,13 @@ export default function Footer() {
             </p>
             <div className="flex items-center space-x-4">
               {contactInfo?.instagram && (
-                <a href={contactInfo.instagram} target="_blank" rel="noopener noreferrer" className="w-10 h-10 flex items-center justify-center bg-white/10 hover:bg-[#D4AF37] transition-colors cursor-pointer">
-                  <i className="ri-instagram-line text-xl"></i>
+                <a href={contactInfo.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram'da RE-SET — Şafak Özkan" className="w-10 h-10 flex items-center justify-center bg-white/10 hover:bg-[#D4AF37] transition-colors cursor-pointer">
+                  <i className="ri-instagram-line text-xl" aria-hidden="true"></i>
                 </a>
               )}
               {contactInfo?.youtube && (
-                <a href={contactInfo.youtube} target="_blank" rel="noopener noreferrer" className="w-10 h-10 flex items-center justify-center bg-white/10 hover:bg-[#D4AF37] transition-colors cursor-pointer">
-                  <i className="ri-youtube-line text-xl"></i>
+                <a href={contactInfo.youtube} target="_blank" rel="noopener noreferrer" aria-label="YouTube'da RE-SET — Şafak Özkan" className="w-10 h-10 flex items-center justify-center bg-white/10 hover:bg-[#D4AF37] transition-colors cursor-pointer">
+                  <i className="ri-youtube-line text-xl" aria-hidden="true"></i>
                 </a>
               )}
             </div>
@@ -74,6 +74,31 @@ export default function Footer() {
           <div>
             <h4 className="text-lg font-semibold mb-4">Hızlı Bağlantılar</h4>
             <ul className="space-y-2">
+              <li>
+                <Link to="/demartini-yontemi" className="text-gray-400 hover:text-[#D4AF37] transition-colors cursor-pointer">
+                  Demartini Yöntemi
+                </Link>
+              </li>
+              <li>
+                <Link to="/demartini-seansi" className="text-gray-400 hover:text-[#D4AF37] transition-colors cursor-pointer">
+                  Demartini Seansı (İstanbul & Online)
+                </Link>
+              </li>
+              <li>
+                <Link to="/deger-belirleme" className="text-gray-400 hover:text-[#D4AF37] transition-colors cursor-pointer">
+                  Değer Belirleme Süreci
+                </Link>
+              </li>
+              <li>
+                <Link to="/breakthrough-experience" className="text-gray-400 hover:text-[#D4AF37] transition-colors cursor-pointer">
+                  Breakthrough Experience
+                </Link>
+              </li>
+              <li>
+                <Link to="/primordial-ses-meditasyonu" className="text-gray-400 hover:text-[#D4AF37] transition-colors cursor-pointer">
+                  Primordial Ses Meditasyonu
+                </Link>
+              </li>
               <li>
                 <Link to="/about" className="text-gray-400 hover:text-[#D4AF37] transition-colors cursor-pointer">
                   Hakkımda
@@ -136,7 +161,7 @@ export default function Footer() {
                   <span>
                     <span itemProp="streetAddress">{contactInfo.address}</span>
                     <meta itemProp="addressLocality" content="İstanbul" />
-                    <meta itemProp="addressRegion" content="Nişantaşı" />
+                    <meta itemProp="addressRegion" content="İstanbul" />
                     <meta itemProp="addressCountry" content="TR" />
                   </span>
                 </li>
@@ -148,7 +173,7 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row items-center justify-between">
           <p className="text-gray-400 text-sm mb-4 md:mb-0">
-            © {new Date().getFullYear()} Reset. Tüm hakları saklıdır.
+            © {new Date().getFullYear()} RE-SET — Şafak Özkan. Tüm hakları saklıdır.
             <span className="mx-2 text-gray-600" aria-hidden="true">|</span>
             <span className="text-gray-500">
               Developed by{' '}

@@ -90,13 +90,14 @@ Artık biliyorum ki, gerçek değişim içeriden başlar. Her bireyin kendine ö
             {aboutContent && (
                 <div className="border border-gray-200 rounded-lg p-4">
                     <div className="flex flex-col md:flex-row gap-6">
-                        {/* Mevcut Resim Önizleme */}
+                        {/* Mevcut Resim Önizleme — ana sayfadaki kutuyla AYNI kırpma
+                            (kare + üstten hizalı), panelde gördüğün = sitede çıkan */}
                         {aboutContent.image && (
                             <div className="w-32 h-32 flex-shrink-0">
                                 <img
                                     src={aboutContent.image}
                                     alt="Hakkımda Resmi"
-                                    className="w-full h-full object-cover rounded-lg"
+                                    className="w-full h-full object-cover object-top rounded-lg"
                                 />
                             </div>
                         )}
@@ -178,7 +179,7 @@ Artık biliyorum ki, gerçek değişim içeriden başlar. Her bireyin kendine ö
                                     onChange={(e) => setAboutForm({ ...aboutForm, paragraph1: e.target.value })}
                                     rows={4}
                                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent resize-none"
-                                    placeholder="15 yılı aşkın deneyimimle..."
+                                    placeholder="11 yıllık deneyimimle..."
                                 />
                             </div>
 
@@ -290,7 +291,7 @@ Artık biliyorum ki, gerçek değişim içeriden başlar. Her bireyin kendine ö
                                         <img
                                             src={aboutForm.image}
                                             alt="Profil önizleme"
-                                            className="w-full h-40 object-cover rounded-lg"
+                                            className="w-full aspect-square max-w-[200px] mx-auto object-cover object-top rounded-lg"
                                             onError={(e) => {
                                                 e.currentTarget.src = 'https://via.placeholder.com/400x300?text=Geçersiz+Resim';
                                             }}

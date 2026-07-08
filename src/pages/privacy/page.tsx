@@ -2,9 +2,11 @@ import { useState, useEffect } from 'react';
 import DOMPurify from 'dompurify';
 import SEO from '../../components/SEO';
 import { contentApi } from '../../lib/api';
+import { metaFor } from '../../lib/routeMeta';
 
 const PrivacyPage = () => {
   const siteUrl = import.meta.env.VITE_SITE_URL || 'https://re-set.com.tr';
+  const meta = metaFor('/privacy');
   const [content, setContent] = useState<string | null>(null);
 
 
@@ -26,16 +28,16 @@ const PrivacyPage = () => {
   const schema = {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
-    name: 'Gizlilik Politikası',
-    description: 'Reset - Şafak Özkan Danışmanlık gizlilik politikası ve kullanıcı verilerinin korunması',
+    name: meta.title,
+    description: meta.description,
     url: `${siteUrl}/privacy`
   };
 
   return (
     <>
       <SEO
-        title="Gizlilik Politikası"
-        description="Reset - Şafak Özkan Danışmanlık gizlilik politikası ve kullanıcı verilerinin korunması"
+        title={meta.title}
+        description={meta.description}
         canonical="/privacy"
         schema={schema}
       />
@@ -59,7 +61,7 @@ const PrivacyPage = () => {
             <div className="prose prose-lg max-w-none text-gray-700">
               <h2 className="text-2xl font-serif text-[#1A1A1A] mt-8 mb-4">1. Giriş</h2>
               <p>
-                Reset - Şafak Özkan olarak, kişisel bilgilerinizin gizliliği ve güvenliği
+                RE-SET — Şafak Özkan olarak, kişisel bilgilerinizin gizliliği ve güvenliği
                 konusunda sorumluluğumuzun bilincindeyiz. Bu gizlilik politikası,
                 kişisel bilgilerinizi nasıl topladığımızı, kullandığımızı ve koruduğumuzu açıklar.
               </p>
@@ -162,7 +164,7 @@ const PrivacyPage = () => {
               </p>
               <p>
                 <strong>E-posta:</strong> info@re-set.com.tr<br />
-                <strong>Adres:</strong> Teşvikiye, Hakkı Yeten Cd. No:11 D:7, 34365 Şişli/İstanbul
+                <strong>Adres:</strong> Tarabya, İstanbul
               </p>
 
               <p className="text-sm text-gray-500 mt-8">

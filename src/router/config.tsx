@@ -8,6 +8,8 @@ import HomePage from '../pages/home/page';
 const CmsPage = lazy(() => import('../pages/cms/page'));
 const AboutPage = lazy(() => import('../pages/about/page'));
 const MethodsPage = lazy(() => import('../pages/methods/page'));
+const PrimordialPage = lazy(() => import('../pages/primordial/page'));
+const ServicePage = lazy(() => import('../pages/hizmet/ServicePage'));
 const BlogPage = lazy(() => import('../pages/blog/page'));
 const BlogDetailPage = lazy(() => import('../pages/blog/[id]/page'));
 const PodcastPage = lazy(() => import('../pages/podcast/page'));
@@ -39,6 +41,10 @@ const routes: RouteObject[] = [
       { index: true, element: <HomePage /> },
       { path: 'about', element: <AboutPage /> },
       { path: 'demartini-yontemi', element: <MethodsPage /> },
+      { path: 'primordial-ses-meditasyonu', element: <PrimordialPage /> },
+      { path: 'demartini-seansi', element: <ServicePage slug="demartini-seansi" /> },
+      { path: 'deger-belirleme', element: <ServicePage slug="deger-belirleme" /> },
+      { path: 'breakthrough-experience', element: <ServicePage slug="breakthrough-experience" /> },
       { path: 'blog', element: <BlogPage /> },
       { path: 'blog/:id', element: <BlogDetailPage /> },
       { path: 'podcast', element: <PodcastPage /> },

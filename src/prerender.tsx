@@ -1,90 +1,20 @@
 import { createClient } from "@supabase/supabase-js";
 import { FAQ } from "./data/faq";
+import { PRIMORDIAL_FAQ } from "./data/primordialFaq";
+import {
+  SEANS_INTRO, SEANS_FAQ,
+  DEGER_INTRO, DEGER_FAQ,
+  BREAKTHROUGH_INTRO, BREAKTHROUGH_FAQ,
+} from "./data/serviceFaqs";
 import { mdToHtml } from "./lib/markdown";
 import { optimizedImage } from "./lib/img";
+import { ROUTE_META, ROUTE_HEADING, SITE_URL, type RouteMeta } from "./lib/routeMeta";
 
-const siteUrl = "https://re-set.com.tr";
+const siteUrl = SITE_URL;
 
-type RouteMeta = {
-  title: string;
-  description: string;
-};
-
-const staticMeta: Record<string, RouteMeta> = {
-  "/": {
-    title: "RE-SET | Şafak Özkan — Demartini Yöntemi ve Metodu Türkiye",
-    description:
-      "Demartini Yöntemi (Demartini Metodu) Türkiye uygulayıcısı Şafak Özkan ile İstanbul/Nişantaşı'da değer belirleme, ilişki dengeleme ve kişisel dönüşüm seansları.",
-  },
-  "/about": {
-    title: "Hakkımda — Şafak Özkan | Demartini Yöntemi (Metodu)",
-    description:
-      "Eğitimli Demartini Yöntemi (Metodu) uygulayıcısı Şafak Özkan. 15+ yıllık uygulama deneyimi, Nişantaşı / İstanbul.",
-  },
-  "/demartini-yontemi": {
-    title: "Demartini Yöntemi — Şafak Özkan | RE-SET Türkiye",
-    description:
-      "Demartini Yöntemi (Demartini Metodu): Eğitimli uygulayıcı Şafak Özkan ile İstanbul/Nişantaşı'da değer belirleme, Breakthrough Experience, Quantum Collapse Process ve ilişki dengeleme seansları.",
-  },
-  "/blog": {
-    title: "Blog | RE-SET — Şafak Özkan",
-    description:
-      "Demartini Metodu, değer belirleme, ilişki dengeleme ve kişisel dönüşüm üzerine güncel yazılar.",
-  },
-  "/podcast": {
-    title: "Podcast | RE-SET — Şafak Özkan",
-    description:
-      "Şafak Özkan'ın Demartini Metodu ve kişisel dönüşüm üzerine podcast bölümleri.",
-  },
-  "/youtube": {
-    title: "YouTube | RE-SET — Şafak Özkan",
-    description:
-      "Demartini Metodu, ilişki dengeleme ve değer belirleme üzerine YouTube içerikleri.",
-  },
-  "/booking": {
-    title: "Randevu Al | Şafak Özkan — Demartini Metodu",
-    description:
-      "Şafak Özkan ile Demartini Metodu seansı için online veya yüz yüze randevu alın.",
-  },
-  "/contact": {
-    title: "İletişim | RE-SET — Şafak Özkan",
-    description:
-      "RE-SET ve Şafak Özkan ile iletişime geçin: Nişantaşı İstanbul, online ve yüz yüze danışmanlık.",
-  },
-  "/privacy": {
-    title: "Gizlilik Politikası | RE-SET",
-    description: "RE-SET gizlilik politikası ve kişisel verilerin işlenmesi.",
-  },
-  "/kvkk": {
-    title: "KVKK Aydınlatma Metni | RE-SET",
-    description:
-      "Kişisel Verilerin Korunması Kanunu kapsamında RE-SET aydınlatma metni.",
-  },
-  "/copyright": {
-    title: "Telif Hakkı | RE-SET",
-    description: "RE-SET telif hakları ve içerik kullanım koşulları.",
-  },
-  "/cookies": {
-    title: "Çerez Politikası | RE-SET",
-    description: "RE-SET web sitesi çerez politikası.",
-  },
-};
-
-// Görünür sayfa başlıkları (H1). Prerender statik gövdesi için.
-const routeHeading: Record<string, string> = {
-  "/": "Demartini Yöntemi (Metodu) — Şafak Özkan · İstanbul",
-  "/about": "Hakkımda — Şafak Özkan | Demartini Metodu Uygulayıcısı",
-  "/demartini-yontemi": "Demartini Yöntemi (Demartini Metodu) Nedir?",
-  "/blog": "Blog — Demartini Metodu ve Kişisel Dönüşüm",
-  "/podcast": "Podcast — Demartini Metodu ile Kişisel Dönüşüm",
-  "/youtube": "YouTube — Demartini Metodu İçerikleri",
-  "/booking": "Randevu Al — Demartini Metodu Seansı",
-  "/contact": "İletişim — RE-SET, Şafak Özkan",
-  "/privacy": "Gizlilik Politikası",
-  "/kvkk": "KVKK Aydınlatma Metni",
-  "/copyright": "Telif Hakkı",
-  "/cookies": "Çerez Politikası",
-};
+// Meta/H1 tek kaynak → src/lib/routeMeta.ts (client SEO ile birebir aynı).
+const staticMeta = ROUTE_META;
+const routeHeading = ROUTE_HEADING;
 
 // Sitede görünen (hardcoded) entity tanımı — birebir yansıtılır (cloaking yok).
 const DEMARTINI_INTRO: string[] = [
@@ -95,6 +25,10 @@ const DEMARTINI_INTRO: string[] = [
 const NAV_LINKS: { href: string; label: string }[] = [
   { href: "/", label: "Ana Sayfa" },
   { href: "/demartini-yontemi", label: "Demartini Yöntemi" },
+  { href: "/demartini-seansi", label: "Demartini Seansı" },
+  { href: "/deger-belirleme", label: "Değer Belirleme" },
+  { href: "/breakthrough-experience", label: "Breakthrough Experience" },
+  { href: "/primordial-ses-meditasyonu", label: "Primordial Ses Meditasyonu" },
   { href: "/about", label: "Hakkımda" },
   { href: "/blog", label: "Blog" },
   { href: "/podcast", label: "Podcast" },
@@ -138,6 +72,102 @@ function introHtml(): string {
     `<section aria-labelledby="nedir"><h2 id="nedir">Demartini Yöntemi Nedir?</h2>` +
     DEMARTINI_INTRO.map((p) => `<p>${esc(p)}</p>`).join("") +
     `</section>`
+  );
+}
+
+// --- Primordial Ses Meditasyonu: taranabilir intro + FAQ + FAQPage/Service JSON-LD ---
+const PRIMORDIAL_INTRO: string[] = [
+  "Primordial Ses (Sound) Meditasyonu, Vedik gelenekten gelen ve kişiye özel bir mantranın (ses) sessizce tekrar edildiği bir meditasyon uygulamasıdır. Mantra, kişinin doğum zamanı ve yerine göre belirlenen, anlamı olmayan nötr bir sestir; amacı zihni düşünce akışından zorlamadan uzaklaştırıp bir sükûnet alanına getirmektir.",
+  "Şafak Özkan, Demartini Yöntemi'nin yanı sıra Primordial Ses Meditasyonu eğitimi de almıştır ve bu iki yaklaşımı danışanın ihtiyacına göre birlikte kullanır. Primordial Ses Meditasyonu bir sağlık hizmeti, psikoterapi veya tıbbi tedavi değildir.",
+];
+
+// --- Hizmet (para) sayfaları: taranabilir intro + FAQ + Service/FAQPage JSON-LD ---
+const SERVICE_SECTIONS: Record<string, { name: string; intro: string[]; faq: { q: string; a: string }[] }> = {
+  "/demartini-seansi": { name: "Demartini Seansı (Birebir)", intro: SEANS_INTRO, faq: SEANS_FAQ },
+  "/deger-belirleme": { name: "Değer Belirleme Süreci", intro: DEGER_INTRO, faq: DEGER_FAQ },
+  "/breakthrough-experience": { name: "Breakthrough Experience", intro: BREAKTHROUGH_INTRO, faq: BREAKTHROUGH_FAQ },
+};
+
+function serviceSection(url: string): string {
+  const cfg = SERVICE_SECTIONS[url];
+  if (!cfg) return "";
+  const intro =
+    `<section aria-labelledby="snedir"><h2 id="snedir">${esc(cfg.name)} Nedir?</h2>` +
+    cfg.intro.map((p) => `<p>${esc(p)}</p>`).join("") +
+    `</section>`;
+  const faq =
+    `<section aria-labelledby="ssss"><h2 id="ssss">Sıkça Sorulan Sorular</h2>` +
+    cfg.faq.map((f) => `<h3>${esc(f.q)}</h3><p>${esc(f.a)}</p>`).join("") +
+    `</section>`;
+  const faqLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: cfg.faq.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
+  const serviceLd = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: cfg.name,
+    serviceType: "Kişisel gelişim danışmanlığı (Demartini Yöntemi)",
+    url: `${siteUrl}${url}`,
+    areaServed: [{ "@type": "City", name: "İstanbul" }, { "@type": "Country", name: "Türkiye" }],
+    provider: {
+      "@type": "Person",
+      name: "Şafak Özkan",
+      url: `${siteUrl}/about`,
+      jobTitle: "Eğitimli Demartini Yöntemi Uygulayıcısı",
+    },
+  };
+  return (
+    intro + faq +
+    `<script type="application/ld+json">${JSON.stringify(faqLd)}</script>` +
+    `<script type="application/ld+json">${JSON.stringify(serviceLd)}</script>`
+  );
+}
+
+function primordialSection(): string {
+  const intro =
+    `<section aria-labelledby="pnedir"><h2 id="pnedir">Primordial Ses Meditasyonu Nedir?</h2>` +
+    PRIMORDIAL_INTRO.map((p) => `<p>${esc(p)}</p>`).join("") +
+    `</section>`;
+  const faq =
+    `<section aria-labelledby="psss"><h2 id="psss">Sıkça Sorulan Sorular</h2>` +
+    PRIMORDIAL_FAQ.map((f) => `<h3>${esc(f.q)}</h3><p>${esc(f.a)}</p>`).join("") +
+    `</section>`;
+
+  const faqLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: PRIMORDIAL_FAQ.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
+  const serviceLd = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: "Primordial Ses (Sound) Meditasyonu",
+    alternateName: ["Mantra Meditasyonu", "Primordial Sound Meditation"],
+    serviceType: "Meditasyon eğitimi ve uygulaması",
+    url: `${siteUrl}/primordial-ses-meditasyonu`,
+    areaServed: { "@type": "Country", name: "Türkiye" },
+    provider: {
+      "@type": "Person",
+      name: "Şafak Özkan",
+      url: `${siteUrl}/about`,
+      jobTitle: "Primordial Ses Meditasyonu Eğitmeni",
+    },
+  };
+  return (
+    intro +
+    faq +
+    `<script type="application/ld+json">${JSON.stringify(faqLd)}</script>` +
+    `<script type="application/ld+json">${JSON.stringify(serviceLd)}</script>`
   );
 }
 
@@ -268,6 +298,8 @@ function bodyFor(url: string, meta: RouteMeta, data: DynData): string {
   if (richFaqRoutes) {
     inner += introHtml() + faqHtml() + faqJsonLd() + reviewSection(data.reviews);
   }
+  if (url === "/primordial-ses-meditasyonu") inner += primordialSection();
+  if (SERVICE_SECTIONS[url]) inner += serviceSection(url);
   if (url === "/youtube") inner += videoSection(data.videos);
   if (url === "/podcast") inner += podcastSection(data.podcasts);
   if (url === "/blog") inner += blogSection(data.posts);

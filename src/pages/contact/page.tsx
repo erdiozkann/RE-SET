@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useToast } from '../../components/ToastContainer';
 import { getUserFriendlyErrorMessage } from '../../lib/errors';
 import SEO from '../../components/SEO';
+import { metaFor } from '../../lib/routeMeta';
 import { supabase } from '../../lib/supabase';
 import { messagesApi } from '../../lib/api';
 
@@ -44,12 +45,25 @@ export default function ContactPage() {
     const formData = new FormData(form);
 
     try {
+      // Form alanları firstName + lastName; birleştirip name'e yaz (yoksa mesaj
+      // isimsiz kaydediliyordu). Konu kodunu insan-okunur etikete çevir.
+      const firstName = (formData.get('firstName') as string || '').trim();
+      const lastName = (formData.get('lastName') as string || '').trim();
+      const subjectLabels: Record<string, string> = {
+        consultation: 'Ücretsiz Danışma',
+        'demartini-method': 'Demartini Metodu',
+        'value-determination': 'Değer Belirleme',
+        'breakthrough-experience': 'Breakthrough Experience',
+        other: 'Diğer',
+      };
+      const subjectCode = formData.get('subject') as string || '';
+
       // Supabase'e mesajı kaydet
       await messagesApi.create({
-        name: formData.get('name') as string,
+        name: `${firstName} ${lastName}`.trim(),
         email: formData.get('email') as string,
         phone: formData.get('phone') as string || '',
-        subject: formData.get('subject') as string || 'İletişim Formu',
+        subject: subjectLabels[subjectCode] || 'İletişim Formu',
         message: formData.get('message') as string
       });
 
@@ -133,7 +147,7 @@ export default function ContactPage() {
       mainEntity: {
         '@type': 'Organization',
         '@id': 'https://re-set.com.tr/#organization',
-        name: 'RE-SET — Reset Danışmanlık',
+        name: 'RE-SET — Şafak Özkan',
         url: siteUrl,
         email: contactInfo.email || undefined,
         telephone: contactInfo.phone || undefined,
@@ -142,7 +156,7 @@ export default function ContactPage() {
               '@type': 'PostalAddress',
               streetAddress: contactInfo.address,
               addressLocality: 'İstanbul',
-              addressRegion: 'Nişantaşı',
+              addressRegion: 'İstanbul',
               addressCountry: 'TR'
             }
           : undefined,
@@ -193,9 +207,9 @@ export default function ContactPage() {
   return (
     <>
       <SEO
-        title="İletişim | Reset - Şafak Özkan"
-        description="Sorularınız için bana ulaşabilir, ücretsiz keşif seansınızı planlayabilirsiniz. İstanbul Nişantaşı'nda Demartini Metodu ve değer belirleme danışmanlığı hizmetleri."
-        keywords="iletişim, randevu, demartini metodu iletişim, danışmanlık randevusu, demartini metodu istanbul"
+        title={metaFor('/contact').title}
+        description={metaFor('/contact').description}
+        canonical="/contact"
         schema={schema}
       />
       <div className="bg-white">
@@ -236,13 +250,14 @@ export default function ContactPage() {
                   </div>
                 )}
                 
-                <form onSubmit={handleSubmit} className="space-y-6" data-readdy-form id="contact_form">
+                <form onSubmit={handleSubmit} className="space-y-6" id="contact_form">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label htmlFor="contact-firstName" className="block text-sm font-medium text-gray-700 mb-2">
                         Adınız *
                       </label>
                       <input
+                        id="contact-firstName"
                         type="text"
                         name="firstName"
                         required
@@ -251,10 +266,11 @@ export default function ContactPage() {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label htmlFor="contact-lastName" className="block text-sm font-medium text-gray-700 mb-2">
                         Soyadınız *
                       </label>
                       <input
+                        id="contact-lastName"
                         type="text"
                         name="lastName"
                         required
@@ -265,10 +281,11 @@ export default function ContactPage() {
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label htmlFor="contact-email" className="block text-sm font-medium text-gray-700 mb-2">
                       E-posta Adresi *
                     </label>
                     <input
+                      id="contact-email"
                       type="email"
                       name="email"
                       required
@@ -278,10 +295,11 @@ export default function ContactPage() {
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label htmlFor="contact-phone" className="block text-sm font-medium text-gray-700 mb-2">
                       Telefon
                     </label>
                     <input
+                      id="contact-phone"
                       type="tel"
                       name="phone"
                       className="w-full px-4 py-3 border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent"
@@ -290,10 +308,11 @@ export default function ContactPage() {
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label htmlFor="contact-subject" className="block text-sm font-medium text-gray-700 mb-2">
                       Konu
                     </label>
-                    <select 
+                    <select
+                      id="contact-subject"
                       name="subject"
                       className="w-full px-4 py-3 pr-8 border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent"
                     >
@@ -307,10 +326,11 @@ export default function ContactPage() {
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label htmlFor="contact-message" className="block text-sm font-medium text-gray-700 mb-2">
                       Mesajınız *
                     </label>
                     <textarea
+                      id="contact-message"
                       name="message"
                       required
                       rows={6}

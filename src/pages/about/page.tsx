@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import Button from '../../components/base/Button';
 import type { Certificate } from '../../types';
 import SEO from '../../components/SEO';
+import { metaFor } from '../../lib/routeMeta';
 import { useToast } from '../../components/ToastContainer';
 import { certificatesApi, contentApi } from '../../lib/api';
 export default function About() {
@@ -71,7 +72,7 @@ export default function About() {
       "@id": "https://re-set.com.tr/#safakozkan",
       "name": "Şafak Özkan",
       "jobTitle": "Eğitimli Demartini Yöntemi Uygulayıcısı",
-      "description": "İstanbul Nişantaşı merkezli, Eğitimli Demartini Yöntemi Uygulayıcısı (Trained Demartini Method Facilitator). 15+ yıllık uygulama deneyimi. Değer belirleme, ilişki dengeleme, Breakthrough Experience ve kişisel dönüşüm alanlarında uzman.",
+      "description": "İstanbul Tarabya merkezli, Eğitimli Demartini Yöntemi Uygulayıcısı (Trained Demartini Method Facilitator) ve Primordial Ses (Sound) Meditasyonu eğitmeni. 11 yıllık uygulama deneyimi. Değer belirleme, ilişki dengeleme, Breakthrough Experience, Primordial Ses Meditasyonu ve kişisel dönüşüm alanlarında çalışır.",
       "url": `${siteUrl}/about`,
       "image": heroImage || 'https://re-set.com.tr/og-image.jpg',
       "worksFor": { "@id": "https://re-set.com.tr/#organization" },
@@ -92,7 +93,7 @@ export default function About() {
           "name": cert.organization
         }))
       ],
-      "knowsAbout": ["Demartini Metodu", "Değer Belirleme Süreci", "Breakthrough Experience", "Yaşam Dengeleme", "Kişisel Dönüşüm", "Quantum Collapse Process", "İlişki Dengeleme"],
+      "knowsAbout": ["Demartini Metodu", "Değer Belirleme Süreci", "Breakthrough Experience", "Yaşam Dengeleme", "Kişisel Dönüşüm", "Quantum Collapse Process", "İlişki Dengeleme", "Primordial Ses Meditasyonu", "Mantra Meditasyonu"],
       "hasCredential": certificates.map(cert => ({
         "@type": "EducationalOccupationalCredential",
         "name": cert.title,
@@ -126,7 +127,7 @@ export default function About() {
           "name": "Şafak Özkan kimdir?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Şafak Özkan, İstanbul Nişantaşı merkezli Eğitimli Demartini Yöntemi Uygulayıcısı (Trained Demartini Method Facilitator)'dır. 15 yılı aşkın uygulama deneyimiyle Türkiye'de binlerce danışana Demartini Metodu ile rehberlik etmiştir."
+            "text": "Şafak Özkan, İstanbul Tarabya merkezli Eğitimli Demartini Yöntemi Uygulayıcısı (Trained Demartini Method Facilitator) ve Primordial Ses Meditasyonu eğitmenidir. 11 yıllık uygulama deneyimiyle Türkiye'de danışanlarına Demartini Metodu ile rehberlik etmektedir."
           }
         },
         {
@@ -177,9 +178,9 @@ export default function About() {
   return (
     <>
       <SEO
-        title="Hakkımda - Şafak Özkan | Demartini Metodu"
-        description="Eğitimli Demartini Yöntemi uygulayıcısı Şafak Özkan. 15 yılı aşkın deneyim."
-        keywords="şafak özkan, demartini metodu, hakkımda"
+        title={metaFor('/about').title}
+        description={metaFor('/about').description}
+        canonical="/about"
         schema={schema}
       />
 

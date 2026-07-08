@@ -192,8 +192,25 @@ export default function BlogTab() {
                 filteredPosts.map((post) => (
                   <tr key={post.id} className="hover:bg-gray-50 transition-colors">
                     <td className="px-6 py-4">
-                      <div className="font-semibold text-[#1A1A1A]">{post.title}</div>
-                      <p className="text-sm text-gray-500 line-clamp-1">{post.excerpt}</p>
+                      <div className="flex items-center gap-3">
+                        {post.image ? (
+                          <img
+                            src={post.image}
+                            alt={post.title}
+                            className="w-14 h-14 rounded-lg object-cover flex-shrink-0 border border-gray-200"
+                            loading="lazy"
+                            onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                          />
+                        ) : (
+                          <div className="w-14 h-14 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0 border border-gray-200">
+                            <i className="ri-image-line text-gray-400 text-xl"></i>
+                          </div>
+                        )}
+                        <div className="min-w-0">
+                          <div className="font-semibold text-[#1A1A1A]">{post.title}</div>
+                          <p className="text-sm text-gray-500 line-clamp-1">{post.excerpt}</p>
+                        </div>
+                      </div>
                     </td>
                     <td className="px-6 py-4 text-gray-600">{post.category || '-'}</td>
                     <td className="px-6 py-4 text-gray-600">

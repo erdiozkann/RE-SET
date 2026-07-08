@@ -27,7 +27,12 @@ const getSupabasePublicInstance = () => {
     if (globalThis.supabasePublicInstance) return globalThis.supabasePublicInstance;
     
     const client = createClient(env.SUPABASE_URL, env.SUPABASE_KEY, {
-        auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false }
+        // storageKey İZOLASYONU ŞART: varsayılan anahtar auth client'la AYNI
+        // navigator.locks kilidini paylaşıyor. Panel sekmesi açıkken (veya token
+        // yenilenirken) asıl client'ın getSession'ı kilidi tutunca, public içerik
+        // sorguları da (hero/services/methods...) ~8-9sn kuyrukta bekliyordu →
+        // "site 10sn açılıyor" şikayetinin kök nedeni buydu.
+        auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false, storageKey: 'sb-reset-public' }
     });
     globalThis.supabasePublicInstance = client;
     return client;

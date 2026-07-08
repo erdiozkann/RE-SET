@@ -65,7 +65,7 @@ export default function HeroEditor() {
 
         try {
             if (heroContent) {
-                await contentApi.updateHeroContent(heroContent.id, {
+                const saved = await contentApi.updateHeroContent(heroContent.id, {
                     title: heroForm.title,
                     description: heroForm.description,
                     image: heroForm.image,
@@ -73,6 +73,14 @@ export default function HeroEditor() {
                     titleSize: heroForm.titleSize,
                     descriptionSize: heroForm.descriptionSize
                 });
+
+                // DOĞRULAMA: DB gerçekten yeni görseli yazdı mı? RLS/oturum nedeniyle
+                // update sessizce 0 satır etkilerse eskiden "başarılı" görünüyordu.
+                // Artık uymuyorsa net hata veriyoruz (sessiz kayıp yok).
+                if ((saved?.image || '') !== (heroForm.image || '')) {
+                    toast.error('Görsel kaydedilemedi (DB güncellenmedi). Yetki/oturum sorunu olabilir — çıkıp info@re-set.com.tr ile tekrar giriş yapın.');
+                    return;
+                }
 
                 await loadHero();
                 setEditingHero(false);
@@ -263,7 +271,9 @@ export default function HeroEditor() {
                                                 setUploadingHeroImage(true);
                                                 try {
                                                     const url = await storageApi.uploadFile('profile-images', file);
-                                                    setHeroForm({ ...heroForm, image: url });
+                                                    // Functional setState: async upload sırasında form değişse bile
+                                                    // stale closure ile diğer alanları ezmez.
+                                                    setHeroForm((prev) => ({ ...prev, image: url }));
                                                     toast.success('Görsel yüklendi');
                                                 } catch {
                                                     toast.error('Görsel yüklenemedi');
@@ -287,14 +297,21 @@ export default function HeroEditor() {
 
                                 {heroForm.image && (
                                     <div className="mt-3 relative">
+                                        {/* Önizleme sitedeki hero ile AYNI kırpma: geniş oran + üstten hizalı
+                                            (object-top). Eski hali ortadan kırpıyordu → panel ile site farklı
+                                            görünüyordu. */}
                                         <img
                                             src={heroForm.image}
                                             alt="Hero önizleme"
-                                            className="w-full h-32 object-cover rounded-lg"
+                                            className="w-full aspect-video object-cover object-top rounded-lg"
                                             onError={(e) => {
                                                 e.currentTarget.src = 'https://via.placeholder.com/400x200?text=Geçersiz+Resim';
                                             }}
                                         />
+                                        <p className="text-xs text-gray-500 mt-1">
+                                            Önizleme, sitedeki kırpmayla aynıdır (üstten hizalı). Geniş ekranlarda
+                                            görselin üst kısmı görünür.
+                                        </p>
                                         <button
                                             type="button"
                                             onClick={() => setHeroForm({ ...heroForm, image: '' })}

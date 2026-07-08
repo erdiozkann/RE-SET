@@ -205,11 +205,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 if (!mounted) return;
 
                 if (session?.user) {
-                    console.log('✅ Session active for:', session.user.email);
                     const profile = await fetchUserProfile(session.user);
                     if (mounted) setUser(profile);
                 } else {
-                    console.log('ℹ️ No active session found.');
                     if (mounted) setUser(null);
                 }
             } catch (error) {

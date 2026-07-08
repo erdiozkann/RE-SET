@@ -18,7 +18,6 @@ try {
     // Sadece versiyonu güncelle, auth token'ı silme!
     // localStorage.clear(); // <--- BU SATIR KALDIRILDI (Auth token'ı siliyordu)
     localStorage.setItem(CACHE_KEY, BUILD_VERSION);
-    console.log(`App updated to ${BUILD_VERSION}`);
   }
 } catch (e) {
   console.error('Cache version check failed:', e);

@@ -1,15 +1,17 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import SEO from '../../components/SEO';
 import ReviewsSlider from '../../components/feature/ReviewsSlider';
 import { servicesApi, contentApi, methodsApi } from '../../lib/api';
 import type { ServiceType, HeroContent, AboutContent, ContactInfo, Method } from '../../types';
 import { FAQ } from '../../data/faq';
 import { optimizedImage } from '../../lib/img';
+import { metaFor } from '../../lib/routeMeta';
 
 
 
 export default function HomePage() {
+  const navigate = useNavigate();
   /* Supabase Only Data Flow */
   const [services, setServices] = useState<ServiceType[]>([]);
   const [methods, setMethods] = useState<Method[]>([]);
@@ -69,7 +71,13 @@ export default function HomePage() {
 
 
   const handleWhatsAppClick = () => {
-    const phoneNumber = (contactInfo?.phone || '+90 532 123 45 67').replace(/\D/g, '');
+    // Gerçek numara yoksa SAHTE numaraya WhatsApp açma (eski placeholder
+    // +90 532 123 45 67 kaldırıldı) → iletişim sayfasına yönlendir.
+    const phoneNumber = (contactInfo?.phone || '').replace(/\D/g, '');
+    if (!phoneNumber) {
+      navigate('/contact');
+      return;
+    }
     const message = encodeURIComponent('Merhaba, danışmanlık hizmetleriniz hakkında bilgi almak istiyorum.');
     window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
   };
@@ -83,7 +91,7 @@ export default function HomePage() {
       '@type': 'ProfessionalService',
       '@id': 'https://re-set.com.tr/#service',
       name: 'RE-SET — Şafak Özkan Demartini Metodu',
-      alternateName: ['Reset Danışmanlık', 'Demartini Metodu İstanbul'],
+      alternateName: ['RE-SET Danışmanlık', 'Demartini Metodu İstanbul'],
       description:
         "İstanbul'da Dr. John Demartini'nin Demartini Yöntemi'ni uygulayan danışmanlık. Değer belirleme, ilişki dengeleme, Breakthrough Experience ve kişisel dönüşüm seansları.",
       url: 'https://re-set.com.tr/',
@@ -93,13 +101,8 @@ export default function HomePage() {
       address: {
         '@type': 'PostalAddress',
         addressLocality: 'İstanbul',
-        addressRegion: 'Nişantaşı',
+        addressRegion: 'İstanbul',
         addressCountry: 'TR'
-      },
-      geo: {
-        '@type': 'GeoCoordinates',
-        latitude: 41.0534,
-        longitude: 28.9943
       },
       areaServed: [
         { '@type': 'City', name: 'İstanbul' },
@@ -231,8 +234,9 @@ export default function HomePage() {
   return (
     <>
       <SEO
-        title="RE-SET | Şafak Özkan — Demartini Yöntemi ve Metodu Türkiye"
-        description="İstanbul'da eğitimli Demartini Yöntemi uygulayıcısı Şafak Özkan. Değerlerinizi keşfedin, hayat dengenizi bulun, potansiyelinizi ortaya çıkarın."
+        title={metaFor('/').title}
+        description={metaFor('/').description}
+        canonical="/"
         schema={schema}
       />
 
@@ -334,10 +338,11 @@ export default function HomePage() {
                 <div className="aspect-square w-full max-w-md rounded-2xl overflow-hidden shadow-xl bg-gray-100 flex items-center justify-center">
                   {aboutContent.image ? (
                     <img
-                      src={optimizedImage(aboutContent.image, { width: 800 })}
+                      src={optimizedImage(aboutContent.image, { width: 800, height: 800, resize: 'cover' })}
                       alt="Şafak Özkan"
-                      className="w-full h-full object-cover object-center"
+                      className="w-full h-full object-cover object-top"
                       loading="lazy"
+                      decoding="async"
                     />
                   ) : (
                     <i className="ri-user-smile-line text-6xl text-gray-300"></i>
@@ -383,7 +388,7 @@ export default function HomePage() {
             <div className="text-center mb-8">
               <h2 className="text-3xl md:text-4xl font-serif text-gray-900 mb-3">Demartini Yöntemi ve Yöntemlerimiz</h2>
               <p className="text-base md:text-lg text-gray-600 max-w-2xl mx-auto">
-                Danışmanlık sürecimizde bilimsel temelli ve etkili yöntemler kullanıyoruz
+                Danışmanlık sürecimizde psikoloji ve davranış bilimi gibi disiplinlerden beslenen yöntemler kullanıyoruz
               </p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -449,7 +454,7 @@ export default function HomePage() {
             <div className="bg-gradient-to-br from-teal-50 to-white p-5 rounded-2xl border border-teal-100">
               <h3 className="text-lg font-semibold text-[#1A1A1A] mb-2">Kimler için uygundur?</h3>
               <p className="text-sm text-gray-600 leading-relaxed">
-                Kaygı, ilişki çatışmaları, travma, kariyer kararsızlığı yaşayan 18+ herkes için.
+                İlişki çatışmaları, öz değer, kariyer kararsızlığı ve zorlu yaşam geçişleri yaşayan 18+ herkes için.
               </p>
             </div>
             <div className="bg-gradient-to-br from-gray-50 to-white p-5 rounded-2xl border border-gray-200">

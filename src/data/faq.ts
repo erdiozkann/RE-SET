@@ -26,11 +26,11 @@ export const FAQ: FaqItem[] = [
   },
   {
     q: 'Demartini Metodu kimler için uygundur?',
-    a: 'Kaygı, depresyon, ilişki çatışmaları, travma, bağımlılık, kariyer kararsızlığı, öz değer ve hayat yönü arayışı yaşayan herkes için uygundur. Tıbbi tedavinin yerine geçmez; tamamlayıcı bir farkındalık aracıdır.',
+    a: 'İlişki çatışmaları, öz değer ve öz güven, kariyer kararsızlığı, yaşam geçişleri, yas ve hayat yönü arayışı gibi konularda algısını dengelemek isteyen herkes için uygundur. Klinik bir durumda (ör. depresyon, travma, bağımlılık) yöntem tıbbi veya psikolojik tedavinin yerine geçmez; uzman gözetimindeki bir sürece tamamlayıcı bir farkındalık aracı olarak kullanılabilir.',
   },
   {
     q: 'Demartini Metodu hangi konularda yardımcı olur?',
-    a: 'Kaygı ve stresle başa çıkma, ilişki dengeleme, geçmiş travmalarla yüzleşme, öz güven ve öz değer, yas ve kayıp, öfke ve suçluluk gibi duyguların nötralize edilmesi, kariyer ve hayat yönü netliği ile minnettarlık geliştirme başlıca çalışma alanlarıdır. Yöntem, olayları değiştirmeye değil, olaylara dair algıyı dengelemeye odaklanır.',
+    a: 'Kaygı ve stresle başa çıkma, ilişki dengeleme, zorlu geçmiş deneyimlerle yüzleşme, öz güven ve öz değer, yas ve kayıp, öfke ve suçluluk gibi duyguların nötralize edilmesi, kariyer ve hayat yönü netliği ile minnettarlık geliştirme başlıca çalışma alanlarıdır. Yöntem, olayları değiştirmeye değil, olaylara dair algıyı dengelemeye odaklanır.',
   },
   {
     q: 'Değer Belirleme Süreci (değerler hiyerarşisi) nedir?',
@@ -62,7 +62,7 @@ export const FAQ: FaqItem[] = [
   },
   {
     q: 'Şafak Özkan kimdir?',
-    a: "Şafak Özkan, İstanbul Nişantaşı merkezli, Eğitimli Demartini Yöntemi Uygulayıcısı'dır (Dr. John Demartini'nin resmi dizininde Trained seviyesinde listelenir). 15 yılı aşkın uygulama deneyimiyle Türkiye'de binlerce danışana Demartini Metodu ile rehberlik etmiştir.",
+    a: "Şafak Özkan, İstanbul Tarabya merkezli, Eğitimli Demartini Yöntemi Uygulayıcısı'dır (Dr. John Demartini'nin resmi dizininde Trained seviyesinde listelenir). Aynı zamanda Primordial Ses (Sound) Meditasyonu eğitimi almıştır. 11 yıllık uygulama deneyimiyle Türkiye'de danışanlarına Demartini Metodu ile rehberlik etmektedir.",
   },
   {
     q: 'Ücretsiz keşif görüşmesi mümkün mü?',

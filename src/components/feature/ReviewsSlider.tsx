@@ -51,6 +51,8 @@ export default function ReviewsSlider() {
   if (reviews.length === 0) return null;
 
   const review = reviews[currentIndex];
+  // rating tanımsız/ondalık/negatif olursa Array(rating) RangeError atardı → 0–5 tam sayıya sıkıştır.
+  const rating = Math.max(0, Math.min(5, Math.round(Number(review.rating) || 0)));
 
   return (
     <div className="bg-gradient-to-br from-teal-50 to-white py-20">
@@ -58,19 +60,28 @@ export default function ReviewsSlider() {
         <h2 className="text-3xl md:text-4xl font-serif text-gray-900 mb-12">
           Danışanlarımızın Yorumları
         </h2>
-        <div className="relative bg-white rounded-3xl shadow-xl p-8 md:p-12">
-          <div className="flex justify-center mb-4">
-            {[...Array(review.rating)].map((_, i) => (
+        <div
+          className="relative bg-white rounded-3xl shadow-xl p-8 md:p-12"
+          role="group"
+          aria-roledescription="Danışan yorumu"
+          aria-label={`Yorum ${currentIndex + 1} / ${reviews.length}`}
+        >
+          <div className="flex justify-center mb-4" aria-hidden="true">
+            {[...Array(rating)].map((_, i) => (
               <i key={i} className="ri-star-fill text-2xl text-amber-400"></i>
             ))}
           </div>
+          {rating > 0 && <span className="sr-only">{rating} / 5 yıldız</span>}
           <p className="text-xl text-gray-700 italic mb-6">"{review.text}"</p>
           <p className="text-lg font-semibold text-gray-900">{review.name}</p>
           <div className="flex justify-center mt-8 space-x-2">
             {reviews.map((_, index) => (
               <button
                 key={index}
+                type="button"
                 onClick={() => setCurrentIndex(index)}
+                aria-label={`${index + 1}. yoruma git`}
+                aria-current={index === currentIndex ? 'true' : undefined}
                 className={`w-3 h-3 rounded-full transition-all ${
                   index === currentIndex ? 'bg-teal-600 w-8' : 'bg-gray-300'
                 }`}

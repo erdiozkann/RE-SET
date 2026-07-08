@@ -20,7 +20,6 @@ export const financeService = {
 
             if (!error && data) return data;
         } catch (e) {
-            console.log('client_balances view not found, using clients table');
         }
 
         // Fallback: Calculate from clients table
@@ -208,7 +207,6 @@ export const financeService = {
 
             if (!error && data) return data as any;
         } catch (e) {
-            console.log('unpaid_invoices view not found, using invoices table');
         }
 
         // Fallback: invoices tablosundan hesapla

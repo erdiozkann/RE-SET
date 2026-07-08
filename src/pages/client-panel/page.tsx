@@ -64,7 +64,6 @@ export default function ClientPanelPage() {
 
         // Client kaydı yoksa boş veri ile devam et
         if (!clients) {
-          console.log('Client kaydı bulunamadı, boş veri ile devam ediliyor');
           setLoading(false);
           return;
         }
@@ -151,7 +150,7 @@ export default function ClientPanelPage() {
 
   const handleSubmitReview = async () => {
     if (!reviewText.trim()) {
-      alert('Lütfen yorum yazın');
+      toast.error('Lütfen yorum yazın');
       return;
     }
 
@@ -171,10 +170,10 @@ export default function ClientPanelPage() {
       setShowReviewForm(false);
       setRating(5);
       setReviewText('');
-      alert('Yorumunuz başarıyla gönderildi! Onaylandıktan sonra sitede görüntülenecektir.');
+      toast.success('Yorumunuz başarıyla gönderildi! Onaylandıktan sonra sitede görüntülenecektir.');
     } catch (error) {
       console.error('Yorum gönderme hatası:', error);
-      alert('Yorum gönderilirken bir hata oluştu');
+      toast.error('Yorum gönderilirken bir hata oluştu');
     }
   };
 
@@ -207,8 +206,8 @@ export default function ClientPanelPage() {
     return (
       <>
         <SEO
-          title="Danışan Paneli - Reset Danışmanlık"
-          description="Reset Danışmanlık danışan paneli"
+          title="Danışan Paneli - RE-SET"
+          description="RE-SET danışan paneli"
           noindex
         />
         <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -224,8 +223,8 @@ export default function ClientPanelPage() {
   return (
     <>
       <SEO
-        title="Danışan Paneli - Reset Danışmanlık"
-        description="Reset Danışmanlık danışan paneli"
+        title="Danışan Paneli - RE-SET"
+        description="RE-SET danışan paneli"
         noindex
       />
       <div className="min-h-screen bg-gray-50 py-8">

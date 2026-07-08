@@ -75,8 +75,8 @@ export default function RegisterPage() {
     return (
       <>
         <SEO
-          title="Kayıt Başarılı - Reset Danışmanlık"
-          description="Reset Danışmanlık kayıt işlemi başarılı"
+          title="Kayıt Başarılı - RE-SET"
+          description="RE-SET kayıt işlemi başarılı"
           noindex
         />
         <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-amber-50 flex items-center justify-center px-4">
@@ -100,8 +100,8 @@ export default function RegisterPage() {
   return (
     <>
       <SEO
-        title="Kayıt Ol - Reset Danışmanlık"
-        description="Reset Danışmanlık hesabı oluşturun"
+        title="Kayıt Ol - RE-SET"
+        description="RE-SET hesabı oluşturun"
         noindex
       />
       <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-amber-50 flex items-center justify-center px-4 py-12">

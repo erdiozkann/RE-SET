@@ -1,21 +1,24 @@
 import SEO from '../../components/SEO';
+import { metaFor } from '../../lib/routeMeta';
 
 const CopyrightPage = () => {
   const siteUrl = import.meta.env.VITE_SITE_URL || 'https://re-set.com.tr';
+  const meta = metaFor('/copyright');
+  const currentYear = new Date().getFullYear();
 
   const schema = {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
-    name: 'Telif Hakları',
-    description: 'Reset - Şafak Özkan Danışmanlık telif hakları ve içerik kullanım koşulları',
+    name: meta.title,
+    description: meta.description,
     url: `${siteUrl}/copyright`
   };
 
   return (
     <>
       <SEO
-        title="Telif Hakları"
-        description="Reset - Şafak Özkan Danışmanlık telif hakları ve içerik kullanım koşulları"
+        title={meta.title}
+        description={meta.description}
         canonical="/copyright"
         schema={schema}
       />
@@ -34,7 +37,7 @@ const CopyrightPage = () => {
             <h2 className="text-2xl font-serif text-[#1A1A1A] mt-8 mb-4">1. Telif Hakları Bildirimi</h2>
             <p>
               Bu web sitesindeki tüm içerik, tasarım, metin, görsel, ses, video, logo, 
-              marka ve diğer materyaller Reset - Şafak Özkan'a aittir ve telif hakkı 
+              marka ve diğer materyaller RE-SET — Şafak Özkan'a aittir ve telif hakkı
               yasalarıyla korunmaktadır.
             </p>
 
@@ -45,7 +48,7 @@ const CopyrightPage = () => {
               <li>Podcast bölümleri ve ses kayıtları</li>
               <li>Video içerikler ve sunumlar</li>
               <li>Fotoğraf ve görseller</li>
-              <li>Reset logosu ve marka kimliği</li>
+              <li>RE-SET logosu ve marka kimliği</li>
               <li>Web sitesi tasarımı ve düzeni</li>
               <li>Eğitim materyalleri ve çalışma kağıtları</li>
               <li>Kişisel gelişim araçları ve testler</li>
@@ -66,7 +69,7 @@ const CopyrightPage = () => {
               <li>İçerikleri izinsiz kopyalama veya çoğaltma</li>
               <li>Ticari amaçlarla kullanım (yazılı izin olmadan)</li>
               <li>İçerikleri değiştirerek farklı platformlarda yayınlama</li>
-              <li>Reset logosu veya marka kimliğini izinsiz kullanma</li>
+              <li>RE-SET logosu veya marka kimliğini izinsiz kullanma</li>
               <li>Podcast bölümlerini izinsiz yeniden yayınlama</li>
               <li>Eğitim materyallerini satış amaçlı kullanma</li>
               <li>Web sitesi tasarımını kopyalama</li>
@@ -86,7 +89,7 @@ const CopyrightPage = () => {
             <div className="bg-[#F5F5F5] p-4 rounded-lg">
               <p className="text-sm font-mono">
                 Şafak Özkan, "Farkındalık Pratiği ile Hayatınızı Dönüştürün", 
-                Reset Blog, 15 Ocak 2024. 
+                RE-SET Blog, 15 Ocak 2024.
                 https://re-set.com.tr/blog/farkindalik-pratigi
               </p>
             </div>
@@ -148,7 +151,7 @@ const CopyrightPage = () => {
             </p>
             <p>
               <strong>E-posta:</strong> info@re-set.com.tr<br />
-              <strong>Adres:</strong> Teşvikiye, Hakkı Yeten Cd. No:11 D:7, 34365 Şişli/İstanbul
+              <strong>Adres:</strong> Tarabya, İstanbul
             </p>
 
             <h2 className="text-2xl font-serif text-[#1A1A1A] mt-8 mb-4">12. Güncelleme</h2>
@@ -158,7 +161,7 @@ const CopyrightPage = () => {
             </p>
 
             <p className="text-sm text-gray-500 mt-8 text-center">
-              <strong>© 2024 Reset - Şafak Özkan. Tüm hakları saklıdır.</strong><br />
+              <strong>© {currentYear} RE-SET — Şafak Özkan. Tüm hakları saklıdır.</strong><br />
               Son Güncelleme: 03 Aralık 2024
             </p>
           </div>

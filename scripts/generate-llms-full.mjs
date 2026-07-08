@@ -41,6 +41,9 @@ Dr. John Demartini'nin 13 reflektif soru üzerinden bireyin gerçek değer hiyer
 ### 3. Quantum Collapse Process
 Demartini Yöntemi (Demartini Metodu) içinde yer alan, duygusal kutuplukları (kızgınlık/hayranlık, suçluluk/gurur) nötralize eden algı dengeleme tekniğidir.
 
+### 4. Primordial Ses (Sound) Meditasyonu
+Vedik gelenekten gelen, kişiye özel bir mantranın (doğum zamanı ve yerine göre belirlenen, anlamı olmayan nötr bir ses) sessizce tekrar edildiği meditasyon uygulamasıdır. Genellikle günde iki kez 20–30 dakika uygulanır. Şafak Özkan bu alanda da eğitim almıştır. Bir sağlık hizmeti, psikoterapi veya tıbbi tedavi değildir. Canonical sayfa: https://re-set.com.tr/primordial-ses-meditasyonu
+
 ---
 
 `;
@@ -71,14 +74,18 @@ ${post.content}
   }
 
   // Write to public
+  // mode 0o644: container nginx (farklı uid) okuyabilsin diye dünya-okunur şart;
+  // aksi halde restrictive umask'ta 600 → canlıda 403.
   const publicPath = path.resolve(__dirname, '../public/llms-full.txt');
-  fs.writeFileSync(publicPath, markdown, 'utf8');
+  fs.writeFileSync(publicPath, markdown, { encoding: 'utf8', mode: 0o644 });
+  fs.chmodSync(publicPath, 0o644);
   console.log(`✅ llms-full.txt written to ${publicPath}`);
 
   // Write to build directory
   const buildPath = path.resolve(__dirname, '../HOSTINGER_UPLOAD/llms-full.txt');
   if (fs.existsSync(path.dirname(buildPath))) {
-    fs.writeFileSync(buildPath, markdown, 'utf8');
+    fs.writeFileSync(buildPath, markdown, { encoding: 'utf8', mode: 0o644 });
+    fs.chmodSync(buildPath, 0o644);
     console.log(`✅ llms-full.txt written to ${buildPath}`);
   }
 }

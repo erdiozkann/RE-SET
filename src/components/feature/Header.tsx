@@ -27,7 +27,8 @@ export default function Header() {
   const navLinks = [
     { path: '/', label: 'Ana Sayfa' },
     { path: '/about', label: 'Hakkımda' },
-    { path: '/demartini-yontemi', label: 'Yöntemler' },
+    { path: '/demartini-yontemi', label: 'Demartini Yöntemi' },
+    { path: '/primordial-ses-meditasyonu', label: 'Meditasyon' },
     { path: '/blog', label: 'Blog' },
     { path: '/podcast', label: 'Podcast' },
     { path: '/booking', label: 'Randevu' },
@@ -43,7 +44,7 @@ export default function Header() {
             {contactInfo?.logo_url && (
               <img
                 src={contactInfo.logo_url}
-                alt="Reset Logo"
+                alt="RE-SET Logo"
                 className="h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
               />
             )}
@@ -88,15 +89,18 @@ export default function Header() {
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="lg:hidden w-10 h-10 flex items-center justify-center cursor-pointer"
+            aria-label={mobileMenuOpen ? 'Menüyü kapat' : 'Menüyü aç'}
+            aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-menu"
           >
-            <i className={`ri-${mobileMenuOpen ? 'close' : 'menu'}-line text-2xl text-[#1A1A1A]`}></i>
+            <i className={`ri-${mobileMenuOpen ? 'close' : 'menu'}-line text-2xl text-[#1A1A1A]`} aria-hidden="true"></i>
           </button>
         </div>
       </div>
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-white border-t border-gray-200">
+        <div id="mobile-menu" className="lg:hidden bg-white border-t border-gray-200">
           <nav className="px-4 py-4 space-y-3">
             {navLinks.map((link) => (
               <Link

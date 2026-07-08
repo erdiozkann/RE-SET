@@ -72,6 +72,10 @@ export default defineConfig({
         "/",
         "/about",
         "/demartini-yontemi",
+        "/primordial-ses-meditasyonu",
+        "/demartini-seansi",
+        "/deger-belirleme",
+        "/breakthrough-experience",
         "/blog",
         "/podcast",
         "/youtube",
@@ -99,6 +103,10 @@ export default defineConfig({
           if (id.includes("@supabase")) return "vendor-supabase";
           if (id.includes("framer-motion")) return "vendor-motion";
           if (id.includes("dompurify")) return "vendor-sanitize";
+          // marked (~140KB) yalnız prerender (build) + lazy blog/cms'te gerekli.
+          // Kendi chunk'ında olmazsa React'in scheduler'ıyla aynı `vendor` catch-all'a
+          // düşüp home kritik yoluna modulepreload ediliyordu. Ayrı chunk → home'a girmez.
+          if (id.includes("/marked/") || id.includes("node_modules/marked")) return "vendor-marked";
           return "vendor";
         },
       },

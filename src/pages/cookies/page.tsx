@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import DOMPurify from 'dompurify';
 import SEO from '../../components/SEO';
 import { contentApi } from '../../lib/api';
+import { metaFor } from '../../lib/routeMeta';
 
 // Varsayılan çerez politikası içeriği
 const defaultCookiesContent = `
@@ -49,13 +50,14 @@ const defaultCookiesContent = `
 <h2 class="text-2xl font-serif text-[#1A1A1A] mt-8 mb-4">5. İletişim</h2>
 <p>Çerez Politikamız hakkında sorularınız varsa, bizimle iletişime geçebilirsiniz:</p>
 <p><strong>E-posta:</strong> info@re-set.com.tr</p>
-<p><strong>Adres:</strong> Teşvikiye, Hakkı Yeten Cd. No:11 D:7, 34365 Şişli/İstanbul</p>
+<p><strong>Adres:</strong> Tarabya, İstanbul</p>
 
 <p class="mt-8 text-sm text-gray-500"><em>Bu çerez politikası, 6698 sayılı Kişisel Verilerin Korunması Kanunu (KVKK) ve Avrupa Birliği Genel Veri Koruma Yönetmeliği (GDPR) uyarınca hazırlanmıştır.</em></p>
 `;
 
 export default function CookiesPage() {
   const siteUrl = import.meta.env.VITE_SITE_URL || 'https://re-set.com.tr';
+  const meta = metaFor('/cookies');
   const [content, setContent] = useState<string | null>(null);
 
 
@@ -79,16 +81,16 @@ export default function CookiesPage() {
   const schema = {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
-    name: 'Çerez Politikası',
-    description: 'Reset web sitesinde kullanılan çerezler, amaçları ve yönetim seçenekleri hakkında detaylı bilgi.',
+    name: meta.title,
+    description: meta.description,
     url: `${siteUrl}/cookies`
   };
 
   return (
     <>
       <SEO
-        title="Çerez Politikası"
-        description="Reset web sitesinde kullanılan çerezler, amaçları ve yönetim seçenekleri hakkında detaylı bilgi."
+        title={meta.title}
+        description={meta.description}
         canonical="/cookies"
         schema={schema}
       />

@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { podcastApi } from '../../lib/api';
 import SEO from '../../components/SEO';
+import { metaFor } from '../../lib/routeMeta';
 import type { PodcastEpisode as Podcast } from '../../types';
 
 export default function PodcastPage() {
@@ -87,6 +88,14 @@ export default function PodcastPage() {
     setCurrentTime(0);
   };
 
+  // Spotify bölüm SAYFA linki (open.spotify.com/episode/<id>) HTML5 <audio> ile
+  // ÇALINAMAZ (ses dosyası değil) → resmi Spotify embed iframe'i kullanılır.
+  const spotifyEmbedUrl = (url?: string): string | null => {
+    if (!url) return null;
+    const m = url.match(/open\.spotify\.com\/(?:intl-[a-z]+\/)?episode\/([A-Za-z0-9]+)/);
+    return m ? `https://open.spotify.com/embed/episode/${m[1]}?utm_source=generator` : null;
+  };
+
   const formatTime = (seconds: number): string => {
     const mins = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
@@ -115,9 +124,9 @@ export default function PodcastPage() {
   return (
     <>
       <SEO
-        title="Podcast | Demartini Metodu Yayinlari"
-        description="Demartini Metodu, deger belirleme ve yasam dengeleme uzerine podcast yayinlari."
-        keywords="demartini metodu podcast, kisisel gelisim podcast, safak ozkan podcast"
+        title={metaFor('/podcast').title}
+        description={metaFor('/podcast').description}
+        canonical="/podcast"
       />
 
       <section className="py-10 md:py-14 bg-gradient-to-br from-[#F5F5F5] to-white">
@@ -178,7 +187,25 @@ export default function PodcastPage() {
         </div>
       </section>
 
-      {currentPodcast && (
+      {currentPodcast && spotifyEmbedUrl(currentPodcast.audioUrl) && (
+        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-50">
+          <div className="max-w-4xl mx-auto px-4 py-3">
+            <iframe
+              key={currentPodcast.id}
+              src={spotifyEmbedUrl(currentPodcast.audioUrl)!}
+              title={`Spotify: ${currentPodcast.title}`}
+              width="100%"
+              height="152"
+              frameBorder="0"
+              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+              loading="lazy"
+              className="rounded-xl"
+            ></iframe>
+          </div>
+        </div>
+      )}
+
+      {currentPodcast && !spotifyEmbedUrl(currentPodcast.audioUrl) && (
         <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-50">
           <audio
             ref={audioRef}

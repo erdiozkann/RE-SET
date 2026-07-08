@@ -69,3 +69,6 @@ Thumbs.db
 
 # VPS deploy build output (regenerated from HOSTINGER_UPLOAD)
 deploy/vps/html/
+
+# Supabase Management API PAT — ASLA commit edilmez
+.supabase-token

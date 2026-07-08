@@ -4,6 +4,7 @@ import DOMPurify from 'dompurify';
 import { blogApi } from '../../../lib/api';
 import SEO from '../../../components/SEO';
 import { mdToHtml } from '../../../lib/markdown';
+import { optimizedImage } from '../../../lib/img';
 import type { BlogPost } from '../../../types';
 
 export default function BlogDetailPage() {
@@ -21,7 +22,8 @@ export default function BlogDetailPage() {
     const loadPost = async () => {
       try {
         const data = await blogApi.getById(id);
-        if (!data) {
+        // Taslak/yayınlanmamış yazılar public'te 404 gibi davranır (sızıntı yok).
+        if (!data || data.status !== 'published') {
           setNotFound(true);
         } else {
           setPost(data);
@@ -110,7 +112,7 @@ export default function BlogDetailPage() {
       publisher: {
         '@type': 'Organization',
         '@id': 'https://re-set.com.tr/#organization',
-        name: 'RE-SET — Reset Danışmanlık',
+        name: 'RE-SET — Şafak Özkan',
         logo: {
           '@type': 'ImageObject',
           url: 'https://re-set.com.tr/favicon.png',
@@ -187,9 +189,10 @@ export default function BlogDetailPage() {
       {post.image && (
         <div className="max-w-3xl mx-auto px-4 md:px-8 -mt-2 mb-8">
           <img
-            src={post.image}
+            src={optimizedImage(post.image, { width: 1000, height: 563, resize: 'cover' })}
             alt={post.title}
-            className="w-full aspect-video object-cover rounded-xl shadow-sm"
+            className="w-full aspect-video object-cover object-center rounded-xl shadow-sm"
+            decoding="async"
           />
         </div>
       )}
@@ -209,6 +212,25 @@ export default function BlogDetailPage() {
               prose-img:rounded-xl prose-img:shadow-sm"
             dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(mdToHtml(post.content)) }}
           />
+
+          {/* İç bağlantı: her yazıdan hizmet sayfalarına (topical authority + dönüşüm) */}
+          <div className="mt-12 border-t border-gray-200 pt-8">
+            <h2 className="text-xl font-serif text-[#1A1A1A] mb-4">Bir sonraki adım</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <Link to="/demartini-seansi" className="block p-4 rounded-xl border border-gray-200 hover:border-[#D4AF37] hover:shadow-md transition-all">
+                <p className="font-semibold text-[#1A1A1A] mb-1">Demartini Seansı</p>
+                <p className="text-sm text-gray-600">İstanbul (Tarabya) &amp; online birebir çalışma</p>
+              </Link>
+              <Link to="/deger-belirleme" className="block p-4 rounded-xl border border-gray-200 hover:border-[#D4AF37] hover:shadow-md transition-all">
+                <p className="font-semibold text-[#1A1A1A] mb-1">Değer Belirleme</p>
+                <p className="text-sm text-gray-600">13 soruyla değerler hiyerarşiniz</p>
+              </Link>
+              <Link to="/booking" className="block p-4 rounded-xl border border-[#D4AF37] bg-[#D4AF37]/5 hover:shadow-md transition-all">
+                <p className="font-semibold text-[#1A1A1A] mb-1">Ücretsiz Keşif Görüşmesi</p>
+                <p className="text-sm text-gray-600">30 dk — randevu talebi bırakın</p>
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
     </>

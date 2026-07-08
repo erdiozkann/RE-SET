@@ -13,7 +13,9 @@ const rowToPost = (row: Record<string, unknown>): BlogPost => ({
   excerpt: row.excerpt as string,
   content: row.content as string,
   category: row.category as string,
-  image: row.image as string,
+  // Bazı satırlarda görsel `featured_image` kolonunda; ikisini de kabul et
+  // (önceki hâlde featured_image düşürülüyordu → o satırların görseli boştu).
+  image: (row.image as string) || (row.featured_image as string) || '',
   date: row.date as string,
   readTime: row.read_time as string,
   featured: row.featured as boolean,

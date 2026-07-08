@@ -2,10 +2,12 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../../../lib/supabase';
 import { useToast } from '../../../components/ToastContainer';
 import { getUserFriendlyErrorMessage } from '../../../lib/errors';
+import { useAuth } from '../../../contexts/AuthContext';
 import type { User } from '../../../types';
 
 export default function AccountSettingsTab() {
   const toast = useToast();
+  const { user: authUser } = useAuth();
   const [currentUser, setCurrentUser] = useState<Partial<User> | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -22,13 +24,15 @@ export default function AccountSettingsTab() {
 
   useEffect(() => {
     loadCurrentUser();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authUser?.email]);
 
   const loadCurrentUser = async () => {
     try {
-      const userEmail = localStorage.getItem('userEmail');
+      // Oturumdaki kullanıcının e-postası (localStorage 'userEmail' hiç set
+      // edilmiyordu → tab boş kalıyordu). AuthContext tek doğruluk kaynağı.
+      const userEmail = authUser?.email;
       if (!userEmail) {
-        // Login'e yönlendirme yapmıyoruz, boş state ile devam ediyoruz
         setLoading(false);
         return;
       }
@@ -41,7 +45,7 @@ export default function AccountSettingsTab() {
 
       if (error) {
         console.error('Users query error:', error);
-        // Hata olsa bile sayfayı göster, email'i localStorage'dan al
+        // Hata olsa bile sayfayı göster, e-postayı oturumdan al
         setCurrentUser({ email: userEmail });
         setEmailForm({ currentEmail: userEmail, newEmail: '' });
         setLoading(false);
@@ -52,14 +56,14 @@ export default function AccountSettingsTab() {
         setCurrentUser(data);
         setEmailForm({ currentEmail: data.email, newEmail: '' });
       } else {
-        // Kullanıcı bulunamadı, localStorage'dan devam et
+        // Kullanıcı bulunamadı, oturum e-postasıyla devam et
         setCurrentUser({ email: userEmail });
         setEmailForm({ currentEmail: userEmail, newEmail: '' });
       }
       setLoading(false);
     } catch (error) {
       console.error('LoadCurrentUser error:', error);
-      const userEmail = localStorage.getItem('userEmail') || '';
+      const userEmail = authUser?.email || '';
       setCurrentUser({ email: userEmail });
       setEmailForm({ currentEmail: userEmail, newEmail: '' });
       setLoading(false);
@@ -92,7 +96,17 @@ export default function AccountSettingsTab() {
         return;
       }
 
-      // E-posta güncelle
+      // Önce Supabase Auth e-postasını güncelle — asıl oturum kimliği burada.
+      // (Yalnız users tablosunu güncellemek kullanıcıyı kilitler: Auth eski
+      // e-postada kalır, giriş yapılamaz.) Auth genelde doğrulama e-postası
+      // gönderir; onaylanana kadar oturum eski adresle geçerli kalır.
+      const { error: authError } = await supabase.auth.updateUser({
+        email: emailForm.newEmail,
+      });
+
+      if (authError) throw authError;
+
+      // Uygulama profilini de güncelle (users tablosu)
       const { error } = await supabase
         .from('users')
         .update({ email: emailForm.newEmail })
@@ -100,10 +114,7 @@ export default function AccountSettingsTab() {
 
       if (error) throw error;
 
-      // LocalStorage'ı güncelle
-      localStorage.setItem('userEmail', emailForm.newEmail);
-
-      toast.success('E-posta başarıyla güncellendi');
+      toast.success('E-posta güncellendi. Onay için yeni adresinize gönderilen bağlantıya tıklayın.');
 
       // Formu sıfırla
       setEmailForm({ currentEmail: emailForm.newEmail, newEmail: '' });

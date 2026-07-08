@@ -47,7 +47,13 @@ export const contentApi = {
     if (heroContentsCache) return heroContentsCache;
     return dedupe('hero_contents', async () => {
       if (heroContentsCache) return heroContentsCache;
-      const { data, error } = await supabasePublic.from('hero_contents').select('*');
+      // ORDER BY şart: birden fazla satır varsa, ORDER'sız [0] her sorguda/rolde
+      // farklı satır dönebilir → home ile panel farklı hero gösterir. En eski satırı
+      // kanonik kabul et (home, prerender ve panel aynı satırı okur/düzenler).
+      const { data, error } = await supabasePublic
+        .from('hero_contents')
+        .select('*')
+        .order('created_at', { ascending: true });
 
       if (error) {
         console.error('Hero içerikleri alınırken hata:', error);
@@ -253,6 +259,23 @@ export const contentApi = {
       .single();
     if (error) throw error;
     profileImagesCache = null;
+
+    // SENKRON: "Ana Sayfa Resmi" (location='hero-main') profil-resimleri
+    // sekmesinden değiştirilince ana sayfa hero'su da güncellenmeli. Ana sayfa
+    // hero_contents tablosundan okur; burası senkron yazmayınca panel "kayıtlı"
+    // gösterip site eski görselde kalıyordu (iki-tablo tuzağı).
+    if (data?.location === 'hero-main') {
+      const { error: heroErr } = await supabase
+        .from('hero_contents')
+        .update({ image: url })
+        .neq('image', url); // idempotent: zaten aynıysa dokunma
+      if (heroErr) {
+        console.error('hero_contents senkron hatası:', heroErr);
+        throw new Error('Görsel kaydedildi ama ana sayfa hero eşitlenemedi. Tekrar deneyin.');
+      }
+      heroContentsCache = null;
+    }
+
     return data;
   },
 

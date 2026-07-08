@@ -46,20 +46,15 @@ export default function LoginPage() {
     setError(null);
 
     try {
-      console.log('Login attempt started:', { email });
       const loggedInUser = await signIn(email, password);
-      console.log('Login successful:', loggedInUser);
 
       toast.success('Giriş başarılı! Yönlendiriliyorsunuz...');
 
       // Explicit navigation for immediate feedback
-      console.log('Determining navigation path for role:', loggedInUser.role);
 
       if (loggedInUser.role === 'ADMIN') {
-        console.log('Redirecting to /admin');
         navigate('/admin', { replace: true });
       } else if (loggedInUser.approved) {
-        console.log('Redirecting to /client-panel');
         navigate('/client-panel', { replace: true });
       } else {
         console.warn('User not approved, staying on page');
@@ -110,7 +105,6 @@ export default function LoginPage() {
       <SEO
         title="Giriş Yap - RE-SET Demartini Metodu"
         description="RE-SET Demartini Metodu hesabınıza giriş yapın. Randevularınızı yönetin, ilerleme kayıtlarınızı görüntüleyin."
-        keywords="giriş, login, danışan girişi, admin girişi"
         noindex
       />
 

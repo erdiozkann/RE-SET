@@ -28,6 +28,10 @@ async function generate() {
     { loc: '', changefreq: 'weekly', priority: '1.0' },
     { loc: '/about', changefreq: 'monthly', priority: '0.9' },
     { loc: '/demartini-yontemi', changefreq: 'monthly', priority: '0.9' },
+    { loc: '/primordial-ses-meditasyonu', changefreq: 'monthly', priority: '0.9' },
+    { loc: '/demartini-seansi', changefreq: 'monthly', priority: '0.95' },
+    { loc: '/deger-belirleme', changefreq: 'monthly', priority: '0.9' },
+    { loc: '/breakthrough-experience', changefreq: 'monthly', priority: '0.9' },
     { loc: '/blog', changefreq: 'weekly', priority: '0.8' },
     { loc: '/podcast', changefreq: 'weekly', priority: '0.7' },
     { loc: '/youtube', changefreq: 'weekly', priority: '0.7' },
@@ -83,14 +87,19 @@ ${xmlEntries}
 </urlset>`;
 
   // Write to public folder (for local dev and next build step)
+  // mode 0o644: restrictive umask (077) altında 600 üretilirse container nginx
+  // okuyamaz → canlıda 403. writeFileSync mode'u sadece YENİ dosyaya uygulanır,
+  // bu yüzden var olan dosyayı da chmod ile garantiye alıyoruz.
   const publicPath = path.resolve(__dirname, '../public/sitemap.xml');
-  fs.writeFileSync(publicPath, sitemapXml, 'utf8');
+  fs.writeFileSync(publicPath, sitemapXml, { encoding: 'utf8', mode: 0o644 });
+  fs.chmodSync(publicPath, 0o644);
   console.log(`✅ Sitemap written to ${publicPath}`);
 
   // Write to build directory (if exists)
   const buildPath = path.resolve(__dirname, '../HOSTINGER_UPLOAD/sitemap.xml');
   if (fs.existsSync(path.dirname(buildPath))) {
-    fs.writeFileSync(buildPath, sitemapXml, 'utf8');
+    fs.writeFileSync(buildPath, sitemapXml, { encoding: 'utf8', mode: 0o644 });
+    fs.chmodSync(buildPath, 0o644);
     console.log(`✅ Sitemap written to ${buildPath}`);
   }
 }

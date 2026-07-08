@@ -53,15 +53,11 @@ export default function ProfileImagesManager() {
             setImageUrl(url);
             toast.success('Görsel yüklendi');
         } catch (error) {
+            // Base64 fallback KALDIRILDI: yükleme başarısızken görseli data-URI
+            // olarak DB'ye yazıyordu (megabaytlarca çöp satır + site asla okuyamıyor).
+            // Artık net hata gösterip duruyoruz.
             console.error('Upload error:', error);
-            toast.error('Görsel yüklenemedi. Supabase Storage bucket kontrol edin.');
-            // Fallback: Base64 kullan
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                const result = event.target?.result as string;
-                setImageUrl(result);
-            };
-            reader.readAsDataURL(file);
+            toast.error('Görsel Storage\'a yüklenemedi. Oturumunuz düşmüş olabilir — sayfayı yenileyip tekrar deneyin.');
         } finally {
             setUploadingImage(false);
         }
@@ -69,6 +65,12 @@ export default function ProfileImagesManager() {
 
     const handleSaveImage = async () => {
         if (!imageUrl || !editingImage) return;
+        // data-URI (base64) kaydetmeyi engelle — DB'ye megabaytlarca metin yazar,
+        // site tarafı bunu görsel olarak veremez. Yalnız gerçek URL kabul.
+        if (imageUrl.startsWith('data:')) {
+            toast.error('Bu görsel geçerli bir bağlantı değil (base64). Lütfen dosyayı yeniden yükleyin.');
+            return;
+        }
 
         try {
             await contentApi.updateProfileImage(editingImage.id, imageUrl);
@@ -102,9 +104,10 @@ export default function ProfileImagesManager() {
                                 <h4 className="font-semibold text-[#1A1A1A] mb-2">{image.name}</h4>
                                 <p className="text-sm text-gray-600 mb-3">
                                     Konum: {
-                                        image.location === 'about-hero' ? 'Hakkımda Sayfası' :
-                                            image.location === 'home-about' ? 'Ana Sayfa - Hakkımda Bölümü' :
-                                                'Diğer'
+                                        image.location === 'hero-main' ? 'Ana Sayfa - Hero (üst büyük görsel)' :
+                                            image.location === 'about-hero' ? 'Hakkımda Sayfası' :
+                                                image.location === 'home-about' ? 'Ana Sayfa - Hakkımda Bölümü' :
+                                                    'Diğer'
                                     }
                                 </p>
                                 <button
@@ -205,18 +208,33 @@ export default function ProfileImagesManager() {
                                 )}
                             </div>
 
-                            {/* Önizleme */}
+                            {/* Önizleme — hero slotu için sitedeki kırpmayla birebir aynı
+                                (geniş oran + object-top); diğer slotlar ortadan kırpma. */}
                             {imageUrl && (
                                 <div className="border border-gray-200 rounded-lg p-2">
                                     <p className="text-sm font-medium text-gray-700 mb-2">Önizleme:</p>
                                     <img
                                         src={imageUrl}
                                         alt="Önizleme"
-                                        className="w-full h-48 object-cover rounded"
+                                        className={`w-full rounded object-cover ${editingImage?.location === 'hero-main'
+                                            ? 'aspect-video object-top'
+                                            : editingImage?.location === 'home-about'
+                                                ? 'aspect-square object-top max-w-xs mx-auto'
+                                                : 'h-48'}`}
                                         onError={(e) => {
                                             e.currentTarget.src = 'https://via.placeholder.com/400x400?text=Geçersiz+Resim';
                                         }}
                                     />
+                                    {editingImage?.location === 'hero-main' && (
+                                        <p className="text-xs text-gray-500 mt-1">
+                                            Önizleme, ana sayfadaki hero kırpmasıyla aynıdır (üstten hizalı).
+                                        </p>
+                                    )}
+                                    {editingImage?.location === 'home-about' && (
+                                        <p className="text-xs text-gray-500 mt-1">
+                                            Önizleme, ana sayfa "Hakkımda" kutusuyla aynıdır (kare, üstten hizalı).
+                                        </p>
+                                    )}
                                 </div>
                             )}
                         </div>

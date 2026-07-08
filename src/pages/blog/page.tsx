@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import SEO from '../../components/SEO';
 import { useToast } from '../../components/ToastContainer';
 import { blogApi } from '../../lib/api';
+import { metaFor } from '../../lib/routeMeta';
+import { optimizedImage } from '../../lib/img';
 import type { BlogPost } from '../../types';
 
 export default function Blog() {
@@ -17,7 +19,8 @@ export default function Blog() {
     setLoadError(false);
     try {
       const data = await blogApi.getAll();
-      setBlogPosts(data || []);
+      // Public liste yalnız yayınlanmış yazıları gösterir (taslak sızıntısı yok).
+      setBlogPosts((data || []).filter((p) => p.status === 'published'));
     } catch (error) {
       console.error('Blog yazıları yüklenirken hata:', error);
       setLoadError(true);
@@ -56,13 +59,14 @@ export default function Blog() {
   );
 
   const siteUrl = 'https://re-set.com.tr';
+  const meta = metaFor('/blog');
 
   const schema = [
     {
       '@context': 'https://schema.org',
       '@type': 'Blog',
-      name: 'Blog | Reset',
-      description: 'Kişisel gelişim ve Demartini Metodu hakkında yazılar',
+      name: meta.title,
+      description: meta.description,
       url: `${siteUrl}/blog`,
       author: {
         '@type': 'Person',
@@ -74,9 +78,9 @@ export default function Blog() {
   return (
     <>
       <SEO
-        title="Blog | Reset"
-        description="Kişisel gelişim ve Demartini Metodu hakkında yazılar"
-        keywords="blog, demartini metodu, kişisel gelişim"
+        title={meta.title}
+        description={meta.description}
+        canonical="/blog"
         schema={schema}
       />
       <section className="py-10 md:py-14 bg-gradient-to-br from-[#F5F5F5] to-white">
@@ -124,11 +128,13 @@ export default function Blog() {
                 <Link key={post.id} to={`/blog/${post.id}`} className="group block">
                   <article>
                     <div className="aspect-video rounded-xl overflow-hidden mb-4 bg-gray-100 flex items-center justify-center">
-                      {(post as any).featured_image || post.image ? (
+                      {post.image ? (
                         <img
-                          src={(post as any).featured_image || post.image}
+                          src={optimizedImage(post.image, { width: 600, height: 338, resize: 'cover' })}
                           alt={post.title}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          loading="lazy"
+                          decoding="async"
                         />
                       ) : (
                         <i className="ri-article-line text-4xl text-gray-300"></i>
@@ -176,11 +182,13 @@ export default function Blog() {
                 <Link key={post.id} to={`/blog/${post.id}`} className="group block">
                   <article>
                     <div className="aspect-video rounded-xl overflow-hidden mb-4 bg-gray-100 flex items-center justify-center">
-                      {(post as any).featured_image || post.image ? (
+                      {post.image ? (
                         <img
-                          src={(post as any).featured_image || post.image}
+                          src={optimizedImage(post.image, { width: 600, height: 338, resize: 'cover' })}
                           alt={post.title}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          loading="lazy"
+                          decoding="async"
                         />
                       ) : (
                         <i className="ri-article-line text-4xl text-gray-300"></i>

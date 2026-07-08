@@ -5,11 +5,86 @@
 > Ana anahtar hedefi: "demartini metodu/yöntemi", "şafak özkan demartini",
 > "demartini türkiye/istanbul" + AI cevap motorlarında atıf.
 
-**Son güncelleme:** 2026-07-03
+**Son güncelleme:** 2026-07-07
 
 ## Gerçekçi hedef beklentisi
 Çıplak "demartini" #1 global olarak Dr. John Demartini'nin markasının; sadece
 on-page ile alınamaz. Kazanılabilir: yukarıdaki uzun-kuyruk + yerel + AI atıf.
+
+---
+
+## 🚀 BÜYÜK REVİZE (2026-07-07) — canlı VPS, tek-shot `deploy/vps/deploy.sh`
+Site VPS'te (nginx+Traefik+LE, `82.29.180.227`, `/docker/reset`). Denetim + batch planı: Obsidian `03_Projects/RE-SET/01_AZ_Denetim_Aciklar.md` + `02_Buyuk_Revize_Plani.md`.
+
+- ✅ **Batch 0 (acil fonksiyonel)** — contact form `name` bug (firstName+lastName), /booking noindex+kayıt-duvarı kaldırıldı, AccountSettingsTab (useAuth+auth.updateUser), **sitemap/robots/llms-full canlıda 403'tü** (dosyalar 600→container nginx okuyamıyor; `deploy.sh` `chmod -R a+rX html` + generate script'leri 644), placeholder telefon kaldırıldı.
+- ✅ **Batch 1 (marka + meta tek-kaynak)** — `src/lib/routeMeta.ts` TEK KAYNAK (prerender + tüm public sayfalar); title-flip (T1) çözüldü; "Reset/Reset Danışmanlık" → "RE-SET" her yerde (sayfalar+Footer+Header+schema+**index.html shell**); keyword prop'ları silindi. İstisna: gerçek danışan yorumundaki "Reset süreciyle…" verbatim.
+- ✅ **Batch 2 (içerik/SEO/YMYL)** — tıbbi iddia klinik-olmayan dile (C4)+disclaimer'lar; "bilimsel" overclaim ölçüldü (O5); **11 yıl** her yerde (H5, "binlerce danışan" uydurması kaldırıldı); **YENİ 2. dikey: `/primordial-ses-meditasyonu`** (Service+FAQPage schema, prerender zengin gövde, sitemap, Header/Footer nav, llms-full); copyright yıl dinamik.
+
+### ✅ NAP çözüldü (C3, 2026-07-07): kullanıcı → adres **"Tarabya, İstanbul"** (sokak/no yok)
+Tüm kod/statik tek elden "Tarabya, İstanbul"a çekildi: iki çelişen sokak adresi kaldırıldı, "Nişantaşı" → "Tarabya" (23 geçiş), schema `addressRegion` il=İstanbul, yanlış Nişantaşı koordinatları (41.0534;28.9943) index.html+home'dan silindi (gerçek pin GBP'de). Canlı: Nişantaşı x0.
+
+### ✅ HERO + GÜVENLİK (2026-07-07, Management API ile doğrudan çözüldü/denetlendi)
+- **Hero görseli düzeldi:** DB'deki tek satır (a733febc) eski görseli tutuyordu; kullanıcının bugün yüklediği en yeni görsele (`1783393565740-5wwfnb.png`) set edildi. Anon+webp 200, doğrulandı.
+- **Kök neden (panel kaydetmiyordu):** RLS/is_admin/client hepsi doğru (is_admin() info@ için true, "Admin All Access" politikası hep vardı). Statik analizle hata yok → muhtemelen tarayıcıda cached-rol ile girişli görünüp aktif Supabase oturumu olmaması. Taze giriş (info@re-set.com.tr) ile panel yazmaları çalışmalı.
+- **admin_emails temizlendi:** yalnız `info@re-set.com.tr` (kullanıcı isteği; admin@re-set.com.tr çıkarıldı — is_admin() içinde zaten hardcoded).
+- **GÜVENLİK DENETİMİ (token ile):** RLS TÜM public tablolarda açık ✅ · anon-okuma sızıntısı YOK ✅ · write policy'ler sağlam (appointments own-only, reviews approved=false, users self-register CLIENT-only=yetki yükseltme yok, site_pages is_admin) ✅ · tek zayıf: contact_messages INSERT `true` (spam; Traefik rate-limit hafifletiyor, Turnstile ileride).
+- ✅ **Hayalet admin silindi** (`admin@reset.com`): artık yalnız `info@re-set.com.tr` (gerçek auth) ADMIN.
+- ✅ **Blog görselleri:** 10 yazının hepsinde görsel var; panel BlogTab thumbnail gösteriyor; liste+detay **sunucu-tarafı 16:9 kırpma** (`optimizedImage` resize=cover) ile birebir tutarlı.
+- ⏳ **Token'ı İPTAL ET** (Management API PAT sohbette göründü; yerel dosya silindi). Supabase → Account → Access Tokens → `reset-fix` sil.
+
+### 🔴 KRİTİK BULGU (2026-07-07): İçerik tablolarında admin YAZMA politikası YOK
+ADIM B çıktısı: hero_contents/about_contents/contact_info/methods/services/site_pages/
+blog_posts/podcast_episodes/youtube_videos/reviews/working_config → hepsinde RLS açık
+ama **yalnız SELECT** politikası var; INSERT/UPDATE/DELETE yok → **panelden hiçbir içerik
+DB'ye yazılamıyor** (hero görseli bunun görünen ucu). ÇÖZÜM hazır:
+- `_sql_migrations/2026-07-07_content_admin_write_policies.sql` → her içerik tablosuna
+  `is_admin()` tabanlı FOR ALL yazma politikası (idempotent). Bunu çalıştır → panel düzelir.
+- `_sql_migrations/2026-07-07_sensitive_tables_leak_check.sql` → clients/appointments/
+  progress/contact_messages/finans tablolarında anon-okuma SIZINTISI var mı (salt-okuma).
+  Çıktıyı Erdi'ye ilet; sızıntı varsa admin-only politikayla kapat.
+
+### 🌐 CLOUDFLARE CDN GEÇİŞİ (2026-07-08, browser-otomasyonla Claude yaptı)
+Hedef: TR'den <1sn (CDN edge). Durum: **nameserver'lar Hostinger'da Cloudflare'e çevrildi, yayılım bekleniyor.**
+- ✅ CF zone: re-set.com.tr (Free, Erdiozkann hesabı). DNS kayıtları düzeltildi:
+  apex A → 82.29.180.227 **DNS only** (kesintisiz geçiş; edge cert sonrası turuncu yapılacak);
+  **5 mail CNAME'i Proxied'dan DNS only'ye çekildi** (DKIM/autoconfig kırılırdı);
+  **www → re-set.com.tr (Proxied)** — eski Hostinger CDN hedefi kaldırıldı; ftp DNS only; AAAA yok.
+- ✅ SSL/TLS mode: **Full (strict)** (origin'de geçerli LE cert var).
+- ✅ Redirect Rule aktif: `https://www.*` → 301 root (query korunur).
+- ✅ Hostinger NS: ns1/ns2.dns-parking.com → **gabriel.ns.cloudflare.com + kara.ns.cloudflare.com** ("Ad sunucuları değişti!" onayı alındı; yayılım 24sa'e kadar).
+- ⏳ **Registry teyidi (2026-07-08):** .tr TLD sunucuları (`ns75.ns.tr`) hâlâ dns-parking gösteriyor (TTL 43200=12sa) — Hostinger kabul etti, TRABİS'e işlenmesi bekleniyor. Hızlandırılamaz.
+- 📋 **AKTİVASYON-SONRASI KONTROL LİSTESİ** (zone Active olunca sırayla):
+  1. SSL/TLS → Edge Certificates → Universal SSL "Active" doğrula
+  2. DNS → apex A kaydını **Proxied (turuncu)** yap → `cf-ray` header + TR hız ölç
+  3. **AI Crawl Control → AI botlarını ENGELLEME** (onboarding "block" önerecek; GEO stratejimiz GPTBot/ClaudeBot/PerplexityBot/Google-Extended İZİN istiyor — robots.txt ile uyumlu bırak)
+  4. Speed → Early Hints **Enable** (pending'de kilitliydi)
+  5. Origin Cert kur (Traefik) → sonra "Always use HTTPS" aç (LE HTTP-01 riskini önce kapat)
+  6. www → apex 301 canlı test
+- ⚠️ LE yenileme notu: proxy açıkken HTTP-01 riskli olabilir → kalıcı çözüm Origin Cert.
+
+### 💰 PARA SAYFALARI CANLI (2026-07-08) + hız/podcast fix'leri
+- ✅ **3 hizmet landing'i yayında** (prerendered, Service+FAQPage+Breadcrumb schema, `data/serviceFaqs.ts` tek kaynak): `/demartini-seansi` (0.95, "demartini istanbul/seansı/randevu/online"), `/deger-belirleme`, `/breakthrough-experience`. Footer + /demartini-yontemi iç bağlantıları. Fiyat yok, tıbbi iddia yok.
+- ✅ **"Site 10sn açılıyor" KÖK NEDENİ ÇÖZÜLDÜ:** supabasePublic aynı auth storageKey'i paylaşıyordu → panel sekmesi kilidi tüm içerik sorgularını 9.5sn kuyrukta bekletiyordu. `storageKey:'sb-reset-public'` izolasyonu → sorgular 9500ms→453ms (kullanıcı tarayıcısından ölçüldü).
+- ✅ **Podcast çalıyor:** Spotify sayfa linkleri HTML5 player'da çalmıyordu → resmi **Spotify embed** (episode iframe) + CSP frame-src open.spotify.com. Canlı doğrulandı.
+- ✅ HTML no-cache (stale-HTML kırılması bitti) + deploy.sh inode/`--force-recreate` düzeltmeleri.
+- ⏳ NS yayılımı hâlâ bekleniyor (gabriel/kara.ns.cloudflare.com; izleyici arka planda). Aktif olunca: apex→turuncu, cf-ray+hız doğrula, Origin Cert.
+
+### ⏳ Kullanıcı/Şafak/PANEL aksiyonları (kod tarafı bitti, bunlar bekliyor)
+**SQL Editor'de çalıştır (ayrı Supabase hesabı, MCP'de değil):**
+- `_sql_migrations/2026-07-07_appointments_unique_slot.sql` → çifte-booking DB kilidi (H2 tam koruma).
+- `_sql_migrations/2026-07-08_security_hardening.sql` → RLS insert CHECK + bucket + advisor (önceki batch).
+
+**Admin panelden içerik güncelle (DB, koddan erişilemiyor):**
+- ⚠️ **"John Demartini Kimdir?" blog yazısı** gövdesinde hâlâ "Nişantaşı … 15 yılı aşkın" → "Tarabya" + "11 yıl" (blog + llms-full'e sızıyor).
+- ⚠️ **KVKK içeriği** DB'den geliyor ve component default'unu ezer → panelden yeni genişletilmiş KVKK metnini gir (özel nitelikli veri/açık rıza/yurtdışı aktarım). **Hukuk onayı önerilir.**
+- 📇 **contactInfo.address** → "Tarabya, İstanbul" (Footer/contact schema oradan streetAddress çeker).
+
+**Kod-dışı / manuel:**
+- **`og-image.jpg` regen**: `scripts/og-card.html` "Tarabya" oldu; statik JPG headless Chrome+sips ile yeniden üretilmeli.
+- **Güvenlik (önceki, geçerli):** admin şifre `123456` döndür, sızmış PAT/TestSprite key revoke.
+
+**Marka/tasarım kararı:**
+- Altın `#D4AF37` metin AA kontrastı geçmiyor (T9) — koyu hardal tonu marka kararı ([[nodeworks-brand]]).
 
 ---
 
