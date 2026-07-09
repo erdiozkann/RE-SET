@@ -62,6 +62,14 @@ Hedef: TR'den <1sn (CDN edge). Durum: **nameserver'lar Hostinger'da Cloudflare'e
   6. www → apex 301 canlı test
 - ⚠️ LE yenileme notu: proxy açıkken HTTP-01 riskli olabilir → kalıcı çözüm Origin Cert.
 
+### 🔧 SEARCH CONSOLE FIX (2026-07-09): Review snippet kritik hatası
+GSC: "itemReviewed alanı için geçersiz nesne türü" (kritik). Neden: prerender'daki Review
+JSON-LD `itemReviewed: Person` kullanıyordu — yorum snippet'i için geçersiz tür; ayrıca kendi
+sitesinde kendi hizmetine Review markup'ı Google'da self-serving (gösterilmez). Fix: Review
+JSON-LD tamamen kaldırıldı, GÖRÜNÜR testimonial korundu (blockquote, / + /demartini-yontemi).
+Canlı doğrulandı: itemReviewed=0, görünür yorum ✓. **ERDİ:** GSC'de sorun sayfasında
+"Doğrulamayı Başlat" (Validate Fix) butonuna bas — Google yeniden tarayıp kapatır (birkaç gün).
+
 ### 💰 PARA SAYFALARI CANLI (2026-07-08) + hız/podcast fix'leri
 - ✅ **3 hizmet landing'i yayında** (prerendered, Service+FAQPage+Breadcrumb schema, `data/serviceFaqs.ts` tek kaynak): `/demartini-seansi` (0.95, "demartini istanbul/seansı/randevu/online"), `/deger-belirleme`, `/breakthrough-experience`. Footer + /demartini-yontemi iç bağlantıları. Fiyat yok, tıbbi iddia yok.
 - ✅ **"Site 10sn açılıyor" KÖK NEDENİ ÇÖZÜLDÜ:** supabasePublic aynı auth storageKey'i paylaşıyordu → panel sekmesi kilidi tüm içerik sorgularını 9.5sn kuyrukta bekletiyordu. `storageKey:'sb-reset-public'` izolasyonu → sorgular 9500ms→453ms (kullanıcı tarayıcısından ölçüldü).

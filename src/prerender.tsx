@@ -265,27 +265,18 @@ function blogSection(posts: BlogPost[]): string {
   return `<section aria-labelledby="yazilar"><h2 id="yazilar">Yazılar</h2>${items}</section>`;
 }
 
-// --- Tek gerçek yorum: dürüst Review JSON-LD (AggregateRating YOK: self-serving) ---
+// --- Tek gerçek yorum: yalnız GÖRÜNÜR HTML, Review JSON-LD YOK.
+// Search Console kritik hatası (2026-07-09): itemReviewed=Person, yorum
+// snippet'i için geçersiz tür; ayrıca kendi sitesindeki kendi hizmetine Review
+// işaretlemesi Google'da "self-serving" sayılır ve zaten gösterilmez. Görünür
+// testimonial SEO/GEO değerini korur; schema'sız bırakmak tek doğru çözüm. ---
 function reviewSection(reviews: Review[]): string {
   const r = reviews.find((x) => x.text && (x.rating ?? 0) > 0);
   if (!r) return "";
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Review",
-    itemReviewed: {
-      "@type": "Person",
-      name: "Şafak Özkan",
-      url: `${siteUrl}/about`,
-    },
-    author: { "@type": "Person", name: r.name },
-    reviewRating: { "@type": "Rating", ratingValue: r.rating, bestRating: 5, worstRating: 1 },
-    reviewBody: r.text,
-    datePublished: r.date || undefined,
-  };
-  const html =
+  return (
     `<section aria-labelledby="yorum"><h2 id="yorum">Danışan Deneyimi</h2>` +
-    `<blockquote><p>${esc(r.text || "")}</p><cite>${esc(r.name)}</cite></blockquote></section>`;
-  return html + `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>`;
+    `<blockquote><p>${esc(r.text || "")}</p><cite>${esc(r.name)}</cite></blockquote></section>`
+  );
 }
 
 // Route'a göre statik, taranabilir gövde. React (createRoot) mount olunca değişir.
