@@ -96,6 +96,13 @@ Canlı doğrulandı: itemReviewed=0, görünür yorum ✓. **ERDİ:** GSC'de sor
 
 ---
 
+## 🗓️ 2026-07-09 (2. tur): CI yeşil + güvenlik hijyeni (git d381cdc)
+- [x] ✅ CI kırmızı→yeşil: finance/service.ts 2x no-empty (boş catch) + kolay unused-vars; lint 0 error (57 warning kaldı, çoğu `any`)
+- [x] ✅ Admin şifresi düz metin repo'dan çıkarıldı: DELIVERY_CHECKLIST + 2 Playwright spec → ADMIN_EMAIL/ADMIN_PASSWORD env (yoksa skip); STATUS.md redakte. Şifre history'de görünür → gerçek koruma ROTASYON (kullanıcı aksiyonu).
+- [x] ✅ testsprite_tests/ untrack edildi (gitignore'daydı ama izliydi); AuthContext @testsprite.com arka kapı koşulları kaldırıldı
+- [x] ✅ gitleaks: 60 commit history TEMİZ (3 Tem purge tuttu); working-tree 5 bulgu = yalnız anon key (public by design, gitignore'lu dosyalar)
+- [x] .supabase-token dosyası silinmiş — Supabase'den token İPTALİ hâlâ kullanıcıda
+
 ## Faz durumu
 
 ### 🔴 FAZ 0 — Güvenlik (repo PUBLIC olduğu için acil)
