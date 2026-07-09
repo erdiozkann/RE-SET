@@ -9,6 +9,7 @@ import {
 import { mdToHtml } from "./lib/markdown";
 import { optimizedImage } from "./lib/img";
 import { ROUTE_META, ROUTE_HEADING, SITE_URL, type RouteMeta } from "./lib/routeMeta";
+import { slugify } from "./lib/slug";
 
 const siteUrl = SITE_URL;
 
@@ -257,7 +258,7 @@ function blogSection(posts: BlogPost[]): string {
   const items = posts
     .map(
       (p) =>
-        `<article><h3><a href="/blog/${esc(p.id)}">${esc(p.title)}</a></h3>` +
+        `<article><h3><a href="/blog/${slugify(p.title)}">${esc(p.title)}</a></h3>` +
         (p.excerpt ? `<p>${esc(p.excerpt)}</p>` : "") +
         `</article>`,
     )
@@ -318,6 +319,8 @@ type DynData = {
   reviews: Review[];
   heroImage: string | null;
   pageByPath: Map<string, SitePageRow>;
+  // Eski UUID blog path'i → yeni slug path'i (canonical devri için)
+  canonicalOverride: Map<string, string>;
 };
 
 let dynamicCache: DynData | null = null;
@@ -325,7 +328,7 @@ let dynamicCache: DynData | null = null;
 async function loadDynamicData(): Promise<DynData> {
   if (dynamicCache) return dynamicCache;
 
-  const data: DynData = { meta: new Map(), posts: [], postByPath: new Map(), videos: [], podcasts: [], reviews: [], heroImage: null, pageByPath: new Map() };
+  const data: DynData = { meta: new Map(), posts: [], postByPath: new Map(), videos: [], podcasts: [], reviews: [], heroImage: null, pageByPath: new Map(), canonicalOverride: new Map() };
   // vite build sırasında import.meta.env değerleri statik olarak gömülür;
   // process.env prerender SSR bağlamında boş olduğu için ona güvenilmez.
   const url = import.meta.env.VITE_SUPABASE_URL || process.env.VITE_SUPABASE_URL;
@@ -354,14 +357,23 @@ async function loadDynamicData(): Promise<DynData> {
     if (postsRes.data) {
       data.posts = postsRes.data as BlogPost[];
       for (const post of data.posts) {
-        const path = `/blog/${post.id}`;
-        data.postByPath.set(path, post);
-        data.meta.set(path, {
+        const meta = {
           title: `${post.title} | RE-SET Blog`,
           description:
             post.excerpt ||
             "Demartini Metodu ve kişisel dönüşüm üzerine RE-SET blog yazısı.",
-        });
+        };
+        // YENİ kanonik URL: başlıktan türeyen slug (/blog/john-demartini-kimdir...)
+        const slugPath = `/blog/${slugify(post.title)}`;
+        data.postByPath.set(slugPath, post);
+        data.meta.set(slugPath, meta);
+        // ESKİ UUID URL'leri de prerender edilir (10 yazı Google'da indeksli) ama
+        // canonical'ları slug'a işaret eder → Google indeksi yeni URL'e devreder,
+        // eski linkler kırılmaz. Client tarafı da UUID'yi slug'a replace-redirect eder.
+        const uuidPath = `/blog/${post.id}`;
+        data.postByPath.set(uuidPath, post);
+        data.meta.set(uuidPath, meta);
+        data.canonicalOverride.set(uuidPath, slugPath);
       }
     }
     if (videosRes.data) data.videos = videosRes.data as Video[];
@@ -391,7 +403,10 @@ export async function prerender({ ssr, url }: { ssr: boolean; url: string }) {
   const dynamic = await loadDynamicData();
   const meta = staticMeta[url] || dynamic.meta.get(url) || staticMeta["/"];
 
-  const canonical = `${siteUrl}${url === "/" ? "/" : url}`;
+  // Eski UUID blog URL'lerinde canonical yeni slug URL'ine işaret eder
+  // (indeks devri); diğer tüm sayfalarda kendi URL'i.
+  const canonicalPath = dynamic.canonicalOverride.get(url) || url;
+  const canonical = `${siteUrl}${canonicalPath === "/" ? "/" : canonicalPath}`;
   const title = meta.title;
   const description = meta.description;
 

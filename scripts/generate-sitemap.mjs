@@ -46,7 +46,7 @@ async function generate() {
   // 2. Fetch Dynamic Blog Posts from Supabase
   const { data: posts, error } = await supabase
     .from('blog_posts')
-    .select('id, date')
+    .select('id, title, date')
     .eq('status', 'published') // only published posts
     .order('date', { ascending: false });
 
@@ -55,8 +55,16 @@ async function generate() {
     process.exit(1);
   }
 
+  // Slug, src/lib/slug.ts ile AYNI kural (başlıktan türetilir) — sitemap yalnız
+  // yeni slug URL'lerini listeler; eski UUID sayfaları canonical ile devrediyor.
+  const TR = { 'ç':'c','Ç':'c','ğ':'g','Ğ':'g','ı':'i','I':'i','İ':'i','ö':'o','Ö':'o','ş':'s','Ş':'s','ü':'u','Ü':'u' };
+  const slugify = (t) => (t || '')
+    .split('').map((ch) => TR[ch] ?? ch).join('')
+    .toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 80).replace(/-+$/g, '');
+
   const blogPages = posts.map(post => ({
-    loc: `/blog/${post.id}`,
+    loc: `/blog/${slugify(post.title)}`,
     lastmod: post.date,
     changefreq: 'monthly',
     priority: '0.8'

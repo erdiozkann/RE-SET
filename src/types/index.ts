@@ -279,6 +279,8 @@ export interface Method {
 
 export interface BlogPost {
   id: string;
+  /** Başlıktan türetilir (lib/slug.ts) — URL: /blog/<slug> */
+  slug: string;
   title: string;
   excerpt: string;
   content: string;

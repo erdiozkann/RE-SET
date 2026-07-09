@@ -5,6 +5,7 @@ import { blogApi } from '../../../lib/api';
 import SEO from '../../../components/SEO';
 import { mdToHtml } from '../../../lib/markdown';
 import { optimizedImage } from '../../../lib/img';
+import { isUuid } from '../../../lib/slug';
 import type { BlogPost } from '../../../types';
 
 export default function BlogDetailPage() {
@@ -21,10 +22,16 @@ export default function BlogDetailPage() {
     }
     const loadPost = async () => {
       try {
-        const data = await blogApi.getById(id);
+        // URL slug (yeni) veya UUID (eski, indeksli linkler) olabilir.
+        // UUID gelirse yazıyı bulup kalıcı olarak slug URL'ine taşırız
+        // (replace → tarayıcı geçmişinde eski URL kalmaz).
+        const data = isUuid(id) ? await blogApi.getById(id) : await blogApi.getBySlug(id);
         // Taslak/yayınlanmamış yazılar public'te 404 gibi davranır (sızıntı yok).
         if (!data || data.status !== 'published') {
           setNotFound(true);
+        } else if (isUuid(id)) {
+          navigate(`/blog/${data.slug}`, { replace: true });
+          return;
         } else {
           setPost(data);
         }
@@ -80,7 +87,7 @@ export default function BlogDetailPage() {
   }
 
   const siteUrl = 'https://re-set.com.tr';
-  const articleUrl = `${siteUrl}/blog/${post.id}`;
+  const articleUrl = `${siteUrl}/blog/${post.slug}`;
 
   const schema = [
     {
@@ -155,7 +162,7 @@ export default function BlogDetailPage() {
       <SEO
         title={`${post.title} | Blog`}
         description={post.excerpt}
-        canonical={`/blog/${post.id}`}
+        canonical={`/blog/${post.slug}`}
         ogImage={post.image || undefined}
         ogType="article"
         schema={schema}

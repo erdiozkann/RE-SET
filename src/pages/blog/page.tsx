@@ -125,7 +125,7 @@ export default function Blog() {
             </h2>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {featuredPosts.map((post) => (
-                <Link key={post.id} to={`/blog/${post.id}`} className="group block">
+                <Link key={post.id} to={`/blog/${post.slug}`} className="group block">
                   <article>
                     <div className="aspect-video rounded-xl overflow-hidden mb-4 bg-gray-100 flex items-center justify-center">
                       {post.image ? (
@@ -179,7 +179,7 @@ export default function Blog() {
           ) : filteredPosts.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredPosts.map((post) => (
-                <Link key={post.id} to={`/blog/${post.id}`} className="group block">
+                <Link key={post.id} to={`/blog/${post.slug}`} className="group block">
                   <article>
                     <div className="aspect-video rounded-xl overflow-hidden mb-4 bg-gray-100 flex items-center justify-center">
                       {post.image ? (

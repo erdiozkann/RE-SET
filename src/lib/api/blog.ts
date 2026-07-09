@@ -1,6 +1,7 @@
 import { supabase, supabasePublic } from '../supabase';
 import type { BlogPost } from '../../types';
 import { registerCacheClearer, withTimeout } from './_cache';
+import { slugify } from '../slug';
 
 let blogPostsCache: BlogPost[] | null = null;
 registerCacheClearer(() => {
@@ -9,6 +10,7 @@ registerCacheClearer(() => {
 
 const rowToPost = (row: Record<string, unknown>): BlogPost => ({
   id: row.id as string,
+  slug: slugify(row.title as string),
   title: row.title as string,
   excerpt: row.excerpt as string,
   content: row.content as string,
@@ -105,6 +107,13 @@ export const blogApi = {
     }
     if (!data) return null;
     return rowToPost(data);
+  },
+
+  // Slug başlıktan türetildiği için DB'de slug kolonu yok → yayınlanmış
+  // yazıları çekip slug eşleşmesi ararız (liste zaten cache'li, ucuz).
+  async getBySlug(slug: string): Promise<BlogPost | null> {
+    const all = await this.getAll();
+    return all.find((p) => p.slug === slug) || null;
   },
 
   async delete(id: string): Promise<boolean> {
