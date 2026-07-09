@@ -1,3 +1,4 @@
+import { confirmDialog } from '../../../components/ConfirmDialog';
 import { useState, useEffect, useCallback } from 'react';
 import { reviewsApi } from '../../../lib/api';
 import { useToast } from '../../../components/ToastContainer';
@@ -75,7 +76,7 @@ export default function ReviewsTab() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Bu yorumu silmek istediğinizden emin misiniz?')) return;
+    if (!await confirmDialog('Bu yorumu silmek istediğinizden emin misiniz?')) return;
 
     try {
       await reviewsApi.delete(id);

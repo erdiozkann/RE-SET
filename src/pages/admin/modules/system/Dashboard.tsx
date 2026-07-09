@@ -157,14 +157,14 @@ export default function DashboardTab() {
           <h3 className="text-sm font-medium text-green-900 mt-2">Bu Hafta</h3>
         </div>
 
-        <div className="bg-gradient-to-br from-teal-50 to-teal-100 rounded-2xl p-5">
+        <div className="bg-gradient-to-br from-stone-50 to-stone-100 rounded-2xl p-5">
           <div className="flex items-center justify-between">
-            <div className="w-11 h-11 bg-teal-500 rounded-xl flex items-center justify-center">
+            <div className="w-11 h-11 bg-stone-500 rounded-xl flex items-center justify-center">
               <i className="ri-check-double-line text-xl text-white"></i>
             </div>
-            <span className="text-3xl font-bold text-teal-800">{stats.confirmed}</span>
+            <span className="text-3xl font-bold text-[#8B6F1A]">{stats.confirmed}</span>
           </div>
-          <h3 className="text-sm font-medium text-teal-900 mt-2">Toplam Onaylı</h3>
+          <h3 className="text-sm font-medium text-[#6B5514] mt-2">Toplam Onaylı</h3>
         </div>
       </div>
 

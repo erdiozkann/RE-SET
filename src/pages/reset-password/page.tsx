@@ -95,8 +95,8 @@ export default function ResetPasswordPage() {
     // Session kontrol ediliyor
     if (checkingSession) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-amber-50 flex items-center justify-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-teal-600"></div>
+            <div className="min-h-screen bg-gradient-to-br from-stone-50 via-white to-amber-50 flex items-center justify-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#D4AF37]"></div>
             </div>
         );
     }
@@ -110,7 +110,7 @@ export default function ResetPasswordPage() {
                     description="Şifre sıfırlama linki geçersiz veya süresi dolmuş."
                     noindex
                 />
-                <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-amber-50 flex items-center justify-center px-4 py-12">
+                <div className="min-h-screen bg-gradient-to-br from-stone-50 via-white to-amber-50 flex items-center justify-center px-4 py-12">
                     <div className="w-full max-w-md">
                         <div className="bg-white rounded-2xl shadow-xl p-8 text-center">
                             <div className="inline-flex items-center justify-center w-16 h-16 bg-red-100 rounded-full mb-4">
@@ -122,7 +122,7 @@ export default function ResetPasswordPage() {
                             </p>
                             <Link
                                 to="/login"
-                                className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-teal-500 to-teal-600 text-white px-6 py-3 rounded-lg font-medium hover:from-teal-600 hover:to-teal-700 transition-all"
+                                className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-stone-500 to-[#C19B2E] text-white px-6 py-3 rounded-lg font-medium hover:from-[#C19B2E] hover:to-[#B08D28] transition-all"
                             >
                                 <i className="ri-arrow-left-line"></i>
                                 <span>Giriş Sayfasına Dön</span>
@@ -142,12 +142,12 @@ export default function ResetPasswordPage() {
                 noindex
             />
 
-            <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-amber-50 flex items-center justify-center px-4 py-12">
+            <div className="min-h-screen bg-gradient-to-br from-stone-50 via-white to-amber-50 flex items-center justify-center px-4 py-12">
                 <div className="w-full max-w-md">
                     <div className="bg-white rounded-2xl shadow-xl p-8">
                         {/* Logo ve Başlık */}
                         <div className="text-center mb-8">
-                            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-teal-500 to-teal-600 rounded-2xl mb-4">
+                            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-stone-500 to-[#C19B2E] rounded-2xl mb-4">
                                 <i className="ri-lock-password-line text-3xl text-white"></i>
                             </div>
                             <h1 className="text-2xl font-bold text-gray-900 mb-2">Yeni Şifre Belirle</h1>
@@ -169,7 +169,7 @@ export default function ResetPasswordPage() {
                                         id="password"
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
-                                        className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all text-sm"
+                                        className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent transition-all text-sm"
                                         placeholder="En az 6 karakter"
                                         required
                                         minLength={6}
@@ -192,7 +192,7 @@ export default function ResetPasswordPage() {
                                         id="confirmPassword"
                                         value={confirmPassword}
                                         onChange={(e) => setConfirmPassword(e.target.value)}
-                                        className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all text-sm"
+                                        className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent transition-all text-sm"
                                         placeholder="Şifrenizi tekrar girin"
                                         required
                                         minLength={6}
@@ -204,7 +204,7 @@ export default function ResetPasswordPage() {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="w-full bg-gradient-to-r from-teal-500 to-teal-600 text-white py-3 rounded-lg font-medium hover:from-teal-600 hover:to-teal-700 transition-all duration-200 shadow-lg shadow-teal-500/30 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                                className="w-full bg-gradient-to-r from-stone-500 to-[#C19B2E] text-white py-3 rounded-lg font-medium hover:from-[#C19B2E] hover:to-[#B08D28] transition-all duration-200 shadow-lg shadow-[#D4AF37]/30 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                             >
                                 {loading ? (
                                     <>

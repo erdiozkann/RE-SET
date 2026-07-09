@@ -3,6 +3,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { AppRoutes } from './router';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { ToastProvider } from './components/ToastContainer';
+import { ConfirmDialogHost } from './components/ConfirmDialog';
 import { AuthProvider } from './contexts/AuthContext';
 import ScrollToTop from './components/ScrollToTop';
 
@@ -11,6 +12,7 @@ function App() {
     <ErrorBoundary>
       <AuthProvider>
         <ToastProvider>
+          <ConfirmDialogHost />
           <BrowserRouter basename="/">
             <ScrollToTop />
             <Suspense fallback={

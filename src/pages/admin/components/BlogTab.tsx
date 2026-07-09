@@ -1,3 +1,4 @@
+import { confirmDialog } from '../../../components/ConfirmDialog';
 import { useEffect, useMemo, useState, useRef, useCallback } from 'react';
 import { blogApi, storageApi } from '../../../lib/api';
 import { useToast } from '../../../components/ToastContainer';
@@ -82,7 +83,7 @@ export default function BlogTab() {
   };
 
   const handleDelete = async (post: BlogPost) => {
-    if (!confirm(`"${post.title}" yazısını silmek istiyor musunuz?`)) return;
+    if (!await confirmDialog(`"${post.title}" yazısını silmek istiyor musunuz?`)) return;
     try {
       await blogApi.delete(post.id);
       toast.success('Blog yazısı silindi');

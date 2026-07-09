@@ -112,8 +112,8 @@ export default function AccountsTab() {
           label: 'Toplam Danışan',
           value: stats.total,
           icon: 'ri-team-line',
-          bg: 'bg-teal-50',
-          color: 'text-teal-700'
+          bg: 'bg-stone-50',
+          color: 'text-[#8B6F1A]'
         }, {
           label: 'Telefon Paylaşanlar',
           value: stats.withPhone,

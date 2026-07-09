@@ -1,3 +1,4 @@
+import { confirmDialog } from '../../../components/ConfirmDialog';
 import { useState, useEffect, useCallback } from 'react';
 import type { AdAccount, AdCampaign, AdMetrics, AdConversion, AdROISummary } from '../../../types';
 import { adAccountsApi, adCampaignsApi, adMetricsApi, adConversionsApi, adROISummaryApi } from '../../../lib/api';
@@ -535,7 +536,7 @@ export default function AdsTab() {
   };
 
   const handleDeleteAccount = async (id: string) => {
-    if (!window.confirm('Bu hesabı silmek istediğinizden emin misiniz?')) return;
+    if (!await confirmDialog('Bu hesabı silmek istediğinizden emin misiniz?')) return;
 
     try {
       await adAccountsApi.delete(id);

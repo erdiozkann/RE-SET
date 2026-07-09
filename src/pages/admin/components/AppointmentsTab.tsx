@@ -1,3 +1,4 @@
+import { confirmDialog } from '../../../components/ConfirmDialog';
 import { useState, useEffect, useCallback } from 'react';
 import { appointmentsApi } from '../../../lib/api';
 import { useToast } from '../../../components/ToastContainer';
@@ -39,7 +40,7 @@ export default function AppointmentsTab() {
   };
 
   const handleCancel = async (id: string) => {
-    if (confirm('Bu randevuyu iptal etmek istediğinizden emin misiniz?')) {
+    if (await confirmDialog('Bu randevuyu iptal etmek istediğinizden emin misiniz?')) {
       try {
         await appointmentsApi.update(id, { status: 'CANCELLED' });
         toast.success('Randevu iptal edildi');
@@ -116,7 +117,7 @@ export default function AppointmentsTab() {
                 <tr>
                   <td colSpan={7} className="px-6 py-8 text-center text-gray-500">
                     <div className="flex items-center justify-center gap-2">
-                      <div className="w-5 h-5 border-2 border-teal-600 border-t-transparent rounded-full animate-spin"></div>
+                      <div className="w-5 h-5 border-2 border-[#D4AF37] border-t-transparent rounded-full animate-spin"></div>
                       <span>Yükleniyor...</span>
                     </div>
                   </td>

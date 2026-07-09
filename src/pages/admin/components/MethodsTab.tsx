@@ -1,3 +1,4 @@
+import { confirmDialog } from '../../../components/ConfirmDialog';
 
 import { useState, useEffect, useCallback } from 'react';
 import { methodsApi } from '../../../lib/api';
@@ -105,7 +106,7 @@ export default function MethodsTab() {
   };
 
   const handleDelete = async (id: string) => {
-    if (confirm('Bu yöntemi silmek istediğinizden emin misiniz?')) {
+    if (await confirmDialog('Bu yöntemi silmek istediğinizden emin misiniz?')) {
       try {
         await methodsApi.delete(id);
         toast.success('Yöntem başarılı şekilde silindi');

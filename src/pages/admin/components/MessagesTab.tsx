@@ -1,3 +1,4 @@
+import { confirmDialog } from '../../../components/ConfirmDialog';
 import { useState, useEffect, useCallback } from 'react';
 import { messagesApi } from '../../../lib/api';
 import { useToast } from '../../../components/ToastContainer';
@@ -47,7 +48,7 @@ export default function MessagesTab() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Bu mesajı silmek istediğinizden emin misiniz?')) return;
+    if (!await confirmDialog('Bu mesajı silmek istediğinizden emin misiniz?')) return;
 
     try {
       await messagesApi.delete(id);

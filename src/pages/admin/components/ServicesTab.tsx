@@ -1,3 +1,4 @@
+import { confirmDialog } from '../../../components/ConfirmDialog';
 
 import { useState, useEffect, useCallback } from 'react';
 import { servicesApi } from '../../../lib/api';
@@ -52,7 +53,7 @@ export default function ServicesTab() {
   };
 
   const handleDelete = async (id: string) => {
-    if (confirm('Bu hizmeti silmek istediğinizden emin misiniz?')) {
+    if (await confirmDialog('Bu hizmeti silmek istediğinizden emin misiniz?')) {
       try {
         await servicesApi.delete(id);
         await loadServices();

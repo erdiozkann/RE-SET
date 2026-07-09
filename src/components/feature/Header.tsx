@@ -51,7 +51,7 @@ export default function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-8">
+          <nav className="hidden xl:flex items-center space-x-8">
             {navLinks.map((link) => (
               <Link
                 key={link.path}
@@ -88,7 +88,7 @@ export default function Header() {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden w-10 h-10 flex items-center justify-center cursor-pointer"
+            className="xl:hidden w-10 h-10 flex items-center justify-center cursor-pointer"
             aria-label={mobileMenuOpen ? 'Menüyü kapat' : 'Menüyü aç'}
             aria-expanded={mobileMenuOpen}
             aria-controls="mobile-menu"
@@ -100,7 +100,7 @@ export default function Header() {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div id="mobile-menu" className="lg:hidden bg-white border-t border-gray-200">
+        <div id="mobile-menu" className="xl:hidden bg-white border-t border-gray-200">
           <nav className="px-4 py-4 space-y-3">
             {navLinks.map((link) => (
               <Link

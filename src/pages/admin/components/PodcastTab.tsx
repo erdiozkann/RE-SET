@@ -1,3 +1,4 @@
+import { confirmDialog } from '../../../components/ConfirmDialog';
 import { useEffect, useMemo, useState, useRef, useCallback } from 'react';
 import { podcastApi, storageApi } from '../../../lib/api';
 import { useToast } from '../../../components/ToastContainer';
@@ -70,7 +71,7 @@ export default function PodcastTab() {
   };
 
   const handleDelete = async (episode: PodcastEpisode) => {
-    if (!confirm(`"${episode.title}" bölümünü silmek istiyor musunuz?`)) return;
+    if (!await confirmDialog(`"${episode.title}" bölümünü silmek istiyor musunuz?`)) return;
     try {
       await podcastApi.delete(episode.id);
       toast.success('Podcast bölümü silindi');

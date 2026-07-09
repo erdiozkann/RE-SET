@@ -1,3 +1,4 @@
+import { confirmDialog } from '../../../components/ConfirmDialog';
 import { useEffect, useState } from 'react';
 import { useToast } from '../../../components/ToastContainer';
 import { sitePagesApi } from '../../../lib/api';
@@ -80,7 +81,7 @@ export default function PagesTab() {
   };
 
   const del = async (p: SitePage) => {
-    if (!confirm(`"${p.title}" sayfasını silmek istiyor musunuz?`)) return;
+    if (!await confirmDialog(`"${p.title}" sayfasını silmek istiyor musunuz?`)) return;
     try {
       await sitePagesApi.remove(p.id);
       await load();

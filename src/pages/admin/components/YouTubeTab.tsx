@@ -1,3 +1,4 @@
+import { confirmDialog } from '../../../components/ConfirmDialog';
 import { useState, useEffect, useCallback } from 'react';
 import { youtubeApi } from '../../../lib/api';
 import { useToast } from '../../../components/ToastContainer';
@@ -86,7 +87,7 @@ export default function YouTubeTab() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Bu videoyu silmek istediğinize emin misiniz?')) return;
+    if (!await confirmDialog('Bu videoyu silmek istediğinize emin misiniz?')) return;
 
     try {
       await youtubeApi.delete(id);

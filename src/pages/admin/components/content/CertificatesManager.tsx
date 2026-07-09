@@ -1,3 +1,4 @@
+import { confirmDialog } from '../../../../components/ConfirmDialog';
 import { useState, useEffect, useCallback } from 'react';
 import { certificatesApi } from '../../../../lib/api';
 import { useToast } from '../../../../components/ToastContainer';
@@ -69,7 +70,7 @@ export default function CertificatesManager() {
     };
 
     const handleDeleteCert = async (id: string) => {
-        if (confirm('Bu sertifikayı silmek istediğinizden emin misiniz?')) {
+        if (await confirmDialog('Bu sertifikayı silmek istediğinizden emin misiniz?')) {
             try {
                 await certificatesApi.delete(id);
                 await loadCertificates();

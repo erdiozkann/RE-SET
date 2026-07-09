@@ -1,3 +1,4 @@
+import { confirmDialog } from '../../../components/ConfirmDialog';
 import { useState, useEffect, useCallback } from 'react';
 import { progressApi, clientsApi } from '../../../lib/api';
 import { useToast } from '../../../components/ToastContainer';
@@ -157,7 +158,7 @@ export default function ProgressTab() {
   };
 
   const handleDeleteRecord = async (id: string) => {
-    if (!confirm('Bu ilerleme kaydını silmek istediğinizden emin misiniz?')) {
+    if (!await confirmDialog('Bu ilerleme kaydını silmek istediğinizden emin misiniz?')) {
       return;
     }
 

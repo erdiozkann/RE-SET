@@ -212,7 +212,7 @@ export default function ClientPanelPage() {
         />
         <div className="min-h-screen bg-gray-50 flex items-center justify-center">
           <div className="text-center">
-            <div className="w-16 h-16 border-4 border-teal-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <div className="w-16 h-16 border-4 border-[#D4AF37] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
             <p className="text-gray-600">Yükleniyor...</p>
           </div>
         </div>
@@ -254,7 +254,7 @@ export default function ClientPanelPage() {
               <button
                 onClick={() => setActiveTab('panel')}
                 className={`flex-1 px-6 py-4 font-medium transition-colors cursor-pointer ${activeTab === 'panel'
-                  ? 'text-teal-600 border-b-2 border-teal-600'
+                  ? 'text-[#8B6F1A] border-b-2 border-[#D4AF37]'
                   : 'text-gray-600 hover:text-gray-900'
                   }`}
               >
@@ -264,7 +264,7 @@ export default function ClientPanelPage() {
               <button
                 onClick={() => setActiveTab('progress')}
                 className={`flex-1 px-6 py-4 font-medium transition-colors cursor-pointer ${activeTab === 'progress'
-                  ? 'text-teal-600 border-b-2 border-teal-600'
+                  ? 'text-[#8B6F1A] border-b-2 border-[#D4AF37]'
                   : 'text-gray-600 hover:text-gray-900'
                   }`}
               >
@@ -283,8 +283,8 @@ export default function ClientPanelPage() {
                   onClick={() => navigate('/booking')}
                   className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow text-left cursor-pointer"
                 >
-                  <div className="w-12 h-12 bg-teal-50 rounded-lg flex items-center justify-center mb-4">
-                    <i className="ri-calendar-line text-2xl text-teal-600"></i>
+                  <div className="w-12 h-12 bg-stone-50 rounded-lg flex items-center justify-center mb-4">
+                    <i className="ri-calendar-line text-2xl text-[#8B6F1A]"></i>
                   </div>
                   <h3 className="font-semibold text-gray-900 mb-1">Randevu Al</h3>
                   <p className="text-sm text-gray-600">Yeni randevu oluştur</p>
@@ -340,7 +340,7 @@ export default function ClientPanelPage() {
                               className="text-3xl transition-colors cursor-pointer"
                             >
                               <i
-                                className={`${star <= rating ? 'ri-star-fill text-teal-600' : 'ri-star-line text-gray-300'
+                                className={`${star <= rating ? 'ri-star-fill text-[#8B6F1A]' : 'ri-star-line text-gray-300'
                                   }`}
                               ></i>
                             </button>
@@ -357,7 +357,7 @@ export default function ClientPanelPage() {
                           onChange={(e) => setReviewText(e.target.value)}
                           rows={4}
                           maxLength={500}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent resize-none"
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent resize-none"
                           placeholder="Deneyiminizi paylaşın..."
                         />
                         <p className="text-xs text-gray-500 mt-1">{reviewText.length}/500 karakter</p>
@@ -365,7 +365,7 @@ export default function ClientPanelPage() {
 
                       <button
                         onClick={handleSubmitReview}
-                        className="w-full px-6 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors whitespace-nowrap cursor-pointer"
+                        className="w-full px-6 py-3 bg-[#D4AF37] text-white rounded-lg hover:bg-[#C19B2E] transition-colors whitespace-nowrap cursor-pointer"
                       >
                         Gönder
                       </button>
@@ -473,7 +473,7 @@ export default function ClientPanelPage() {
                             download={resource.type === 'PDF' ? `${resource.title}.txt` : undefined}
                             target={resource.type === 'LINK' ? '_blank' : undefined}
                             rel={resource.type === 'LINK' ? 'noopener noreferrer' : undefined}
-                            className="inline-flex items-center gap-1 text-sm text-teal-600 hover:text-teal-700 whitespace-nowrap cursor-pointer"
+                            className="inline-flex items-center gap-1 text-sm text-[#8B6F1A] hover:text-[#6B5514] whitespace-nowrap cursor-pointer"
                           >
                             <i className="ri-download-line"></i>
                             {resource.type === 'PDF' ? 'İndir' : 'Görüntüle'}
@@ -595,7 +595,7 @@ export default function ClientPanelPage() {
                     {/* Legend */}
                     <div className="flex flex-wrap justify-center gap-6 mt-4">
                       <div className="flex items-center gap-2">
-                        <div className="w-8 h-0.5 bg-teal-600"></div>
+                        <div className="w-8 h-0.5 bg-[#D4AF37]"></div>
                         <span className="text-sm text-gray-600">Duygusal Netlik</span>
                       </div>
                       <div className="flex items-center gap-2">
@@ -632,7 +632,7 @@ export default function ClientPanelPage() {
                             })}
                           </span>
                           <div className="flex gap-4 text-xs">
-                            <span className="text-teal-600">DN: {record.emotionalClarity ?? 0}/100</span>
+                            <span className="text-[#8B6F1A]">DN: {record.emotionalClarity ?? 0}/100</span>
                             <span className="text-[#1A1A1A]">ZN: {record.mentalClarity ?? 0}/100</span>
                             <span className="text-slate-500">M: {record.centeredness ?? 0}/100</span>
                           </div>

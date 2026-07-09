@@ -24,7 +24,8 @@ export default function ReviewsSlider() {
   }, []);
 
   useEffect(() => {
-    if (reviews.length === 0) return;
+    // Tek yorum varken slider davranışı yok (boş vitrin hissi + gereksiz timer)
+    if (reviews.length < 2) return;
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % reviews.length);
     }, 5000);
@@ -33,7 +34,7 @@ export default function ReviewsSlider() {
 
   if (loading) {
     return (
-      <div className="bg-gradient-to-br from-teal-50 to-white py-20">
+      <div className="bg-gradient-to-br from-stone-50 to-white py-20">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <div className="animate-pulse">
             <div className="h-8 bg-gray-200 rounded w-64 mx-auto mb-12"></div>
@@ -55,7 +56,7 @@ export default function ReviewsSlider() {
   const rating = Math.max(0, Math.min(5, Math.round(Number(review.rating) || 0)));
 
   return (
-    <div className="bg-gradient-to-br from-teal-50 to-white py-20">
+    <div className="bg-gradient-to-br from-stone-50 to-white py-20">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <h2 className="text-3xl md:text-4xl font-serif text-gray-900 mb-12">
           Danışanlarımızın Yorumları
@@ -74,20 +75,22 @@ export default function ReviewsSlider() {
           {rating > 0 && <span className="sr-only">{rating} / 5 yıldız</span>}
           <p className="text-xl text-gray-700 italic mb-6">"{review.text}"</p>
           <p className="text-lg font-semibold text-gray-900">{review.name}</p>
-          <div className="flex justify-center mt-8 space-x-2">
-            {reviews.map((_, index) => (
-              <button
-                key={index}
-                type="button"
-                onClick={() => setCurrentIndex(index)}
-                aria-label={`${index + 1}. yoruma git`}
-                aria-current={index === currentIndex ? 'true' : undefined}
-                className={`w-3 h-3 rounded-full transition-all ${
-                  index === currentIndex ? 'bg-teal-600 w-8' : 'bg-gray-300'
-                }`}
-              />
-            ))}
-          </div>
+          {reviews.length > 1 && (
+            <div className="flex justify-center mt-8 space-x-2">
+              {reviews.map((_, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  onClick={() => setCurrentIndex(index)}
+                  aria-label={`${index + 1}. yoruma git`}
+                  aria-current={index === currentIndex ? 'true' : undefined}
+                  className={`w-3 h-3 rounded-full transition-all ${
+                    index === currentIndex ? 'bg-[#D4AF37] w-8' : 'bg-gray-300'
+                  }`}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

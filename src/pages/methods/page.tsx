@@ -191,7 +191,7 @@ export default function MethodsPage() {
         schema={schema}
       />
 
-      <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-amber-50 py-12 md:py-16">
+      <div className="min-h-screen bg-gradient-to-br from-stone-50 via-white to-amber-50 py-12 md:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
             <h1 className="text-3xl md:text-4xl font-serif text-gray-900 mb-4">
@@ -215,7 +215,7 @@ export default function MethodsPage() {
                 <p className="text-gray-600 mb-4">Yöntemler yüklenemedi.</p>
                 <button
                   onClick={loadMethods}
-                  className="px-5 py-2.5 bg-teal-600 text-white font-medium rounded-lg hover:bg-teal-700 transition-colors focus:outline-none focus:ring-2 focus:ring-teal-600 focus:ring-offset-2"
+                  className="px-5 py-2.5 bg-[#D4AF37] text-white font-medium rounded-lg hover:bg-[#C19B2E] transition-colors focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:ring-offset-2"
                 >
                   Tekrar Dene
                 </button>
@@ -223,8 +223,8 @@ export default function MethodsPage() {
             ) : methods.length > 0 ? (
               methods.map((method) => (
                 <div key={method.id} className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow">
-                  <div className="w-16 h-16 bg-teal-100 rounded-2xl flex items-center justify-center mb-6">
-                    <i className={`${method.icon || 'ri-lightbulb-line'} text-3xl text-teal-600`}></i>
+                  <div className="w-16 h-16 bg-amber-100 rounded-2xl flex items-center justify-center mb-6">
+                    <i className={`${method.icon || 'ri-lightbulb-line'} text-3xl text-[#8B6F1A]`}></i>
                   </div>
                   <h3 className="text-2xl font-semibold text-gray-900 mb-4">{method.title}</h3>
                   <p className="text-gray-600 mb-4">{method.description}</p>
@@ -292,7 +292,7 @@ export default function MethodsPage() {
             </p>
             <div className="overflow-x-auto my-6 border border-gray-100 rounded-xl shadow-sm">
               <table className="min-w-full divide-y divide-gray-200 text-sm text-left">
-                <thead className="bg-teal-50/50 text-gray-900 font-semibold font-serif">
+                <thead className="bg-stone-50/50 text-gray-900 font-semibold font-serif">
                   <tr>
                     <th className="px-6 py-4">Özellik</th>
                     <th className="px-6 py-4">Geleneksel Psikoterapi / Koçluk</th>
@@ -303,22 +303,22 @@ export default function MethodsPage() {
                   <tr>
                     <td className="px-6 py-4 font-semibold text-gray-900">Süreç Odağı</td>
                     <td className="px-6 py-4">Sorun analizi, geçmiş travmaların tekrarlanması, tek taraflı kutupluluk çözümü.</td>
-                    <td className="px-6 py-4 text-teal-700 font-medium">Algısal dengeleme, kutuplulukları (beğeni/kızgınlık) eş zamanlı nötralize etme.</td>
+                    <td className="px-6 py-4 text-[#8B6F1A] font-medium">Algısal dengeleme, kutuplulukları (beğeni/kızgınlık) eş zamanlı nötralize etme.</td>
                   </tr>
                   <tr>
                     <td className="px-6 py-4 font-semibold text-gray-900">Zaman ve Hız</td>
                     <td className="px-6 py-4">Haftalar veya aylar sürebilen süreçler.</td>
-                    <td className="px-6 py-4 text-teal-700 font-medium">Yapılandırılmış 13 soru dizisiyle tek bir seansta hızlı duygusal yük çözümü.</td>
+                    <td className="px-6 py-4 text-[#8B6F1A] font-medium">Yapılandırılmış 13 soru dizisiyle tek bir seansta hızlı duygusal yük çözümü.</td>
                   </tr>
                   <tr>
                     <td className="px-6 py-4 font-semibold text-gray-900">Temel Amaç</td>
                     <td className="px-6 py-4">Davranışsal değişim veya baş etme mekanizması geliştirme.</td>
-                    <td className="px-6 py-4 text-teal-700 font-medium">Derin farkındalık, minnet, sevgi ve ilham alanını ortaya çıkarma.</td>
+                    <td className="px-6 py-4 text-[#8B6F1A] font-medium">Derin farkındalık, minnet, sevgi ve ilham alanını ortaya çıkarma.</td>
                   </tr>
                   <tr>
                     <td className="px-6 py-4 font-semibold text-gray-900">Yaklaşım Yapısı</td>
                     <td className="px-6 py-4">Bilişsel, duygusal veya davranışsal yönlendirmeler.</td>
-                    <td className="px-6 py-4 text-teal-700 font-medium">Adım adım kurgulanmış, sistematik ve yapılandırılmış sorgulama.</td>
+                    <td className="px-6 py-4 text-[#8B6F1A] font-medium">Adım adım kurgulanmış, sistematik ve yapılandırılmış sorgulama.</td>
                   </tr>
                 </tbody>
               </table>
@@ -357,19 +357,19 @@ export default function MethodsPage() {
             </h3>
             <ul className="list-disc list-inside text-gray-700 space-y-1 mb-3">
               <li>
-                <a href="/demartini-seansi" className="text-teal-700 underline hover:text-teal-900">
+                <a href="/demartini-seansi" className="text-[#8B6F1A] underline hover:text-[#6B5514]">
                   Demartini Seansı — İstanbul (Tarabya) &amp; Online
                 </a>
                 : yöntemin birebir uygulandığı 60–90 dk'lık çalışma.
               </li>
               <li>
-                <a href="/deger-belirleme" className="text-teal-700 underline hover:text-teal-900">
+                <a href="/deger-belirleme" className="text-[#8B6F1A] underline hover:text-[#6B5514]">
                   Değer Belirleme Süreci
                 </a>
                 : 13 soruyla gerçek değerler hiyerarşinizi keşfedin.
               </li>
               <li>
-                <a href="/breakthrough-experience" className="text-teal-700 underline hover:text-teal-900">
+                <a href="/breakthrough-experience" className="text-[#8B6F1A] underline hover:text-[#6B5514]">
                   Breakthrough Experience
                 </a>
                 : Dr. Demartini'nin 2 tam günlük amiral programı.
@@ -393,7 +393,7 @@ export default function MethodsPage() {
                 href="https://drdemartini.com/tr/demartini-method"
                 target="_blank"
                 rel="noopener noreferrer nofollow"
-                className="text-teal-600 hover:underline"
+                className="text-[#8B6F1A] hover:underline"
               >
                 drdemartini.com/tr/demartini-method
               </a>
@@ -429,13 +429,13 @@ export default function MethodsPage() {
               ].map((item, i) => (
                 <details
                   key={i}
-                  className="group bg-gradient-to-br from-gray-50 to-white rounded-xl border border-gray-200 open:border-teal-300 open:shadow-md transition-shadow"
+                  className="group bg-gradient-to-br from-gray-50 to-white rounded-xl border border-gray-200 open:border-[#D4AF37] open:shadow-md transition-shadow"
                 >
                   <summary className="cursor-pointer list-none px-5 py-4 flex items-center justify-between gap-4">
                     <h3 className="text-base md:text-lg font-semibold text-gray-900">
                       {item.q}
                     </h3>
-                    <i className="ri-add-line text-2xl text-teal-600 flex-shrink-0 group-open:rotate-45 transition-transform"></i>
+                    <i className="ri-add-line text-2xl text-[#8B6F1A] flex-shrink-0 group-open:rotate-45 transition-transform"></i>
                   </summary>
                   <div className="px-5 pb-5 pt-1">
                     <p className="text-sm md:text-base text-gray-700 leading-relaxed">
@@ -457,7 +457,7 @@ export default function MethodsPage() {
               </p>
               <a
                 href="/booking"
-                className="inline-block px-6 py-3 bg-gradient-to-r from-teal-500 to-teal-600 text-white rounded-full font-semibold hover:from-teal-600 hover:to-teal-700 transition-all shadow-lg text-sm md:text-base"
+                className="inline-block px-6 py-3 bg-gradient-to-r from-stone-500 to-[#C19B2E] text-white rounded-full font-semibold hover:from-[#C19B2E] hover:to-[#B08D28] transition-all shadow-lg text-sm md:text-base"
               >
                 Randevu Al
               </a>

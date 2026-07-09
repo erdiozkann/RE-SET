@@ -108,12 +108,12 @@ export default function LoginPage() {
         noindex
       />
 
-      <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-amber-50 flex items-center justify-center px-4 py-12">
+      <div className="min-h-screen bg-gradient-to-br from-stone-50 via-white to-amber-50 flex items-center justify-center px-4 py-12">
         <div className="w-full max-w-md">
           <div className="bg-white rounded-2xl shadow-xl p-8">
             {/* Logo ve Başlık */}
             <div className="text-center mb-8">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-teal-500 to-teal-600 rounded-2xl mb-4">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-stone-500 to-[#C19B2E] rounded-2xl mb-4">
                 <i className="ri-user-line text-3xl text-white"></i>
               </div>
                 <h1 className="text-2xl font-bold text-gray-900 mb-2">Giriş Yap</h1>
@@ -144,7 +144,7 @@ export default function LoginPage() {
                     id="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all text-sm"
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent transition-all text-sm"
                     placeholder="ornek@email.com"
                     required
                     disabled={loading}
@@ -165,7 +165,7 @@ export default function LoginPage() {
                     id="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all text-sm"
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent transition-all text-sm"
                     placeholder="••••••••"
                     required
                     disabled={loading}
@@ -181,7 +181,7 @@ export default function LoginPage() {
                     setResetEmail(email); // Mevcut email'i aktar
                     setShowResetModal(true);
                   }}
-                  className="text-sm text-teal-600 hover:text-teal-700 font-medium transition-colors"
+                  className="text-sm text-[#8B6F1A] hover:text-[#6B5514] font-medium transition-colors"
                 >
                   Şifremi Unuttum
                 </button>
@@ -190,7 +190,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-gradient-to-r from-teal-500 to-teal-600 text-white py-3 rounded-lg font-medium hover:from-teal-600 hover:to-teal-700 transition-all duration-200 shadow-lg shadow-teal-500/30 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 whitespace-nowrap"
+                className="w-full bg-gradient-to-r from-stone-500 to-[#C19B2E] text-white py-3 rounded-lg font-medium hover:from-[#C19B2E] hover:to-[#B08D28] transition-all duration-200 shadow-lg shadow-[#D4AF37]/30 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 whitespace-nowrap"
               >
                 {loading ? (
                   <>
@@ -212,7 +212,7 @@ export default function LoginPage() {
                 Hesabınız yok mu?{' '}
                 <Link
                   to="/register"
-                  className="text-teal-600 hover:text-teal-700 font-medium transition-colors"
+                  className="text-[#8B6F1A] hover:text-[#6B5514] font-medium transition-colors"
                 >
                   Kayıt Ol
                 </Link>
@@ -266,7 +266,7 @@ export default function LoginPage() {
                     id="resetEmail"
                     value={resetEmail}
                     onChange={(e) => setResetEmail(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all text-sm"
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent transition-all text-sm"
                     placeholder="ornek@email.com"
                     required
                     disabled={resetLoading}
@@ -287,7 +287,7 @@ export default function LoginPage() {
                 <button
                   type="submit"
                   disabled={resetLoading}
-                  className="flex-1 bg-gradient-to-r from-teal-500 to-teal-600 text-white py-3 rounded-lg font-medium hover:from-teal-600 hover:to-teal-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="flex-1 bg-gradient-to-r from-stone-500 to-[#C19B2E] text-white py-3 rounded-lg font-medium hover:from-[#C19B2E] hover:to-[#B08D28] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   {resetLoading ? (
                     <>

@@ -26,7 +26,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-teal-50 via-white to-amber-50 px-4">
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-stone-50 via-white to-amber-50 px-4">
           <div className="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full">
             <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <i className="ri-error-warning-line text-3xl text-red-600"></i>
@@ -39,7 +39,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
             </p>
             <button
               onClick={() => window.location.reload()}
-              className="w-full bg-teal-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-teal-700 transition-colors whitespace-nowrap"
+              className="w-full bg-[#D4AF37] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#C19B2E] transition-colors whitespace-nowrap"
             >
               Sayfayı Yenile
             </button>

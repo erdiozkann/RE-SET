@@ -141,7 +141,7 @@ export default function Blog() {
                       )}
                     </div>
 
-                    <p className="text-sm text-[#D4AF37] font-medium mb-2">{post.category}</p>
+                    <p className="text-sm text-[#8B6F1A] font-medium mb-2">{post.category}</p>
                     <h3 className="text-lg md:text-xl font-serif text-[#1A1A1A] mb-2 group-hover:text-[#D4AF37]">{post.title}</h3>
                     <p className="text-gray-600 mb-3 text-sm">{post.excerpt}</p>
                     <span className="text-xs text-gray-500">{formatDate(post.date)}</span>
@@ -195,7 +195,7 @@ export default function Blog() {
                       )}
                     </div>
 
-                    <p className="text-xs text-[#D4AF37] font-medium mb-2">{post.category}</p>
+                    <p className="text-xs text-[#8B6F1A] font-medium mb-2">{post.category}</p>
                     <h3 className="text-lg font-semibold text-[#1A1A1A] mb-2 group-hover:text-[#D4AF37] line-clamp-2">{post.title}</h3>
                     <p className="text-sm text-gray-600 mb-3 line-clamp-2">{post.excerpt}</p>
                     <span className="text-xs text-gray-500">{formatDate(post.date)}</span>

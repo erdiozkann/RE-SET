@@ -146,9 +146,9 @@ export default function About() {
 
   if (isLoading) {
     return (
-      <div className="py-16 flex items-center justify-center bg-gradient-to-br from-teal-50 via-white to-amber-50 h-screen">
+      <div className="py-16 flex items-center justify-center bg-gradient-to-br from-stone-50 via-white to-amber-50 h-screen">
         <div className="text-center">
-          <i className="ri-loader-4-line text-4xl text-teal-600 animate-spin mb-4"></i>
+          <i className="ri-loader-4-line text-4xl text-[#8B6F1A] animate-spin mb-4"></i>
           <p className="text-gray-600">Yükleniyor...</p>
         </div>
       </div>
@@ -157,7 +157,7 @@ export default function About() {
 
   if (loadError) {
     return (
-      <div className="py-16 flex items-center justify-center bg-gradient-to-br from-teal-50 via-white to-amber-50 h-screen px-4">
+      <div className="py-16 flex items-center justify-center bg-gradient-to-br from-stone-50 via-white to-amber-50 h-screen px-4">
         <div className="text-center max-w-md">
           <i className="ri-wifi-off-line text-5xl text-gray-300 mb-4"></i>
           <h2 className="text-xl font-serif text-gray-900 mb-2">Sayfa yüklenemedi</h2>
@@ -166,7 +166,7 @@ export default function About() {
           </p>
           <button
             onClick={fetchData}
-            className="px-6 py-3 bg-teal-600 text-white font-medium rounded-lg hover:bg-teal-700 transition-colors focus:outline-none focus:ring-2 focus:ring-teal-600 focus:ring-offset-2"
+            className="px-6 py-3 bg-[#D4AF37] text-white font-medium rounded-lg hover:bg-[#C19B2E] transition-colors focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:ring-offset-2"
           >
             Tekrar Dene
           </button>
@@ -213,7 +213,7 @@ export default function About() {
                       <img
                         src={heroImage}
                         alt="Şafak Özkan"
-                        className="w-full h-full object-cover object-center"
+                        className="w-full h-full object-cover object-top"
                         fetchPriority="high"
                       />
                     ) : (

@@ -63,7 +63,7 @@ export default function PrimordialPage() {
         schema={schema}
       />
 
-      <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-amber-50 py-12 md:py-16">
+      <div className="min-h-screen bg-gradient-to-br from-stone-50 via-white to-amber-50 py-12 md:py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
             <h1 className="text-3xl md:text-4xl font-serif text-gray-900 mb-4">

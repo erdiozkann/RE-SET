@@ -1,3 +1,4 @@
+import { confirmDialog } from '../../../components/ConfirmDialog';
 import { useState, useEffect, useCallback } from 'react';
 import { usersApi } from '../../../lib/api';
 import { useToast } from '../../../components/ToastContainer';
@@ -37,7 +38,7 @@ export default function PendingUsersTab() {
   };
 
   const handleReject = async (email: string) => {
-    if (!confirm(`${email} adresini reddetmek istediğinizden emin misiniz?`)) return;
+    if (!await confirmDialog(`${email} adresini reddetmek istediğinizden emin misiniz?`)) return;
 
     try {
       await usersApi.reject(email);

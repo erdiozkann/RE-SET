@@ -242,7 +242,7 @@ export default function HomePage() {
 
       {/* Hero Section — her zaman render olur (fallback ile), flaş yok */}
       {(
-        <section className="relative min-h-[90vh] flex items-start bg-gradient-to-br from-teal-50 via-white to-amber-50 overflow-hidden">
+        <section className="relative min-h-[90vh] flex items-start bg-gradient-to-br from-stone-50 via-white to-amber-50 overflow-hidden">
           {/* Hero Background Image with Progressive Loading */}
           {hero.image && (
             <div className="absolute inset-0 z-0">
@@ -337,8 +337,11 @@ export default function HomePage() {
               <div className="relative flex justify-center">
                 <div className="aspect-square w-full max-w-md rounded-2xl overflow-hidden shadow-xl bg-gray-100 flex items-center justify-center">
                   {aboutContent.image ? (
+                    /* Sunucu kare-kırpma YOK: Supabase resize=cover ORTADAN kırpar,
+                       portrede kafayı keser. Tam görsel gelir; CSS object-top üstü
+                       sabitler, taşan ALTTAN kırpılır → yüz daima görünür. */
                     <img
-                      src={optimizedImage(aboutContent.image, { width: 800, height: 800, resize: 'cover' })}
+                      src={optimizedImage(aboutContent.image, { width: 800 })}
                       alt="Şafak Özkan"
                       className="w-full h-full object-cover object-top"
                       loading="lazy"
@@ -395,7 +398,7 @@ export default function HomePage() {
               {methods.map((method) => (
                 <div
                   key={method.id}
-                  className="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-6 border border-gray-200 hover:border-[#D4AF37] hover:shadow-xl transition-all group"
+                  className="h-full bg-gradient-to-br from-gray-50 to-white rounded-2xl p-6 border border-gray-200 hover:border-[#D4AF37] hover:shadow-xl transition-all group"
                 >
                   {method.icon && (
                     <div className="w-14 h-14 bg-gradient-to-br from-[#D4AF37] to-[#C19B2E] rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
@@ -451,7 +454,7 @@ export default function HomePage() {
                 İnsan davranışı uzmanı Dr. John Demartini, 50+ yıllık araştırması üzerine kurmuştur.
               </p>
             </div>
-            <div className="bg-gradient-to-br from-teal-50 to-white p-5 rounded-2xl border border-teal-100">
+            <div className="bg-gradient-to-br from-stone-50 to-white p-5 rounded-2xl border border-stone-200">
               <h3 className="text-lg font-semibold text-[#1A1A1A] mb-2">Kimler için uygundur?</h3>
               <p className="text-sm text-gray-600 leading-relaxed">
                 İlişki çatışmaları, öz değer, kariyer kararsızlığı ve zorlu yaşam geçişleri yaşayan 18+ herkes için.
