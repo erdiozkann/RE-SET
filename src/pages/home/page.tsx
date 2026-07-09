@@ -335,22 +335,21 @@ export default function HomePage() {
                 </Link>
               </div>
               <div className="relative flex justify-center">
-                <div className="aspect-square w-full max-w-md rounded-2xl overflow-hidden shadow-xl bg-gray-100 flex items-center justify-center">
-                  {aboutContent.image ? (
-                    /* Sunucu kare-kırpma YOK: Supabase resize=cover ORTADAN kırpar,
-                       portrede kafayı keser. Tam görsel gelir; CSS object-top üstü
-                       sabitler, taşan ALTTAN kırpılır → yüz daima görünür. */
-                    <img
-                      src={optimizedImage(aboutContent.image, { width: 800 })}
-                      alt="Şafak Özkan"
-                      className="w-full h-full object-cover object-top"
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  ) : (
+                {/* KIRPMA YOK: panelden yüklenen görsel kendi oranında, olduğu
+                    gibi ortalanır (kare kutu dayatması kafa/kadraj kesiyordu). */}
+                {aboutContent.image ? (
+                  <img
+                    src={optimizedImage(aboutContent.image, { width: 800 })}
+                    alt="Şafak Özkan"
+                    className="w-full max-w-md h-auto rounded-2xl shadow-xl"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                ) : (
+                  <div className="aspect-square w-full max-w-md rounded-2xl bg-gray-100 flex items-center justify-center shadow-xl">
                     <i className="ri-user-smile-line text-6xl text-gray-300"></i>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>

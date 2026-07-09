@@ -208,12 +208,13 @@ export default function About() {
                   </Button>
                 </div>
                 <div className="relative flex justify-center">
-                  <div className="aspect-square w-full max-w-md rounded-2xl overflow-hidden bg-gray-100 flex items-center justify-center shadow-lg">
+                  {/* KIRPMA YOK: yüklenen görsel kendi oranında ortalanır */}
+                  <div className="w-full max-w-md flex items-center justify-center">
                     {heroImage ? (
                       <img
                         src={heroImage}
                         alt="Şafak Özkan"
-                        className="w-full h-full object-cover object-top"
+                        className="w-full h-auto rounded-2xl shadow-lg"
                         fetchPriority="high"
                       />
                     ) : (
