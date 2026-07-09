@@ -40,7 +40,7 @@ export default function AppointmentsTab() {
   };
 
   const handleCancel = async (id: string) => {
-    if (await confirmDialog('Bu randevuyu iptal etmek istediğinizden emin misiniz?')) {
+    if (await confirmDialog('Bu randevuyu iptal etmek istediğinizden emin misiniz?', 'Randevuyu İptal Et')) {
       try {
         await appointmentsApi.update(id, { status: 'CANCELLED' });
         toast.success('Randevu iptal edildi');

@@ -528,7 +528,7 @@ export default function ClientPanelPage() {
                       <path
                         d={createPath(chartData.map(d => d.emotionalClarity ?? 0))}
                         fill="none"
-                        stroke="#0d9488"
+                        stroke="#D4AF37"
                         strokeWidth="2"
                       />
                       {chartData.map((d, i) => (
@@ -537,7 +537,7 @@ export default function ClientPanelPage() {
                           cx={getXPosition(i, chartData.length)}
                           cy={getYPosition(d.emotionalClarity ?? 0)}
                           r="4"
-                          fill="#0d9488"
+                          fill="#D4AF37"
                         />
                       ))}
 

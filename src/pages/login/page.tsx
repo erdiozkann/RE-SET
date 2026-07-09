@@ -113,7 +113,7 @@ export default function LoginPage() {
           <div className="bg-white rounded-2xl shadow-xl p-8">
             {/* Logo ve Başlık */}
             <div className="text-center mb-8">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-stone-500 to-[#C19B2E] rounded-2xl mb-4">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-[#D4AF37] to-[#C19B2E] rounded-2xl mb-4">
                 <i className="ri-user-line text-3xl text-white"></i>
               </div>
                 <h1 className="text-2xl font-bold text-gray-900 mb-2">Giriş Yap</h1>
@@ -190,7 +190,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-gradient-to-r from-stone-500 to-[#C19B2E] text-white py-3 rounded-lg font-medium hover:from-[#C19B2E] hover:to-[#B08D28] transition-all duration-200 shadow-lg shadow-[#D4AF37]/30 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 whitespace-nowrap"
+                className="w-full bg-gradient-to-r from-[#D4AF37] to-[#C19B2E] text-white py-3 rounded-lg font-medium hover:from-[#C19B2E] hover:to-[#B08D28] transition-all duration-200 shadow-lg shadow-[#D4AF37]/30 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 whitespace-nowrap"
               >
                 {loading ? (
                   <>
@@ -287,7 +287,7 @@ export default function LoginPage() {
                 <button
                   type="submit"
                   disabled={resetLoading}
-                  className="flex-1 bg-gradient-to-r from-stone-500 to-[#C19B2E] text-white py-3 rounded-lg font-medium hover:from-[#C19B2E] hover:to-[#B08D28] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="flex-1 bg-gradient-to-r from-[#D4AF37] to-[#C19B2E] text-white py-3 rounded-lg font-medium hover:from-[#C19B2E] hover:to-[#B08D28] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   {resetLoading ? (
                     <>

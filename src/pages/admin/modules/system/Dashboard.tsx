@@ -159,7 +159,7 @@ export default function DashboardTab() {
 
         <div className="bg-gradient-to-br from-stone-50 to-stone-100 rounded-2xl p-5">
           <div className="flex items-center justify-between">
-            <div className="w-11 h-11 bg-stone-500 rounded-xl flex items-center justify-center">
+            <div className="w-11 h-11 bg-[#D4AF37] rounded-xl flex items-center justify-center">
               <i className="ri-check-double-line text-xl text-white"></i>
             </div>
             <span className="text-3xl font-bold text-[#8B6F1A]">{stats.confirmed}</span>

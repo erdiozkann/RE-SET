@@ -457,7 +457,7 @@ export default function MethodsPage() {
               </p>
               <a
                 href="/booking"
-                className="inline-block px-6 py-3 bg-gradient-to-r from-stone-500 to-[#C19B2E] text-white rounded-full font-semibold hover:from-[#C19B2E] hover:to-[#B08D28] transition-all shadow-lg text-sm md:text-base"
+                className="inline-block px-6 py-3 bg-gradient-to-r from-[#D4AF37] to-[#C19B2E] text-white rounded-full font-semibold hover:from-[#C19B2E] hover:to-[#B08D28] transition-all shadow-lg text-sm md:text-base"
               >
                 Randevu Al
               </a>

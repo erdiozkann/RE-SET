@@ -38,7 +38,7 @@ export default function PendingUsersTab() {
   };
 
   const handleReject = async (email: string) => {
-    if (!await confirmDialog(`${email} adresini reddetmek istediğinizden emin misiniz?`)) return;
+    if (!await confirmDialog(`${email} adresini reddetmek istediğinizden emin misiniz?`, 'Reddet')) return;
 
     try {
       await usersApi.reject(email);

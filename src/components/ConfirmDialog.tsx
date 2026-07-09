@@ -1,14 +1,23 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
 // Native window.confirm yerine erişilebilir, markalı onay diyaloğu.
 // UX kuralları (araştırma-dayanaklı): eylem başlıkta yeniden ifade edilir,
 // yıkıcı buton KIRMIZI ve eylemi adıyla söyler ("Sil"), varsayılan odak
-// İPTAL'dedir (yanlışlıkla onayı önler), Escape=iptal.
+// İPTAL'dedir (yanlışlıkla onayı önler), Escape=iptal, Tab diyalog içinde
+// döner (focus trap — arka plandaki butonlara kaçamaz).
+//
+// Sağlamlık garantileri (code-review bulguları sonrası):
+// - Bekleyen bir onay varken yeni çağrı gelirse ESKİSİ false ile çözülür
+//   (asılı await kalmaz).
+// - Host unmount olursa veya rota değişirse bekleyen onay false ile çözülür
+//   (hayalet diyalog / bayat handler tetiklenmesi olmaz).
 //
 // Kullanım (hook gerekmez — modül-seviyesi promise API):
 //   import { confirmDialog } from '../../components/ConfirmDialog';
 //   if (!(await confirmDialog('Bu yazıyı silmek istediğinizden emin misiniz?'))) return;
-// Host bileşeni App'te bir kez mount edilir: <ConfirmDialogHost />
+//   // Silme değilse eylemi adlandır: confirmDialog(mesaj, 'Reddet')
+// Host, App'te BrowserRouter İÇİNDE bir kez mount edilir: <ConfirmDialogHost />
 
 type PendingConfirm = {
   message: string;
@@ -30,35 +39,72 @@ export function confirmDialog(message: string, confirmText = 'Sil'): Promise<boo
 
 export function ConfirmDialogHost() {
   const [pending, setPending] = useState<PendingConfirm | null>(null);
+  const pendingRef = useRef<PendingConfirm | null>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
   const cancelRef = useRef<HTMLButtonElement>(null);
+  const location = useLocation();
+
+  pendingRef.current = pending;
 
   useEffect(() => {
-    enqueue = (p) => setPending(p);
+    enqueue = (p) => {
+      // Üst üste çağrı: öncekini asla asılı bırakma — iptal say.
+      pendingRef.current?.resolve(false);
+      setPending(p);
+    };
     return () => {
       enqueue = null;
+      // Host unmount: bekleyen onayı iptalle çöz (sonsuz await olmasın).
+      pendingRef.current?.resolve(false);
+      pendingRef.current = null;
     };
   }, []);
+
+  const close = useCallback((ok: boolean) => {
+    pendingRef.current?.resolve(ok);
+    pendingRef.current = null;
+    setPending(null);
+  }, []);
+
+  // Rota değişti → diyalog artık bağlamsız; iptalle kapat.
+  useEffect(() => {
+    if (pendingRef.current) close(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname]);
 
   // Varsayılan odak İptal'de (a11y: yanlışlıkla yıkıcı onayı önler)
   useEffect(() => {
     if (pending) cancelRef.current?.focus();
   }, [pending]);
 
-  const close = useCallback(
-    (ok: boolean) => {
-      pending?.resolve(ok);
-      setPending(null);
-    },
-    [pending],
-  );
-
+  // Escape=iptal + Tab focus trap (odak diyalog içinde döner)
   useEffect(() => {
     if (!pending) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') close(false);
+      if (e.key === 'Escape') {
+        close(false);
+        return;
+      }
+      if (e.key === 'Tab' && dialogRef.current) {
+        const focusables = dialogRef.current.querySelectorAll<HTMLElement>('button');
+        if (focusables.length === 0) return;
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        const active = document.activeElement;
+        if (e.shiftKey && active === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && active === last) {
+          e.preventDefault();
+          first.focus();
+        } else if (!dialogRef.current.contains(active)) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    window.addEventListener('keydown', onKey, true);
+    return () => window.removeEventListener('keydown', onKey, true);
   }, [pending, close]);
 
   if (!pending) return null;
@@ -73,6 +119,7 @@ export function ConfirmDialogHost() {
       onClick={() => close(false)}
     >
       <div
+        ref={dialogRef}
         className="bg-white rounded-xl shadow-2xl p-6 max-w-sm w-full"
         onClick={(e) => e.stopPropagation()}
       >

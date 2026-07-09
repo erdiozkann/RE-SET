@@ -12,8 +12,9 @@ function App() {
     <ErrorBoundary>
       <AuthProvider>
         <ToastProvider>
-          <ConfirmDialogHost />
           <BrowserRouter basename="/">
+            {/* Router içinde: rota değişince açık onay diyaloğu iptalle kapanır */}
+            <ConfirmDialogHost />
             <ScrollToTop />
             <Suspense fallback={
               <div className="flex items-center justify-center min-h-screen">
