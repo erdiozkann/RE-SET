@@ -132,7 +132,7 @@ npm audit
 1. **Dev Server:** `npm run dev` ile başlatılmalı (3000 portu)
 2. **Dependencies:** İlk kurulumda `npm install` çalıştırılmalı
 3. **Supabase:** Ortam değişkenleri (.env) doğru ayarlanmalı
-4. **Admin Hesabı:** info@re-set.com.tr / 123456
+4. **Admin Hesabı:** info@re-set.com.tr (şifre teslimde ayrıca ve güvenli kanaldan iletilir — asla bu repoya yazılmaz)
 
 ---
 

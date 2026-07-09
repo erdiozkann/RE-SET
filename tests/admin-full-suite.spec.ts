@@ -1,10 +1,16 @@
 import { test, expect } from '@playwright/test';
 
+// Kimlik bilgileri asla repoya yazılmaz — lokal çalıştırma:
+//   ADMIN_EMAIL=... ADMIN_PASSWORD=... npx playwright test tests/admin-full-suite.spec.ts
 test('RE-SET Admin Panel Full Verifikasyon', async ({ page }) => {
+  const email = process.env.ADMIN_EMAIL;
+  const password = process.env.ADMIN_PASSWORD;
+  test.skip(!email || !password, 'ADMIN_EMAIL ve ADMIN_PASSWORD env değişkenleri gerekli');
+
   // 1. Admin Login
   await page.goto('/login', { waitUntil: 'networkidle' });
-  await page.fill('input[type="email"]', 'info@re-set.com.tr');
-  await page.fill('input[type="password"]', '123456');
+  await page.fill('input[type="email"]', email!);
+  await page.fill('input[type="password"]', password!);
   await page.click('button[type="submit"]');
   
   // 2. Dashboard Görünürlüğünü Bekle

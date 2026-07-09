@@ -274,8 +274,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             const allowAutoApprove =
                 import.meta.env.DEV &&
                 typeof window !== 'undefined' &&
-                (profile.email?.endsWith('@testsprite.com') ||
-                    window.location.hostname === 'localhost' ||
+                (window.location.hostname === 'localhost' ||
                     window.location.hostname === '127.0.0.1');
 
             if (!allowAutoApprove) {
@@ -308,8 +307,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const shouldAutoApprove =
             import.meta.env.DEV &&
             typeof window !== 'undefined' &&
-            (email.endsWith('@testsprite.com') ||
-                window.location.hostname === 'localhost' ||
+            (window.location.hostname === 'localhost' ||
                 window.location.hostname === '127.0.0.1');
 
         return {

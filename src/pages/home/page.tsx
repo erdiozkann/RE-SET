@@ -19,9 +19,6 @@ export default function HomePage() {
   const [aboutContent, setAboutContent] = useState<AboutContent | null>(null);
   const [contactInfo, setContactInfo] = useState<ContactInfo | null>(null);
 
-  // Loading states
-  const [heroLoading, setHeroLoading] = useState(true);
-
   // Hero image loading state
   const [heroImageLoaded, setHeroImageLoaded] = useState(false);
   const heroImageRef = useRef<HTMLImageElement>(null);
@@ -31,15 +28,13 @@ export default function HomePage() {
   const loadData = useCallback(() => {
     // Independent data fetching for progressive rendering
     // 1. Hero Content (Critical Priority)
-    setHeroLoading(true);
     contentApi.getHeroContents()
       .then(data => {
         if (data && data.length > 0) {
           setHeroContent(data[0]);
         }
       })
-      .catch(err => console.error('Hero Load Error:', err))
-      .finally(() => setHeroLoading(false));
+      .catch(err => console.error('Hero Load Error:', err));
 
     // 2. Contact Info (High Priority for Header/CTA)
     contentApi.getContactInfo()

@@ -89,7 +89,7 @@ Canlı doğrulandı: itemReviewed=0, görünür yorum ✓. **ERDİ:** GSC'de sor
 
 **Kod-dışı / manuel:**
 - **`og-image.jpg` regen**: `scripts/og-card.html` "Tarabya" oldu; statik JPG headless Chrome+sips ile yeniden üretilmeli.
-- **Güvenlik (önceki, geçerli):** admin şifre `123456` döndür, sızmış PAT/TestSprite key revoke.
+- **Güvenlik (önceki, geçerli):** admin şifresini döndür (eski şifre repo geçmişinde göründü), sızmış PAT/TestSprite key revoke.
 
 **Marka/tasarım kararı:**
 - Altın `#D4AF37` metin AA kontrastı geçmiyor (T9) — koyu hardal tonu marka kararı ([[nodeworks-brand]]).
@@ -108,7 +108,7 @@ Kod tarafı ✅ tamam · Kullanıcı aksiyonları ⏳ bekliyor
 - [x] ✅ M2: `users.password` kolonu DÜŞÜRÜLDÜ (canlı, doğrulandı); `AccountSettingsTab` şifre değiştirme Supabase Auth'a taşındı (düz-metin karşılaştırma kaldırıldı)
 - [ ] Advisor: 35 WARN (çoğu function_search_path_mutable; 1 rls_policy_always_true; 1 public_bucket_allows_listing) — minör, sonra
 - [ ] **KULLANICI:** PAT `sbp_d02...` sohbete girdiği için Supabase'den **iptal et** (Account → Access Tokens → revoke) (app_metadata + sabit email)
-- [ ] **KULLANICI:** admin şifresini (`123456`) döndür — public repo'da sızdı
+- [ ] **KULLANICI:** admin şifresini döndür (eski şifre repo geçmişinde göründü) — public repo'da sızdı
 - [ ] **KULLANICI:** TestSprite API key'ini iptal et (public repo'da sızdı)
 - [ ] **KULLANICI:** RE-SET Supabase'i MCP'ye bağla **veya** DIAGNOSE.sql'i çalıştırıp çıktıyı paylaş → sonra RLS migration uygula
 - [x] ✅ **git history purge YAPILDI + PUSH'LANDI** (2026-07-03): `git-filter-repo` ile `.mcp.json` tüm history'den çıkarıldı + TestSprite key (`testsprite_tests/tmp/config.json`'da da vardı) REDACTED'e çevrildi; hiçbir commit'te key yok. Yedek: `~/reset-backup-20260703-050846.bundle`. `origin/main` force-push edildi (remote HEAD temiz). NOT: GitHub eski SHA'yı GC'ye kadar cache'leyebilir → gerçek koruma key revoke.
@@ -162,7 +162,7 @@ Kod tarafı ✅ tamam · Kullanıcı aksiyonları ⏳ bekliyor
 ## Denetim özeti (4 paralel ajan, 2026-07-03)
 - **Performans:** route code-split ✅; ama 3 render-bloklayan CDN (biri hiç kullanılmayan Font Awesome), Supabase 125KB kritik yolda, hero LCP client-fetch, sıfır sıkıştırma.
 - **SEO/GEO/AEO:** metadata/schema/içerik güçlü; ama prerender boş body → AI botları hiçbir şey görmüyor (ana kusur), og-image 404, title çift-suffix, H1'de Demartini yok, blog 1 yazı.
-- **Güvenlik:** service_role sızıntısı yok ✅, DOMPurify ✅, consent ✅; ama admin şifre 123456 (public), RLS `user_metadata` escalation, users self-UPDATE WITH CHECK yok, sıfır güvenlik başlığı.
+- **Güvenlik:** service_role sızıntısı yok ✅, DOMPurify ✅, consent ✅; ama admin şifresi repo geçmişinde göründü (rotasyon şart), RLS `user_metadata` escalation, users self-UPDATE WITH CHECK yok, sıfır güvenlik başlığı.
 - **Teknik:** CI ✅, strict TS ✅, gerçek smoke testler ✅; ama TestSprite key commit'li, `src/i18n` kurulu olmayan paket import ediyor (ölü), " 2" duplicate dosyalar, 43 `any`. Git "takılması" = pager+iCloud (çözüldü: `core.pager=cat`).
 
 ## Notlar

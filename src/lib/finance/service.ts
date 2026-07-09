@@ -3,7 +3,6 @@ import type {
     Invoice,
     Payment,
     ClientBalance,
-    Transaction,
     UnpaidInvoice,
     MonthlyRevenue
 } from './types';
@@ -19,7 +18,8 @@ export const financeService = {
                 .order('balance', { ascending: false });
 
             if (!error && data) return data;
-        } catch (e) {
+        } catch {
+            // View yoksa aşağıdaki fallback hesaplar
         }
 
         // Fallback: Calculate from clients table
@@ -205,8 +205,9 @@ export const financeService = {
                 .from('unpaid_invoices')
                 .select('*');
 
-            if (!error && data) return data as any;
-        } catch (e) {
+            if (!error && data) return data as UnpaidInvoice[];
+        } catch {
+            // View yoksa aşağıdaki fallback hesaplar
         }
 
         // Fallback: invoices tablosundan hesapla

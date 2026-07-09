@@ -233,7 +233,7 @@ const BookingPage = () => {
       await signOut();
       toast.success('Çıkış yapıldı');
       navigate('/', { replace: true });
-    } catch (error) {
+    } catch {
       toast.error('Çıkış yapılırken bir hata oluştu');
     }
   };
