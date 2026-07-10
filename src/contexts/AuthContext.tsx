@@ -159,7 +159,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const refreshUser = useCallback(async () => {
         try {
-            const { data: { session } } = await withTimeout(() => supabase.auth.getSession(), 8000);
+            const { data: { session } } = await withTimeout(() => supabase.auth.getSession(), 15000);
             if (session?.user) {
                 const profile = await fetchUserProfile(session.user);
                 setUser(profile);
@@ -198,8 +198,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             }
 
             try {
-                // 1. Get Session
-                const { data: { session }, error } = await withTimeout(() => supabase.auth.getSession(), 8000);
+                // 1. Get Session — 15sn: sekmeler arası navigator.locks kilidini
+                // token yenilemesi (_recoverAndRefresh) tutarken 8sn yetmiyordu;
+                // timeout olsa bile onAuthStateChange (TOKEN_REFRESHED/SIGNED_IN)
+                // oturumu sonradan teslim eder — bu yüzden hata değil uyarıdır.
+                const { data: { session }, error } = await withTimeout(() => supabase.auth.getSession(), 15000);
 
                 if (error) throw error;
                 if (!mounted) return;
@@ -211,7 +214,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                     if (mounted) setUser(null);
                 }
             } catch (error) {
-                console.error('❌ Auth Init Error:', error);
+                console.warn('Auth init gecikti (oturum onAuthStateChange ile kurtarılır):', error);
                 if (mounted) setUser(null);
             } finally {
                 if (mounted) setLoading(false);
