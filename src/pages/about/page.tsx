@@ -3,6 +3,7 @@ import Button from '../../components/base/Button';
 import type { Certificate } from '../../types';
 import SEO from '../../components/SEO';
 import { metaFor } from '../../lib/routeMeta';
+import { readableOnLight } from '../../lib/color';
 import { useToast } from '../../components/ToastContainer';
 import { certificatesApi, contentApi } from '../../lib/api';
 export default function About() {
@@ -201,7 +202,7 @@ export default function About() {
                 <div>
                   <h1
                     className="text-3xl md:text-4xl lg:text-5xl font-serif mb-4 leading-tight"
-                    style={{ color: aboutContent.text_color || '#1A1A1A' }}
+                    style={{ color: readableOnLight(aboutContent.text_color, '#1A1A1A') }}
                   >
                     {aboutContent.title}
                   </h1>

@@ -6,6 +6,7 @@ import { servicesApi, contentApi, methodsApi } from '../../lib/api';
 import type { ServiceType, HeroContent, AboutContent, ContactInfo, Method } from '../../types';
 import { FAQ } from '../../data/faq';
 import { optimizedImage } from '../../lib/img';
+import { readableOnLight } from '../../lib/color';
 import { metaFor } from '../../lib/routeMeta';
 
 
@@ -264,11 +265,16 @@ export default function HomePage() {
           {/* Content Container - Sol üst köşeye hizalanmış */}
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10 pt-24 md:pt-32">
             <div className="max-w-xl">
-              {/* Glassmorphism Container */}
-              <div className="backdrop-blur-md bg-white/80 dark:bg-gray-900/80 rounded-3xl p-8 md:p-10 shadow-2xl border border-white/20">
+              {/* Glassmorphism Container — kart AÇIK zemin: panelden gelen
+                  text_color açık bir renkse (eski koyu-görsel tasarımından
+                  kalma #e5d9d6 gibi) yazı görünmez oluyordu → readableOnLight
+                  guard'ı koyu fallback'e düşürür. Site light-only: stray
+                  dark: varyantı da kaldırıldı (koyu telefonda kart kararıp
+                  aynı hatayı tersinden üretiyordu). */}
+              <div className="backdrop-blur-md bg-white/80 rounded-3xl p-8 md:p-10 shadow-2xl border border-white/20">
                 <h1
                   className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight"
-                  style={{ color: hero.text_color || '#1A1A1A' }}
+                  style={{ color: readableOnLight(hero.text_color, '#1A1A1A') }}
                 >
                   <span className="block text-base md:text-lg font-semibold tracking-wide text-[#C19B2E] mb-2">
                     Demartini Yöntemi (Metodu) · Şafak Özkan · İstanbul
@@ -277,7 +283,7 @@ export default function HomePage() {
                 </h1>
                 <p
                   className="text-base md:text-lg lg:text-xl mb-8 leading-relaxed"
-                  style={{ color: hero.text_color || '#4B5563' }}
+                  style={{ color: readableOnLight(hero.text_color, '#4B5563') }}
                 >
                   {hero.description}
                 </p>
