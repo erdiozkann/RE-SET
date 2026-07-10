@@ -102,8 +102,8 @@ Canlı doğrulandı: itemReviewed=0, görünür yorum ✓. **ERDİ:** GSC'de sor
 - [x] ✅ testsprite_tests/ untrack edildi (gitignore'daydı ama izliydi); AuthContext @testsprite.com arka kapı koşulları kaldırıldı
 - [x] ✅ gitleaks: 60 commit history TEMİZ (3 Tem purge tuttu); working-tree 5 bulgu = yalnız anon key (public by design, gitignore'lu dosyalar)
 - [x] .supabase-token dosyası silinmiş — Supabase'den token İPTALİ hâlâ kullanıcıda
-- [x] ✅ **Mobil hero fix hazır, DEPLOY BEKLİYOR** (git d4b5a9a): DB text_color #e5d9d6 beyaz kartta görünmezdi → lib/color.ts readableOnLight() parlaklık guard'ı (home hero + about h1); stray dark: kaldırıldı. Mobil ekran görüntüsüyle doğrulandı, smoke 14/14.
-- [x] ✅ **Konsol temizliği hazır, DEPLOY BEKLİYOR** (git 5e76423): supabasePublic accessToken opsiyonuna geçti (GoTrueClient hiç yaratılmaz → "Multiple GoTrueClient" uyarısı biter), index.html mobile-web-app-capable, AuthContext getSession 8s→15s + error→warn. CI yeşil, smoke 14/14. **Canlıda görünmesi için `bash deploy/vps/deploy.sh` gerekli (kullanıcı onayı).**
+- [x] ✅✅ **Mobil hero fix CANLIDA** (git d4b5a9a): DB text_color #e5d9d6 beyaz kartta görünmezdi → lib/color.ts readableOnLight() parlaklık guard'ı (home hero + about h1); stray dark: kaldırıldı. Mobil ekran görüntüsüyle doğrulandı, smoke 14/14.
+- [x] ✅✅ **Konsol temizliği CANLIDA** (git 5e76423): supabasePublic accessToken opsiyonuna geçti (GoTrueClient hiç yaratılmaz → "Multiple GoTrueClient" uyarısı biter), index.html mobile-web-app-capable, AuthContext getSession 8s→15s + error→warn. CI yeşil, smoke 14/14. Deploy edildi (2026-07-10): yeni bundle index-BzrfADjm.js canlıda; temiz tarayıcıda konsol 0 satır, mobil hero başlığı koyu/net doğrulandı.
 - [x] ✅✅ **CI TARİHTE İLK KEZ UÇTAN UCA YEŞİL** (2026-07-10, run 29062028263): smoke'lar CI'da hiç geçmemişti — env yokken createClient('') import'ta fırlatıp uygulamayı çökertiyordu (beyaz sayfa). Fix: env.ts güvenli placeholder + about sayfası SEO/canonical'ı loading/hata dallarında da render eder. Smoke 14/14 (env'li VE env'siz). NOT: bu değişiklikler henüz VPS'e deploy edilmedi — bir sonraki deploy'da gider.
 
 ## Faz durumu
