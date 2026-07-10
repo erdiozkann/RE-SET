@@ -144,9 +144,21 @@ export default function About() {
     }
   ];
 
+  // SEO (title/canonical/schema) her dalda render edilmeli: loading ve hata
+  // ekranları da bu rotanın tam-sayfa görünümleri — canonical'sız kalmamalı.
+  const seoTag = (
+    <SEO
+      title={metaFor('/about').title}
+      description={metaFor('/about').description}
+      canonical="/about"
+      schema={schema}
+    />
+  );
+
   if (isLoading) {
     return (
       <div className="py-16 flex items-center justify-center bg-gradient-to-br from-stone-50 via-white to-amber-50 h-screen">
+        {seoTag}
         <div className="text-center">
           <i className="ri-loader-4-line text-4xl text-[#8B6F1A] animate-spin mb-4"></i>
           <p className="text-gray-600">Yükleniyor...</p>
@@ -158,6 +170,7 @@ export default function About() {
   if (loadError) {
     return (
       <div className="py-16 flex items-center justify-center bg-gradient-to-br from-stone-50 via-white to-amber-50 h-screen px-4">
+        {seoTag}
         <div className="text-center max-w-md">
           <i className="ri-wifi-off-line text-5xl text-gray-300 mb-4"></i>
           <h2 className="text-xl font-serif text-gray-900 mb-2">Sayfa yüklenemedi</h2>
@@ -177,12 +190,7 @@ export default function About() {
 
   return (
     <>
-      <SEO
-        title={metaFor('/about').title}
-        description={metaFor('/about').description}
-        canonical="/about"
-        schema={schema}
-      />
+      {seoTag}
 
       {aboutContent && (
         <div className="bg-white">
