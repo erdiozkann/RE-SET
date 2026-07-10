@@ -102,6 +102,7 @@ Canlı doğrulandı: itemReviewed=0, görünür yorum ✓. **ERDİ:** GSC'de sor
 - [x] ✅ testsprite_tests/ untrack edildi (gitignore'daydı ama izliydi); AuthContext @testsprite.com arka kapı koşulları kaldırıldı
 - [x] ✅ gitleaks: 60 commit history TEMİZ (3 Tem purge tuttu); working-tree 5 bulgu = yalnız anon key (public by design, gitignore'lu dosyalar)
 - [x] .supabase-token dosyası silinmiş — Supabase'den token İPTALİ hâlâ kullanıcıda
+- [x] ✅✅ **CI TARİHTE İLK KEZ UÇTAN UCA YEŞİL** (2026-07-10, run 29062028263): smoke'lar CI'da hiç geçmemişti — env yokken createClient('') import'ta fırlatıp uygulamayı çökertiyordu (beyaz sayfa). Fix: env.ts güvenli placeholder + about sayfası SEO/canonical'ı loading/hata dallarında da render eder. Smoke 14/14 (env'li VE env'siz). NOT: bu değişiklikler henüz VPS'e deploy edilmedi — bir sonraki deploy'da gider.
 
 ## Faz durumu
 
